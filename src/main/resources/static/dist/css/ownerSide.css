@@ -1,0 +1,36 @@
+ul{
+	margin: 0;
+	padding: 0;
+}
+.sideTitle{
+	font-style: 18px;
+	color: #333;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+.sideBar{
+	background-color: #ffdc7a;
+	padding: 10px;
+	margin: 40px 0;
+	border-radius: 10px;
+	box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+	box-sizing: border-box;
+}
+
+.sideBar a{
+	display: block;
+	width: 100%;
+	height: 40px;
+	line-height: 35px;
+	padding: 0 20px;
+	box-sizing: border-box;
+	border-radius: 8px;
+	color: #333;
+/* 	text-align: center; */
+}
+.sideBar a.active{
+	background-color: #fff2d4;
+	font-weight: bold;
+	color: #eda807;
+}
+

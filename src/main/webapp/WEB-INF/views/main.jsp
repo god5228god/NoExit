@@ -14,7 +14,7 @@
 	<main class="ne-main-content ne-body-offset">
 		<div class="ne-container">
 			<div class="container">
-				메인페이지 
+				메인페이지  
 			</div>
 		</div>
 	</main>
