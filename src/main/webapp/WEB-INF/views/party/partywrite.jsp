@@ -7,6 +7,31 @@
 <meta charset="UTF-8">
 <title>partywrite.jsp</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
+<style type="text/css">
+
+.write
+{
+	background-color: white;
+	width: 40%;
+	margin: 0 auto;     
+	padding: 30px;     
+	margin-top: 30px;
+}
+
+form[name='writeForm'] 
+{  
+	margin: 0 auto;
+	text-align: center;
+}
+
+.write table 
+{
+	margin: 0 auto;
+}
+
+</style>
+
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/common/header.jsp" %>
@@ -17,15 +42,52 @@
 				
 				<div class="write">
 					
-					<form action="">
+					<form action="" name="writeForm">
 						
-						<span>카페명 : </span><br>
-						<span>테마명 : </span><br>
-						<span>예약시간 : </span><br>
-						파티명 : <input type="text"><br>
-						성별 조건 : 무관 <input type="radio" value="0"> 동성만<input type="radio" value="1"> <br>
-						한마디 : <input type="text"> <br>
-						
+						<table>
+							<tr>
+								<th>카페명</th>
+								<td>
+									바인딩 한 카페명
+								</td>
+							</tr>
+							<tr>
+								<th>테마명</th>
+								<td>
+									바인딩한 테마명
+								</td>
+							</tr>
+							<tr>
+								<th>예약일시</th>
+								<td>
+									바인딩한 일시
+								</td>							
+							</tr>
+							<tr>
+								<th>파티명</th>
+								<td>
+									<input type="text" name="partyName">
+								</td>							
+							</tr>
+							<tr>
+								<th>성별 조건</th>
+								<td>
+									<label>
+										<input type="radio" value="0" name="gender" checked="checked"> 무관
+									</label>
+									<label>
+										<input type="radio" value="1" name="gender"> 동성
+									</label>
+								</td>
+							</tr>
+							<tr>
+								<th>한마디</th>
+								<td>
+									<input type="text" name="partyComment">
+								</td>
+							</tr>
+						</table>
+					
 						<button type="button">개설하기</button>
 						 
 					</form>
