@@ -1,0 +1,83 @@
+.resWrap{
+	/* height: 750px; */
+	box-sizing: border-box;
+	margin: 20px 0; 
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+
+.title{
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	color: #333;
+}	
+.res-title{
+		font-size: 16px;
+		font-weight: bold;
+		border-bottom: 2px solid #fdb400;
+		margin-bottom: 10px;
+		padding-bottom: 5px;
+		color: #444;
+		
+	}
+	
+.resOpen{
+	width: 35%;
+	height: 380px;
+	background-color: #fff;
+	/* border: 1px solid #ccc; */
+	box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+	padding: 20px 30px;
+	box-sizing: border-box;
+	border-radius: 5px;
+}
+
+.resOpen .selectBox{
+	width: 100%;
+}
+
+.resOpenList{
+	width: 60%;
+	height: 100%;
+	background-color: #fff;
+	/* border: 1px solid #ccc; */
+	box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+	padding: 20px 30px;
+	box-sizing: border-box;
+	border-radius: 5px;
+	
+}
+
+.resOpen .form-label{
+	margin-top: 10px;
+}
+
+.timeWrap{
+	margin-bottom: 25px;
+}
+.timeWrap .ne-box{
+	width: 40%;
+}
+.resOpen .btn{
+	width: 100%;
+}
+
+.topWrap .res-title{
+	padding-bottom: 5px;
+}
+.topWrap .ne-box{
+	padding: 0 10px;
+	height: 30px;
+}
+
+.resOpenList .table{
+	width: 100%;
+	background-color: #fff;
+}
+
+.page-navigation{
+	text-align: center;
+	margin-top: 5px;
+}

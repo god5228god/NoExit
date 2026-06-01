@@ -814,7 +814,7 @@ small, .small   { font-size: .875rem; }  /* 14px */
 }
 .ne-table thead th {
   background: var(--ne-bg);
-  font-size: .77rem;
+  font-size: .9rem;
   font-weight: 700;
   color: var(--ne-text-2);
   padding: .65rem 1rem;
@@ -1196,3 +1196,25 @@ small, .small   { font-size: .875rem; }  /* 14px */
 .ne-footer span:not(.ne-footer-logo span) {
   color: #9ca3af !important;
 }
+
+
+/* form Box 스타일  */
+.ne-box{
+	height: 35px;
+	border: 1px solid #aaa;
+	border-radius: 8px;
+	padding: 0 5px;
+	box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+
+
+
+
