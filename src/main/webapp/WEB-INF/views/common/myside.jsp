@@ -5,62 +5,47 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-	crossorigin="anonymous">
-
-<link rel="stylesheet" type="text/css"
-	href='${pageContext.request.contextPath }/dist/css/common.css'>
-
 <style type="text/css">
-nav {
-	margin-top: 120px;
-	width: 300px;
+/* 왼쪽 사이드바 고정틀 유지 */
+.left-sidebar-wrapper {
+	width: 280px;
+	flex-shrink: 0;
+}
+.ne-side-profile {
 	text-align: center;
-	margin-bottom: 300px;
+	padding: 1.5rem 1rem;
 }
-
-nav li {
-	text-align: center;
-	padding-bottom: 30px;
+.ne-side-profile img {
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-bottom: 1rem;
 }
-
-#nickName {
-	font-size: 25px;
-}
-
-body{
-	height: 101vh;
-
-}
-
 </style>
 </head>
 <body>
 
-	<!-- 마이페이지에 들어갈 사이드바 -->
-	<nav class="ne-side-nav">
-
-		<img src="${pageContex.request.contextPath }/dist/images/zazaz.jpg"><br>
-		<div id="nickName">미쿠쨩다이스키데스스</div>
-		<div>
-			<h5>
-				어서와!<br>
-			</h5>
-			<h6>오늘도 좋은 추억 만들자.</h6>
-		</div>
-		<br><br>
-		<ul>
-			<li><a href="/mypage/reservations" id="record" class="active"
-				style="text-align: center;">개인 기록</a></li>
-			<li>매칭 목록</li>
-			<li>예약 내역</li>
-			<li><a href="/" id="home" class="" style="text-align: center;">홈으로</a></li>
-		</ul>
-	</nav>
+	<div class="left-sidebar-wrapper">
+		<nav class="ne-side-nav">
+			<div class="ne-side-profile">
+				<img src="${pageContext.request.contextPath}/dist/images/zazaz.jpg" alt="프로필">
+				<div id="nickName" class="fw-bold mb-2" style="font-size: 20px;">미쿠쨩다이스키데스스</div>
+				<div class="text-muted small">
+					<h5 class="m-0" style="font-size: 16px;">어서와!</h5>
+					<h6 class="m-0 text-secondary" style="font-size: 14px;">오늘도 좋은 추억 만들자.</h6>
+				</div>
+			</div>
+			
+			<div class="ne-side-nav-section">마이 메뉴</div>
+			<a href="/mypage/reservations" id="record" class="active">개인 기록</a>
+			<a href="#">매칭 목록</a>
+			<a href="#">예약 내역</a>
+			
+			<div class="ne-side-nav-section">기타</div>
+			<a href="/" id="home">홈으로</a>
+		</nav>
+	</div>
 
 </body>
 </html>
