@@ -13,18 +13,29 @@
 .list
 {
 	display: grid;
-	grid-template-columns: repeat(5, 1fr);
+	grid-template-columns: repeat(2, 2fr);
 	gap: 10px;
+}
+
+.ne-sc
+{
+	display: flex;
+}
+
+.image
+{
+	background-color: gray;
+	flex: 0 0 50%;
 }
 
 .description
 {
 	text-align: center;
-}
-
-th
-{
-	width: 100px;
+	flex: 0 0 1;
+	min-width: 0;
+	table-layout: fixed;
+	width: 100%;
+	text-align: center;
 }
 
 .search-form
@@ -113,9 +124,10 @@ th
 				
 				<div class="list">
 					
+			
 					<a class="ne-sc" href="" >
 						
-						<div class="ne-sc-title">테마 이미지</div>
+						<div class="image">테마 이미지</div>
 							
 							<table class="description">
 								<tr>
@@ -125,6 +137,14 @@ th
 								<tr>
 									<th>장르</th>
 									<td>추리</td>
+								</tr>
+								<tr>
+									<th>날짜</th>
+									<td>2026-06-02</td>
+								</tr>
+								<tr>
+									<th>시간</th>
+									<td>10:00</td>
 								</tr>
 								<tr>
 									<th>파티명</th>
@@ -137,149 +157,6 @@ th
 							</table>
 					</a>
 					
-					<a class="ne-sc" href="" >
-						
-						<div class="ne-sc-title">테마 이미지</div>
-							
-							<table class="description">
-								<tr>
-									<th>방이름</th>
-									<td>그레이</td>
-								</tr>
-								<tr>
-									<th>장르</th>
-									<td>추리</td>
-								</tr>
-								<tr>
-									<th>파티명</th>
-									<td>주열룸</td>
-								</tr>
-								<tr>
-									<th>현재인원수</th>
-									<td>2명</td>
-								</tr>
-							</table>
-					</a>
-					
-					<a class="ne-sc" href="" >
-						
-						<div class="ne-sc-title">테마 이미지</div>
-							
-							<table class="description">
-								<tr>
-									<th>방이름</th>
-									<td>그레이</td>
-								</tr>
-								<tr>
-									<th>장르</th>
-									<td>추리</td>
-								</tr>
-								<tr>
-									<th>파티명</th>
-									<td>주열룸</td>
-								</tr>
-								<tr>
-									<th>현재인원수</th>
-									<td>2명</td>
-								</tr>
-							</table>
-					</a>
-					
-					<a class="ne-sc" href="" >
-						
-						<div class="ne-sc-title">테마 이미지</div>
-							
-							<table class="description">
-								<tr>
-									<th>방이름</th>
-									<td>그레이</td>
-								</tr>
-								<tr>
-									<th>장르</th>
-									<td>추리</td>
-								</tr>
-								<tr>
-									<th>파티명</th>
-									<td>주열룸</td>
-								</tr>
-								<tr>
-									<th>현재인원수</th>
-									<td>2명</td>
-								</tr>
-							</table>
-					</a>
-					
-					<a class="ne-sc" href="" >
-						
-						<div class="ne-sc-title">테마 이미지</div>
-							
-							<table class="description">
-								<tr>
-									<th>방이름</th>
-									<td>그레이</td>
-								</tr>
-								<tr>
-									<th>장르</th>
-									<td>추리</td>
-								</tr>
-								<tr>
-									<th>파티명</th>
-									<td>주열룸</td>
-								</tr>
-								<tr>
-									<th>현재인원수</th>
-									<td>2명</td>
-								</tr>
-							</table>
-					</a>
-					
-					<a class="ne-sc" href="" >
-						
-						<div class="ne-sc-title">테마 이미지</div>
-							
-							<table class="description">
-								<tr>
-									<th>방이름</th>
-									<td>그레이</td>
-								</tr>
-								<tr>
-									<th>장르</th>
-									<td>추리</td>
-								</tr>
-								<tr>
-									<th>파티명</th>
-									<td>주열룸</td>
-								</tr>
-								<tr>
-									<th>현재인원수</th>
-									<td>2명</td>
-								</tr>
-							</table>
-					</a>
-					
-					<a class="ne-sc" href="" >
-						
-						<div class="ne-sc-title">테마 이미지</div>
-							
-							<table class="description">
-								<tr>
-									<th>방이름</th>
-									<td>그레이</td>
-								</tr>
-								<tr>
-									<th>장르</th>
-									<td>추리</td>
-								</tr>
-								<tr>
-									<th>파티명</th>
-									<td>주열룸</td>
-								</tr>
-								<tr>
-									<th>현재인원수</th>
-									<td>2명</td>
-								</tr>
-							</table>
-					</a>
 					
 				</div>
 			
