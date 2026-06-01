@@ -10,13 +10,89 @@
 
 <style type="text/css">
 
+	.info
+	{
+		padding-top: 30px;
+		display: flex;
+	}
+	
+	.image
+	{
+		width: 300px;
+		height: 500px;
+		background-color: white; 
+		margin-right: 30px;
+	}
+	
+	.description
+	{
+		text-align: center;
+		border-collapse: collapse;
+	}
+
+
+	.description th,
+	.description td { border-bottom: 1px solid #ccc; }
+	
+	.description tr:last-child th,
+	.description tr:last-child td { border-bottom: none; }
+	
+	.description th,
+	.description td { padding: 6px 10px; }
+		
+	.description th
+	{	
+		width: 50px;
+		border-right: 1px solid #ccc;
+	}
+	
+	.description td
+	{
+		width: 700px;
+	}
+
 	.comment
 	{
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 	    gap: 10px;
 	}
-
+	
+	.schedule .date,
+	.schedule .time
+	{
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	
+	
+	.schedule .date 
+	{ 
+		margin-bottom: 16px; 
+	}
+	
+	.schedule .time
+	{
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+	}
+	
+	.schedule button
+	{
+		padding: 8px 14px;
+		border: 1px solid #ccc;
+		border-radius: 6px;
+		background: #fff;
+		cursor: pointer;
+		font-size: 13px;
+	}
+	
+	.schedule button:hover 
+	{
+	 	background: #f3f3f3; 
+	}
+	
 </style>
 
 </head>
@@ -31,20 +107,64 @@
 					
 					<div class="info">
 						
-						<span>테마이미지</span><br>				
-						<span>카페명</span><br>
-						<span>카페연락처</span><br>
-						<span>카페위치</span><br>
-						<span>테마명</span><br>
-						<span>테마소개</span><br>
-						<span>소요시간</span><br>
-						<span>1인 가격</span><br>
-						<span>난이도</span><br>
-						<span>활동도</span><br>
-						<span>공포도</span><br>
-						<span>최소인원</span><br>
-						<span>최대인원</span><br>
-						<span>성인유무</span><br>
+						<div class="image">
+							테마이미지
+						</div>
+						
+						<table class="description">
+							<tr>
+								<th>카페명</th>
+								<td>우주별</td>
+							</tr>
+							<tr>
+								<th>카페연락처</th>
+								<td>010-1234-1234</td>
+							</tr>
+							<tr>
+								<th>카페위치</th>
+								<td>홍대입구 근처 어딘가</td>
+							</tr>
+							<tr>
+								<th>테마명</th>
+								<td>그레이</td>
+							</tr>
+							<tr>
+								<th>소요시간</th>
+								<td>60분</td>
+							</tr>
+							<tr>
+								<th>테마 소개</th>
+								<td>주열님이 강력 추천하는 테마</td>
+							</tr>
+							<tr>
+								<th>소요시간</th>
+								<td>60분</td>
+							</tr>
+							<tr>
+								<th>1인 가격</th>
+								<td>30000</td>
+							</tr>
+							<tr>
+								<th>난이도</th>
+								<td>★★★★★</td>
+							</tr>
+							<tr>
+								<th>활동도</th>
+								<td>★★★★★</td>
+							</tr>
+							<tr>
+								<th>공포도</th>
+								<td>★★★★★</td>
+							</tr>
+							<tr>
+								<th>인원 수</th>
+								<td>2 ~ 4</td>
+							</tr>
+							<tr>
+								<th>성인 유무</th>
+								<td>Y/N</td>
+							</tr>
+						</table>
 						
 					</div>
 					
@@ -52,26 +172,29 @@
 					
 					<div class="schedule">
 						
-						<span>날짜</span>
-						<span>시간</span>
-						<span>시간</span>
-						<span>시간</span>
-						<span>시간</span>
-						
-						<br>
-						<span>날짜</span>
-						<span>시간</span>
-						<span>시간</span>
-						<span>시간</span>
-						<span>시간</span>
-						
-						<br>
+						<div class="date">
+							
+							<button type="button">2026-06-01</button>
+							<button type="button">2026-06-02</button>
+							<button type="button">2026-06-03</button>
+							<button type="button">2026-06-04</button>
+							<button type="button">2026-06-05</button>
+							
+						</div>
+									
+						<div class="time">
+							
+							<button type="button">10:00</button>
+							<button type="button">12:00</button>
+							<button type="button">14:00</button>
+							<button type="button">16:00</button>
+							<button type="button">18:00</button>
+							
+						</div>									
 									
 					</div>
 					
 					<br>
-						
-						<button type="button">파티 개설</button>
 						
 					<br><br>
 					
