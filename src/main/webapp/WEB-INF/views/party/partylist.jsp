@@ -120,9 +120,13 @@
 						
 							필터
 							<br>
-							인원수
-							<input type="text" class="search-input" name="minCount" placeholder="최소 인원">
-							<input type="text" class="search-input" name="maxCount" placeholder="최대 인원">
+							날짜
+							<input type="text" class="search-input" name="minRegDate" placeholder="최소 날짜">
+							<input type="text" class="search-input" name="maxRegDate" placeholder="최대 날짜">
+							<br>
+							시간
+							<input type="text" class="search-input" name="minTime" placeholder="최소 시간">
+							<input type="text" class="search-input" name="maxTime" placeholder="최대 시간">
 							<br>
 						</div>
 						

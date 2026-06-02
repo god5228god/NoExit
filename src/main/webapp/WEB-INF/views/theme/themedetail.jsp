@@ -10,89 +10,162 @@
 
 <style type="text/css">
 
-	.info
-	{
-		padding-top: 30px;
-		display: flex;
-	}
-	
-	.image
-	{
-		width: 300px;
-		height: 500px;
-		background-color: white; 
-		margin-right: 30px;
-	}
-	
-	.description
-	{
-		text-align: center;
-		border-collapse: collapse;
-	}
+	.container {
+  padding: 24px 0;
+}
+
+/* ===== 상단 정보 (이미지 + 표) ===== */
+.info {
+  padding-top: 30px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.image {
+  flex-shrink: 0;
+  width: 300px;
+  height: 500px;
+  margin-right: 30px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* 설명 표 */
+.description {
+  flex: 1;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.description th,
+.description td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.description tr:last-child th,
+.description tr:last-child td {
+  border-bottom: none;
+}
+
+.description th {
+  width: 110px;
+  border-right: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.description td {
+  text-align: left;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+/* ===== 예약 슬롯 ===== */
+.schedule {
+  margin: 24px 0;
+}
+
+.schedule .datetime-title {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+/* 날짜 그룹 */
+.schedule .datetime {
+  margin-bottom: 20px;
+}
+
+.schedule .datetime .date {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.schedule .datetime hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 0 0 12px;
+}
+
+/* 시간 버튼 그리드 */
+.schedule .time {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: 8px;
+}
+
+.schedule .btn-time {
+  padding: 8px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.schedule .btn-time:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== 리뷰 ===== */
+.review {
+  margin-top: 32px;
+}
+
+/* 리뷰 통계 + 개별 리뷰 카드 공통 */
+.review .item {
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* 리뷰 통계 (전체 폭) */
+.review .total {
+  margin-bottom: 24px;
+}
+
+.review .total-review,
+.review .user-review {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.review .total-review th,
+.review .user-review th {
+  width: 90px;
+  text-align: left;
+  padding: 6px 8px;
+  color: #6b7280;
+  font-weight: 500;
+  white-space: nowrap;
+}
 
 
-	.description th,
-	.description td { border-bottom: 1px solid #ccc; }
-	
-	.description tr:last-child th,
-	.description tr:last-child td { border-bottom: none; }
-	
-	.description th,
-	.description td { padding: 6px 10px; }
-		
-	.description th
-	{	
-		width: 50px;
-		border-right: 1px solid #ccc;
-		background-color: #e5e7eb;
-	}
-	
-	.description td
-	{
-		width: 700px;
-	}
-
-	.comment
-	{
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-	    gap: 10px;
-	}
-	
-	.schedule .date,
-	.schedule .time
-	{
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-	}
-	
-	
-	.schedule .date 
-	{ 
-		margin-bottom: 16px; 
-	}
-	
-	.schedule .time
-	{
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
-	}
-	
-	.schedule button
-	{
-		padding: 8px 14px;
-		border: 1px solid #ccc;
-		border-radius: 6px;
-		background: #fff;
-		cursor: pointer;
-		font-size: 13px;
-	}
-	
-	.schedule button:hover 
-	{
-	 	background: #f3f3f3; 
-	}
+/* 개별 리뷰 3열 그리드 */
+.review .comment {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
 	
 </style>
 
@@ -165,42 +238,69 @@
 						
 					</div>
 					
-					<br>
-					
 					<div class="schedule">
 						
-						<div class="date">
+						<span class="datetime-title">예약 슬롯</span>
+						
+						<div class="datetime">
+							<span class="date">2026-06-01</span>
+							<hr>
 							
-							<button type="button">2026-06-01</button>
-							<button type="button">2026-06-02</button>
-							<button type="button">2026-06-03</button>
-							<button type="button">2026-06-04</button>
-							<button type="button">2026-06-05</button>
+							<div class="time">
+								
+								<button type="button" class="btn-time" disabled="disabled">10:00</button>
+								<button type="button" class="btn-time" disabled="disabled">12:00</button>
+								<button type="button" class="btn-time" disabled="disabled">14:00</button>
+								<button type="button" class="btn-time" disabled="disabled">16:00</button>
+								<button type="button" class="btn-time" onclick="">18:00</button>
+								
+							</div>
 							
 						</div>
-									
-						<div class="time">
-							
-							<button type="button">10:00</button>
-							<button type="button">12:00</button>
-							<button type="button">14:00</button>
-							<button type="button">16:00</button>
-							<button type="button">18:00</button>
-							
-						</div>									
-									
-					</div>
-					
-					<br>
 						
-					<br><br>
+						<div class="datetime">
+						
+							<span class="date">2026-06-02</span>
+							<hr>
+							
+							<div class="time">
+								
+								<button type="button" class="btn-time">10:00</button>
+								<button type="button" class="btn-time" disabled="disabled">12:00</button>
+								<button type="button" class="btn-time">14:00</button>
+								<button type="button" class="btn-time" disabled="disabled">16:00</button>
+								<button type="button" class="btn-time">18:00</button>
+								
+							</div>
+							
+						</div>
+						
+						<div class="datetime">
+							<span class="date">2026-06-03</span>
+							<hr>
+							
+							<div class="time">
+								
+								<button type="button" class="btn-time" disabled="disabled">10:00</button>
+								<button type="button" class="btn-time">12:00</button>
+								<button type="button" class="btn-time" disabled="disabled">14:00</button>
+								<button type="button" class="btn-time">16:00</button>
+								<button type="button" class="btn-time">18:00</button>
+								<button type="button" class="btn-time">20:00</button>
+								<button type="button" class="btn-time" disabled="disabled">22:00</button>
+								
+							</div>
+							
+						</div>
+												
+					</div>
 					
 					<div class="review">
 						
 						<div class="total">
 														
 							<div class="ne-sc item">
-							  <div class="ne-sc-title">리뷰 통계</div>
+							  <div class="ne-sc-title">리뷰 통계 (1개)</div>
 							  	
 							  	<table class="total-review">
 							  		<tr>
@@ -229,106 +329,8 @@
 							
 						</div>
 						
-						<br>
-						
 						<div class="comment">
 						
-							<div class="ne-sc item">
-							  <div class="ne-sc-title">작성자닉네임</div>
-							  	
-							  	<table class="user-review">
-							  		<tr>
-							  			<th>체감난이도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감공포도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감활동도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>몰입도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>만족도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>한줄 코멘트</th>
-							  			<td>재밌음</td>
-							  		</tr>
-							  	</table>
-							  
-							</div>
-							
-							<div class="ne-sc item">
-							  <div class="ne-sc-title">작성자닉네임</div>
-							  	
-							  	<table class="user-review">
-							  		<tr>
-							  			<th>체감난이도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감공포도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감활동도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>몰입도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>만족도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>한줄 코멘트</th>
-							  			<td>재밌음</td>
-							  		</tr>
-							  	</table>
-							  
-							</div>
-							
-							<div class="ne-sc item">
-							  <div class="ne-sc-title">작성자닉네임</div>
-							  	
-							  	<table class="user-review">
-							  		<tr>
-							  			<th>체감난이도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감공포도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감활동도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>몰입도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>만족도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>한줄 코멘트</th>
-							  			<td>재밌음</td>
-							  		</tr>
-							  	</table>
-							  
-							</div>
-							
 							<div class="ne-sc item">
 							  <div class="ne-sc-title">작성자닉네임</div>
 							  	

@@ -2,6 +2,7 @@ package com.noexit.app.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -20,15 +21,15 @@ public class Party
 		return "party/partylist";
 	}
 	
-	@GetMapping("detail")
-	public String partyDetail()
+	@GetMapping("info/{partyid}")
+	public String partyDetail(@PathVariable(name="partyid") int partyId)
 	{
 		return "party/partydetail";
 	}
 	
-	@GetMapping("board")
-	public String partyBoard()
+	@GetMapping("board/{partyid}")
+	public String partyBoard(@PathVariable(name="partyid") int partyId)
 	{
-		return "party/partyboard";
+		return "party/partyboard2";
 	}
 }

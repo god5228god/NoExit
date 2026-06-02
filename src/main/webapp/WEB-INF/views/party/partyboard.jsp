@@ -100,6 +100,9 @@ table {
 .guest th, .guest td {
 	padding: 10px 8px;
 	border-bottom: 1px solid var(--border);
+	word-break: break-word;   /* 긴 단어/연속 문자 강제 줄바꿈 */
+	white-space: normal;      /* 한 줄 유지 방지, 자동 줄바꿈 허용 */
+	overflow-wrap: anywhere;  /* 어디서든 줄바꿈 가능 */
 }
 
 .party th,
@@ -205,7 +208,7 @@ button:hover { background: #f0f1f4; }
 
 .party-guest .table-scroll
 {
-	height: 150px;
+	height: 220px;
 }
 
 /* 스크롤해도 헤더 고정 */
@@ -224,6 +227,13 @@ button:hover { background: #f0f1f4; }
 	margin-top: 12px;
 }
 
+#comment
+{
+	max-height: 30px;
+	overflow-y: auto;
+	text-align: left;
+}
+
 </style>
 
 </head>
@@ -240,27 +250,29 @@ button:hover { background: #f0f1f4; }
 					
 						<span>파티 정보</span>
 					
-						<!-- 파티명 / 파티한마디 / 테마 / 시간 / 수정하기버튼 -->
-						<table class="party">
-							<tr>
-								<th>파티명</th>
-								<td>주열룸</td>
-								<th>파티장</th>
-								<td>윤주열</td>
-							</tr>
-							<tr>
-								<th>테마명</th>
-								<td colspan="3">그레이</td>
-							</tr>
-							<tr>
-								<th>일시</th>
-								<td colspan="3">2026-06-03 18:00</td>
-							</tr>
-							<tr>
-								<th>방장 한마디</th>
-								<td colspan="3">미쿠미쿠</td>
-							</tr>
-						</table>
+							<!-- 파티명 / 파티한마디 / 테마 / 시간 / 수정하기버튼 -->
+							<table class="party">
+								<tr>
+									<th>파티명</th>
+									<td colspan="3">주열룸</td>
+								</tr>
+								<tr>
+									<th>테마명</th>
+									<td colspan="3">그레이</td>
+								</tr>
+								<tr>
+									<th>일시</th>
+									<td>2026-06-03 18:00</td>
+									<th>파티장</th>
+									<td>윤주열</td>
+								</tr>
+								<tr>
+									<th>방장 한마디</th>
+									<td colspan="3">
+										<div id="comment">미쿠미쿠</div>
+									</td>	
+								</tr>
+							</table>
 						
 						<div class="info-control">
 							
@@ -294,11 +306,11 @@ button:hover { background: #f0f1f4; }
 								
 								<tbody>
 									<tr>
-										<td>윤주열</td>
+										<td>윤주열윤주열윤주열윤주열윤주열윤주열윤주열</td>
 										<td>-50</td>
 										<td>여</td>
 										<td>7</td>
-										<td>미쿠 좋아하심?</td>
+										<td>미쿠 좋아하심?미쿠 좋아하심?미쿠 좋아하심?미쿠 좋아하심?미쿠 좋아하심?미쿠 좋아하심?</td>
 										<td>
 											<button type="button" class="ne-st ne-st-green">승인</button>
 											<button type="button" class="ne-st ne-st-red">거절</button>
@@ -405,12 +417,12 @@ button:hover { background: #f0f1f4; }
 							</div>
 							<div class="msg other">
 								<span class="writer">윤주열</span>
-								<span class="comment">50만원</span>
+								<span class="comment">50만원50만원50만원50만원50만원50만원50만원50만원50만원</span>
 							</div>
 							
 							<div class="msg mine">
 								<button type="button" class="ne-st ne-st-red" style="font-size: small;">삭제</button>
-								<span class="comment">제 정신임?</span>
+								<span class="comment">제 정신임?제 정신임?제 정신임?제 정신임?제 정신임?제 정신임?제 정신임?</span>
 								<span class="writer">김주열</span>
 							</div>
 							
@@ -444,7 +456,7 @@ button:hover { background: #f0f1f4; }
 								</thead>
 								<tbody>
 									<tr>
-										<td>윤주열</td>
+										<td>윤주열윤주열윤주열윤주열윤주열윤주열윤주열</td>
 										<td>여</td>
 										<td>9</td>
 										<td>준비 중</td>
