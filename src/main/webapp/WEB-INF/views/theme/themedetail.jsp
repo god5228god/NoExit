@@ -200,7 +200,7 @@
 						<div class="total">
 														
 							<div class="ne-sc item">
-							  <div class="ne-sc-title">리뷰 통계</div>
+							  <div class="ne-sc-title">리뷰 통계 100개</div>
 							  	
 							  	<table class="total-review">
 							  		<tr>
