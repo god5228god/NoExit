@@ -136,13 +136,11 @@
 				</div>
 				
 				<div class="theme-info">
-							
 					<span class="cafe-name">우주별</span>
 					<span class="theme-name">그레이</span>
 					<span class="time">2026-06-01 16:00</span>
 					<span class="count">2 ~ 4</span>
 					<span class="price">30000</span>
-					
 				</div>
 				
 				<div class="write">

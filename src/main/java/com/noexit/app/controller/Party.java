@@ -30,6 +30,6 @@ public class Party
 	@GetMapping("board/{partyid}")
 	public String partyBoard(@PathVariable(name="partyid") int partyId)
 	{
-		return "party/partyboard";
+		return "party/partyboard2";
 	}
 }
