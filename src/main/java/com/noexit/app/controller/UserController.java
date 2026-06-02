@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.noexit.app.model.User;
-import com.noexit.app.service.UserService;
+//import com.noexit.app.model.User;
+//import com.noexit.app.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/user")
 public class UserController {
 
-	private final UserService service;
+	//private final UserService service;
 
 	// 아이디 찾기 폼
-	@GetMapping("/findid")
+	@GetMapping("/findId")
 	public String findIdForm() {
 		return "user/findId";
 	}
 
 	// 비밀번호 찾기 폼
-	@GetMapping("/findpw")
+	@GetMapping("/findPw")
 	public String findPwForm() {
 		return "user/findPw";
 	}
@@ -39,9 +39,9 @@ public class UserController {
 
 	// 회원가입 처리 (POST)
 	@PostMapping("/enroll")
-	public String enroll(User user) {
+	public String enroll(/* User user */) {
 		try {
-			service.enroll(user);
+			//service.enroll(user);
 		} catch (Exception e) {
 			log.info("enroll : ", e);
 		}
@@ -57,7 +57,7 @@ public class UserController {
 	// 로그인 처리 (POST)
 	@PostMapping("/login")
 	public String login() {
-		return "redirect:/user/main";
+		return "redirect:/main";
 	}
 
 	// 로그아웃

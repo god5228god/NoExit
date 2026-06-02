@@ -6,9 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>아이디 찾기</title>
+<style type="text/css">
+
+
+</style>
+
 <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript">
-	
+	/*
 	$(function(){
 		
 		//인증번호 발송 요청
@@ -70,6 +75,7 @@
 		});
 			
 	}); 
+	*/
 
 </script>
 </head>
