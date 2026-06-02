@@ -5,12 +5,7 @@
 	padding: 20px;
 	box-sizing: border-box;
 }
-.title{
-	font-size: 20px;
-	font-weight: bold;
-	margin-bottom: 10px;
-	color: #333;
-}	
+
 
 
 .resList{
@@ -56,11 +51,11 @@
 	text-align: center;
 }
 
-.page-navigation{
+.paginate{
 	margin-top: 10px;
 	text-align: center;
 }
-.page-navigation > *{
+.paginate > *{
 	display: inline-block;
 	width: 30px;
 	height: 30px;
@@ -68,7 +63,7 @@
 	line-height: 30px;
 	box-sizing: border-box;
 }
-.page-navigation span{
+.paginate span{
 	background-color: #fdb800;
 	color: #fff;
 	font-weight: bold;

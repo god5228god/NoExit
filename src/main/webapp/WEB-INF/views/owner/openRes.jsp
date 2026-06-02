@@ -141,8 +141,12 @@
 								
 							</tbody>
 						</table>
-						<div class="page-navigation">
-							<< < 1 2 3 4 5 > >>
+						<div class="paginate">
+							<a href="#"> 1 </a>
+							<a href="#"> 2 </a>
+							<span class="active">3</span>
+							<a href="#"> 4 </a>
+							<a href="#"> 5 </a>
 						</div>
 					</div>
 				</div>

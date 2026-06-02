@@ -296,7 +296,7 @@ small, .small   { font-size: .875rem; }  /* 14px */
    4. 레이아웃 — 헤더
    ───────────────────────────────────────────────────────────────────── */
 .ne-header {
-  position: fixed;
+  position: relative;
   top: 0; left: 0; right: 0;
   z-index: 1030;
   height: 100px;
@@ -314,10 +314,10 @@ small, .small   { font-size: .875rem; }  /* 14px */
 }
 
 /* 헤더 높이만큼 본문 밀기 */
-.ne-body-offset {
+/* .ne-body-offset {
   padding-top: 100px;
 }
-
+ */
 /* 로고 */
 .ne-logo {
   text-decoration: none;
@@ -1201,18 +1201,53 @@ small, .small   { font-size: .875rem; }  /* 14px */
 /* form Box 스타일  */
 .ne-box{
 	height: 35px;
-	border: 1px solid #aaa;
+	border: 1px solid #ddd;
 	border-radius: 8px;
 	padding: 0 5px;
 	box-sizing: border-box;
 }
 
+.ne-wrap{
+	box-sizing: border-box;
+	margin: 20px 0; 
+	padding: 20px 0;
+	box-sizing: border-box;
+}
 
+/* 흰배경 회색테두리 박스  */
+.content-box{
+	background-color: #fff;
+	border-radius: 8px;
+	padding: 10px 20px;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+}
 
+/*  노란배경 노란테두리 박스 */
+.content-box-yellow{
+	background: #fff8e6;
+    border: 1px solid #fef0b0;
+    border-radius: 8px;
+    padding: 10px 20px;
+	box-sizing: border-box;
+}
 
+.title{
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	color: #333;
+}	
 
-
-
+.ne-title{
+		font-size: 16px;
+		font-weight: bold;
+		border-bottom: 2px solid #fdb400;
+		margin-bottom: 10px;
+		padding-bottom: 5px;
+		color: #444;
+		
+	}
 
 
 

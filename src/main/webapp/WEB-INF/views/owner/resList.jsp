@@ -40,7 +40,6 @@
 									<th>예약자</th>
 									<th>연락처</th>
 									<th>인원</th>
-									<th>상태</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -52,7 +51,6 @@
 									<td>홍길동</td>
 									<td>010-4544-4544</td>
 									<td>4명</td>
-									<td><span class="ne-st ne-st-blue">예약완료</span></td>
 									<td>
 										<button type="button" class="btn ne-btn-deact">예약취소</button>
 									</td>
@@ -64,7 +62,6 @@
 									<td>윤주열</td>
 									<td>010-1111-1111</td>
 									<td>2명</td>
-									<td><span class="ne-st ne-st-red">예약취소</span></td>
 									<td>
 										<!-- <button type="button" class="btn ne-btn-deact">예약취소</button> -->
 									</td>
@@ -76,7 +73,6 @@
 									<td>김민준</td>
 									<td>010-1234-1234</td>
 									<td>3명</td>
-									<td><span class="ne-st ne-st-blue">예약완료</span></td>
 									<td>
 										<button type="button" class="btn ne-btn-deact">예약취소</button>
 									</td>
@@ -84,10 +80,10 @@
 								
 							</tbody>
 						</table>
-						<div class="page-navigation">
+						<div class="paginate">
 							<a href="#"> 1 </a>
 							<a href="#"> 2 </a>
-							<span>3</span>
+							<span class="active">3</span>
 							<a href="#"> 4 </a>
 							<a href="#"> 5 </a>
 						</div>
