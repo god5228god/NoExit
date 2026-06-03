@@ -20,4 +20,9 @@ public class UserServiceImpl implements UserService {
 		userMapper.insertAccount(user);
 		userMapper.insertInfo(user);
 	}
+
+	@Override
+	public int countByLoginId(String loginId) {
+		 return userMapper.countByLoginId(loginId);
+	}
 }
