@@ -10,85 +10,90 @@
 
 <style type="text/css">
 
-.list
-{
-	display: grid;
-	grid-template-columns: repeat(2, 2fr);
-	gap: 10px;
-}
-
-.ne-sc
+.container
 {
 	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding-top: 10px;
 }
 
-.image
+.search-wrap
 {
-	background-color: gray;
-	flex: 0 0 50%;
-}
-
-.description
-{
-	text-align: center;
-	flex: 0 0 1;
-	min-width: 0;
-	table-layout: fixed;
-	width: 100%;
-	text-align: center;
+	display: grid;
+	grid-template-columns: 4fr 1fr;
 }
 
 .search-form
 {
-	padding-bottom: 20px;
-	position: relative;
-	height: 150px;
+	display: flex;
+	justify-content: center;
+	height: 80px;
+	padding: 10px;
 }
 
-.search
+.search-form select,
+.search-form input,
+.search-form button
 {
-	text-align: center;
+	height: 50px;
 }
 
-.search-type,
-.search > .search-input,
-.search > .btn 
+.search-filter
 {
-	font-size: 18px;
-	padding: 10px 14px;
-	vertical-align: middle;
-	margin-top: 40px;
+	display: flex;
+	flex-direction: column;
+	font-size: 10px;
 }
 
-.search > .search-input 
+.filter-item input
 {
-	width: 260px;
+	width: 60px;
 }
 
-.filter
+.theme-list,
+.theme-item
 {
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 220px;          
-	font-size: 12px;
-	text-align: right;
-	line-height: 1.8;
+	display: grid;
+	gap: 10px;
 }
 
-.search-input 
+.theme-list
 {
-	width: 80px;
-	font-size: 12px;
-	padding: 2px 4px;
+	grid-template-columns: 1fr 1fr;
 }
 
-.ne-sc:hover
+.theme-item
 {
-	background: none;        /* 배경 강조 제거 */
-	box-shadow: none;        /* 그림자/광택(글로우) 제거 */
-	color: inherit;          /* 글자색 변화 제거 */
-	text-decoration: none;   /* 밑줄 제거 */
+	grid-template-columns: 3fr 2fr;
+	border: 1px solid black;
+	border-radius: 15px;
+	padding: 5px;
+}
+
+.theme-image
+{
+	background: #f5f5f5;
+}
+
+.theme-info
+{
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.info-item
+{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.theme-add
+{
+	display: flex;
+	justify-content: center;
 }
 
 </style>
@@ -101,84 +106,200 @@
 		<div class="ne-container">
 			<div class="container">
 				
-				<div class="search-form">
+				<div class="search-wrap">
 					
-					<form action="" class="search" method="post">
+					<div class="search-form">
+						<form action="" method="post" name="searchForm">
+							
+							<select name="schType">
+								<option value="cafeName">카페명</option>
+								<option value="themeName">테마명</option>
+							</select>
+							
+							<input type="text" name="kwd" placeholder="검색 키워드">
+							
+							<button type="button" onclick="" class="btn btn-primary">검색</button>
+							<button type="button" onclick="" class="btn btn-outline-primary">초기화</button>
+							
+						</form>
+					</div>
+					
+					<div class="search-filter">
+						<span>필터</span>
 						
-						<select class="search-type">
-							<option value="cafeName">카페명</option>
-							<option value="themeName">테마명</option>
-						</select>
-						
-						<input type="text" class="search-input" placeholder="검색키워드">
-						
-						<button type="button" class="btn btn-primary">검색</button>
-						
-						<br>
-						
-						<div class="filter">
-							필터
-							<br>
-							평점
-							<input type="text" class="search-input" name="minRating" placeholder="최소 평점">
-							<input type="text" class="search-input" name="maxRating" placeholder="최대 평점">
-							<br>
-							공포도
-							<input type="text" class="search-input" name="minHorror" placeholder="최소 공포도">
-							<input type="text" class="search-input" name="maxHorror" placeholder="최대 공포도">
-							<br>
-							가격
-							<input type="text" class="search-input" name="minPrice" placeholder="최소 가격">
-							<input type="text" class="search-input" name="maxPrice" placeholder="최대 가격">
-							<br>
+						<div class="filter-item">
+							<span>가격</span>
+							<input type="text" name="minPirce" placeholder="최소 가격">
+							~
+							<input type="text" name="maxPrice" placeholder="최대 가격"> 
 						</div>
 						
-					</form>
+						<div class="filter-item">
+							<span>평점</span>
+							<input type="text" name="minScore" placeholder="최소 평점">
+							~
+							<input type="text" name="maxScore" placeholder="최대 평점"> 
+						</div>
+						
+						<div class="filter-item">
+							<span>공포</span>
+							<input type="text" name="minHorror" placeholder="최소 공포">
+							~
+							<input type="text" name="maxHorror" placeholder="최대 공포"> 
+						</div>
+						
+					</div>	
 					
 				</div>
 				
-				<div class="list">
+				<div class="theme-list">
+				
+					<a href="" class="theme-item">
 					
-					<a class="ne-sc" href="" >
+						<div class="theme-image">
+							<span>테마이미지</span>
+						</div>
 						
-						<div class="image">테마 이미지</div>
+						<div class="theme-info">
+						
+							<div class="info-item">
+								<span>테마명</span>
+								<span>그레이</span>
+							</div>
 							
-							<table class="description">
-								<tr>
-									<th>카페명</th>
-									<td>우주별</td>		
-								</tr>
-								<tr>
-									<th>방이름</th>
-									<td>그레이</td>
-								</tr>
-								<tr>
-									<th>평점</th>
-									<td>★★★★☆</td>
-								</tr>
-								<tr>
-									<th>공포도</th>
-									<td>★★★★☆</td>
-								</tr>
-								<tr>
-									<th>시간</th>
-									<td>60분</td>	
-								</tr>
-								<tr>
-									<th>장르</th>
-									<td>추리</td>
-								</tr>
-								<tr>
-									<th>인원</th>
-									<td>2 ~ 4</td>
-								</tr>
-								<tr>
-									<th>가격</th>
-									<td>30000</td>
-								</tr>
-							</table>
+							<div class="info-item">
+								<span>테마 장르</span>
+								<span>추리</span>
+							</div>
+							
+							<div class="info-item">
+								<span>테마 시간</span>
+								<span>60분</span>
+							</div>
+							
+							<div class="info-item">
+								<span>테마 가격</span>
+								<span>30000</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평점</span>
+								<span>★★★★★</span>
+							</div>
+							
+							<div class="info-item">
+								<span>공포도</span>
+								<span>★★★★★</span>
+							</div>
+							
+							<div class="info-item">
+								<span>인원</span>
+								<span>2 ~ 4</span>
+							</div>
+							
+						</div>
+					
 					</a>
-		
+				
+					<a href="" class="theme-item">
+					
+						<div class="theme-image">
+							<span>테마이미지</span>
+						</div>
+						
+						<div class="theme-info">
+						
+							<div class="info-item">
+								<span>테마명</span>
+								<span>그레이</span>
+							</div>
+							
+							<div class="info-item">
+								<span>테마 장르</span>
+								<span>추리</span>
+							</div>
+							
+							<div class="info-item">
+								<span>테마 시간</span>
+								<span>60분</span>
+							</div>
+							
+							<div class="info-item">
+								<span>테마 가격</span>
+								<span>30000</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평점</span>
+								<span>★★★★★</span>
+							</div>
+							
+							<div class="info-item">
+								<span>공포도</span>
+								<span>★★★★★</span>
+							</div>
+							
+							<div class="info-item">
+								<span>인원</span>
+								<span>2 ~ 4</span>
+							</div>
+							
+						</div>
+					
+					</a>
+				
+					<a href="" class="theme-item">
+					
+						<div class="theme-image">
+							<span>테마이미지</span>
+						</div>
+						
+						<div class="theme-info">
+						
+							<div class="info-item">
+								<span>테마명</span>
+								<span>그레이</span>
+							</div>
+							
+							<div class="info-item">
+								<span>테마 장르</span>
+								<span>추리</span>
+							</div>
+							
+							<div class="info-item">
+								<span>테마 시간</span>
+								<span>60분</span>
+							</div>
+							
+							<div class="info-item">
+								<span>테마 가격</span>
+								<span>30000</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평점</span>
+								<span>★★★★★</span>
+							</div>
+							
+							<div class="info-item">
+								<span>공포도</span>
+								<span>★★★★★</span>
+							</div>
+							
+							<div class="info-item">
+								<span>인원</span>
+								<span>2 ~ 4</span>
+							</div>
+							
+						</div>
+					
+					</a>
+				
+				</div>
+				
+				<div class="theme-add">
+					
+					<button type="button" class="btn btn-primary">더보기</button>	
 					
 				</div>
 				

@@ -10,163 +10,150 @@
 
 <style type="text/css">
 
-	.container {
-  padding: 24px 0;
+.container
+{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 20px 0;
 }
 
-/* ===== 상단 정보 (이미지 + 표) ===== */
-.info {
-  padding-top: 30px;
+.theme-info-wrap
+{
+	display: grid;
+	grid-template-columns : 2fr 3fr;
+	gap: 20px;
+}
+
+.theme-image
+{
+	background-color: #f5f5f5;
+}
+
+.theme-info
+{
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.info-item
+{
+	display: flex;
+	justify-content: space-between;
+ 	padding: 5px;
+  	background: #f5f5f5;
+  	border-radius: 5px;
+}
+
+.theme-description 
+{
+  	display: flex;
+  	flex-direction: column;
+  	gap: 5px;
+}
+
+.theme-description span 
+{
+  	font-weight: bold;
+}
+
+.theme-description p 
+{
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background: #f5f5f5;
+}
+
+.slot-list 
+{
+  	display: flex;
+  	flex-direction: column;
+  	gap: 10px;
+}
+
+.slot-list > span
+{
+	font-weight: bold;
+}
+
+.slot 
+{
+  	display: flex;
+  	align-items: center;
+  	gap: 15px;
+  	padding: 10px;
+  	border: 1px solid black;
+  	border-radius: 10px;
+}
+
+.slot-date 
+{
+  font-weight: bold;
+}
+
+.slot-time 
+{
   display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.image {
-  flex-shrink: 0;
-  width: 300px;
-  height: 500px;
-  margin-right: 30px;
-  background-color: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #9ca3af;
-  font-size: 14px;
-}
-
-/* 설명 표 */
-.description {
-  flex: 1;
-  border-collapse: collapse;
-  text-align: center;
-}
-
-.description th,
-.description td {
-  padding: 8px 12px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.description tr:last-child th,
-.description tr:last-child td {
-  border-bottom: none;
-}
-
-.description th {
-  width: 110px;
-  border-right: 1px solid #e5e7eb;
-  background-color: #f9fafb;
-  font-weight: 600;
-  color: #374151;
-  white-space: nowrap;
-}
-
-.description td {
-  text-align: left;
-  color: #1f2937;
-  word-break: break-word;
-}
-
-/* ===== 예약 슬롯 ===== */
-.schedule {
-  margin: 24px 0;
-}
-
-.schedule .datetime-title {
-  display: block;
-  font-size: 18px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 16px;
-}
-
-/* 날짜 그룹 */
-.schedule .datetime {
-  margin-bottom: 20px;
-}
-
-.schedule .datetime .date {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
-}
-
-.schedule .datetime hr {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin: 0 0 12px;
-}
-
-/* 시간 버튼 그리드 */
-.schedule .time {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
-  gap: 8px;
-}
-
-.schedule .btn-time {
-  padding: 8px 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background: #fff;
+.slot-time button, .slot-time span
+{
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 13px;
-  transition: all 0.15s;
 }
 
-.schedule .btn-time:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.slot-time span
+{
+	background: #d1d1d1;
 }
 
-/* ===== 리뷰 ===== */
-.review {
-  margin-top: 32px;
+.slot-time button
+{
+	background: white;
 }
 
-/* 리뷰 통계 + 개별 리뷰 카드 공통 */
-.review .item {
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+.slot-time button:hover
+{
+	background-color: orange;
 }
 
-/* 리뷰 통계 (전체 폭) */
-.review .total {
-  margin-bottom: 24px;
+.review-wrap > span
+{
+	font-weight: bold;
 }
 
-.review .total-review,
-.review .user-review {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
+.review-total
+{
+	width: 30%;
 }
 
-.review .total-review th,
-.review .user-review th {
-  width: 90px;
-  text-align: left;
-  padding: 6px 8px;
-  color: #6b7280;
-  font-weight: 500;
-  white-space: nowrap;
+.review 
+{
+  display: flex;
+  justify-content: space-between;
 }
 
-
-/* 개별 리뷰 3열 그리드 */
-.review .comment {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+.review-list
+{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;	
+	gap : 10px;
 }
-	
+
+.comment p 
+{
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+}
+
 </style>
 
 </head>
@@ -177,190 +164,178 @@
 		<div class="ne-container">
 			<div class="container">
 				
-				<div class="theme">
+				<div class="theme-info-wrap">
 					
-					<div class="info">
+					<div class="theme-image">
+						<span>테마이미지</span>
+					</div>
+					
+					<div class="theme-info">
 						
-						<div class="image">
-							테마이미지
+						<div class="info-item">
+							<span>카페명</span>
+							<span>우주별</span>
 						</div>
 						
-						<table class="description">
-							<tr>
-								<th>카페명</th>
-								<td>우주별</td>
-							</tr>
-							<tr>
-								<th>카페연락처</th>
-								<td>010-1234-1234</td>
-							</tr>
-							<tr>
-								<th>카페위치</th>
-								<td>홍대입구 근처 어딘가</td>
-							</tr>
-							<tr>
-								<th>테마명</th>
-								<td>그레이</td>
-							</tr>
-							<tr>
-								<th>소요시간</th>
-								<td>60분</td>
-							</tr>
-							<tr>
-								<th>테마 소개</th>
-								<td>주열님이 강력 추천하는 테마</td>
-							</tr>
-							<tr>
-								<th>1인 가격</th>
-								<td>30000</td>
-							</tr>
-							<tr>
-								<th>난이도</th>
-								<td>★★★★★</td>
-							</tr>
-							<tr>
-								<th>활동도</th>
-								<td>★★★★★</td>
-							</tr>
-							<tr>
-								<th>공포도</th>
-								<td>★★★★★</td>
-							</tr>
-							<tr>
-								<th>인원 수</th>
-								<td>2 ~ 4</td>
-							</tr>
-							<tr>
-								<th>성인 유무</th>
-								<td>Y/N</td>
-							</tr>
-						</table>
+						<div class="info-item">
+							<span>카페위치</span>
+							<span>홍대입구 5분 거리</span>
+						</div>
+						
+						<div class="info-item">
+							<span>카페전화번호</span>
+							<span>010-1234-11234</span>
+						</div>
+						
+						<div class="info-item">
+							<span>테마명</span>
+							<span>그레이</span>
+						</div>
+						
+						<div class="info-item">
+							<span>테마 장르</span>
+							<span>추리</span>
+						</div>
+						
+						<div class="info-item">
+							<span>테마 시간</span>
+							<span>60분</span>
+						</div>
+						
+						<div class="info-item">
+							<span>난이도</span>
+							<span>★★★★★</span>
+						</div>
+						
+						<div class="info-item">
+							<span>공포도</span>
+							<span>★★★★☆</span>
+						</div>
+						
+						<div class="info-item">
+							<span>테마 가격</span>
+							<span>30000</span>
+						</div>
+						
+						<div class="info-item">
+							<span>테마 인원</span>
+							<span>2 ~ 4</span>
+						</div>
+						
+					</div>
+				</div>
+				
+				<div class="theme-description">
+					<span>테마 소개</span>
+					<p>1960년 대 뉴욕에서 당신은 탐정이 되어 사건의 실마리를 찾아 범인을 찾아내야 합니다. </p>
+				</div>
+							
+				<div class="slot-list">
+					
+					<span>예약 목록</span>
+					
+					<div class="slot">
+					
+						<div class="slot-date">
+							<span>2026-06-01</span>
+						</div>
+						
+						<div class="slot-time">
+							<span class="ne-st ne-st-gray">10:00</span>
+							<button type="button" value="slotId" onclick="">12:00</button>
+							<button type="button" value="slotId" onclick="">14:00</button>
+							<button type="button" value="slotId" onclick="">16:00</button>
+						</div>
 						
 					</div>
 					
-					<div class="schedule">
-						
-						<span class="datetime-title">예약 슬롯</span>
-						
-						<div class="datetime">
-							<span class="date">2026-06-01</span>
-							<hr>
-							
-							<div class="time">
-								
-								<button type="button" class="btn-time" disabled="disabled">10:00</button>
-								<button type="button" class="btn-time" disabled="disabled">12:00</button>
-								<button type="button" class="btn-time" disabled="disabled">14:00</button>
-								<button type="button" class="btn-time" disabled="disabled">16:00</button>
-								<button type="button" class="btn-time" onclick="">18:00</button>
-								
-							</div>
-							
+					<div class="slot">
+					
+						<div class="slot-date">
+							<span>2026-06-02</span>
 						</div>
 						
-						<div class="datetime">
-						
-							<span class="date">2026-06-02</span>
-							<hr>
-							
-							<div class="time">
-								
-								<button type="button" class="btn-time">10:00</button>
-								<button type="button" class="btn-time" disabled="disabled">12:00</button>
-								<button type="button" class="btn-time">14:00</button>
-								<button type="button" class="btn-time" disabled="disabled">16:00</button>
-								<button type="button" class="btn-time">18:00</button>
-								
-							</div>
-							
+						<div class="slot-time">
+							<button type="button" value="slotId" onclick="">10:00</button>
+							<button type="button" value="slotId" onclick="">12:00</button>
+							<button type="button" value="slotId" onclick="">14:00</button>
+							<button type="button" value="slotId" onclick="">16:00</button>
 						</div>
 						
-						<div class="datetime">
-							<span class="date">2026-06-03</span>
-							<hr>
-							
-							<div class="time">
-								
-								<button type="button" class="btn-time" disabled="disabled">10:00</button>
-								<button type="button" class="btn-time">12:00</button>
-								<button type="button" class="btn-time" disabled="disabled">14:00</button>
-								<button type="button" class="btn-time">16:00</button>
-								<button type="button" class="btn-time">18:00</button>
-								<button type="button" class="btn-time">20:00</button>
-								<button type="button" class="btn-time" disabled="disabled">22:00</button>
-								
-							</div>
-							
-						</div>
-												
 					</div>
 					
-					<div class="review">
+				</div>							
+				
+				<div class="review-wrap">
+					
+					<span>리뷰</span>
+					
+					<div class="review-total">
 						
-						<div class="total">
-														
-							<div class="ne-sc item">
-							  <div class="ne-sc-title">리뷰 통계 (1개)</div>
+						<div class="ne-sc item">
+							<div class="ne-sc-title">리뷰 통계 (1개)</div>
 							  	
-							  	<table class="total-review">
-							  		<tr>
-							  			<th>체감난이도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감공포도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감활동도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>몰입도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>만족도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  	</table>
+							 <div class="review">
+							 	<span>만족도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	 
 							  
-							</div>
-							
+							 <div class="review">
+							 	<span>체감난이도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	
+							   
+							 <div class="review">
+							 	<span>체감공포도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	 
+							  
+							 <div class="review">
+							 	<span>체감활동도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	  
+							  
+							 <div class="review">
+							 	<span>몰입도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	  
+							  
 						</div>
 						
-						<div class="comment">
+					</div>
+					
+					<div class="review-list">
 						
-							<div class="ne-sc item">
-							  <div class="ne-sc-title">작성자닉네임</div>
-							  	
-							  	<table class="user-review">
-							  		<tr>
-							  			<th>체감난이도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감공포도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>체감활동도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>몰입도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>만족도</th>
-							  			<td>★★★☆☆</td>
-							  		</tr>
-							  		<tr>
-							  			<th>한줄 코멘트</th>
-							  			<td>재밌음</td>
-							  		</tr>
-							  	</table>
+						<div class="ne-sc item">
+						  	<div class="ne-sc-title">윤주열</div>
+							
+							 <div class="review">
+							 	<span>만족도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	 
 							  
+							 <div class="review">
+							 	<span>체감난이도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	
+							   
+							 <div class="review">
+							 	<span>체감공포도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	 
+							  
+							 <div class="review">
+							 	<span>체감활동도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	  
+							  
+							 <div class="review">
+							 	<span>몰입도</span>
+							 	<span>★★★☆☆</span>
+							 </div>	
+							
+							<div class="comment">
+								<p>장치가 다양하고 색다른 요소가 많이 있습니다. 방탈출 초보분들께 강추합니다.</p>
 							</div>
 							
 						</div>

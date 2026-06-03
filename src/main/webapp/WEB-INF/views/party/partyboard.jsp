@@ -8,230 +8,239 @@
 <title>partyboard.jsp</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
-
 <style type="text/css">
-/* ===== 변수 ===== */
-:root {
-	--bg: #f4f5f7;
-	--surface: #ffffff;
-	--border: #e3e6ea;
-	--text: #2b2f36;
-	--muted: #6b7280;
-	--primary: #5b6ef5;
-	--primary-dark: #4453d8;
-	--danger: #ef4444;
-	--success: #22a565;
-	--radius: 12px;
-	--shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-}
 
-/* ===== 레이아웃 ===== */
-.party-room {
-	margin-top: 20px;
+.container
+{
 	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-template-areas:
-		"info    guest"
-		"comment apply";
-	gap: 16px;
-	margin-bottom: 20px;
+	grid-template-columns: 3fr 2fr;
+	padding-top: 20px;	
+	padding-bottom: 20px;
+	gap: 20px;
 }
 
-.party-info,
-.party-guest,
-.party-apply,
+.left-wrap
+{
+	display: flex;
+	flex-direction: column;;
+	gap: 10px;
+}
+
+.left-wrap > div
+{
+	border: 1px solid black;
+	border-radius: 5px;
+	
+	 display: flex;
+	 flex-direction: column;
+	 gap: 5px;
+	 margin: 5px;
+	 padding: 5px;
+	 overflow-y: auto;
+}
+
+.title
+{
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.title + hr
+{
+	margin: 0;
+	border-top: 1px solid black;
+}
+
+
+/* 파티 정보 */
+.party-info-wrap 
+{
+  height: 250px;
+}
+
+.party-info-wrap span
+{
+	background: #f5f5f5;
+}
+
+.party-name 
+{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.theme-info,
+.party-condition,
+.party-action
+{
+	display: flex;
+  	flex-wrap: wrap;
+  	gap: 5px;
+}
+
+.party-condition 
+{
+  	flex-direction: column;
+}
+
+.party-action
+{
+	justify-content: center;
+}
+
+
+/* comment */
 .party-comment
 {
-	background: var(--surface);
-	border: 1px solid var(--border);
-	border-radius: var(--radius);
-	box-shadow: var(--shadow);
-	padding: 16px;
-	color: var(--text);
+	height: 450px;
 }
 
-.party-info, .party-guest
+.comment-list,
+.comment-item,
+.comment-write-form
 {
-	height: 300px;
-}
-
-.party-comment {
-	grid-area: comment;
-	height: 400px;        /* min-height → height (고정) */
+	margin: 5px;
+	padding: 5px;
 	display: flex;
-	flex-direction: column;
-	align-items: stretch;
+	gap: 5px;
 }
 
-.party-info    { grid-area: info; }
-.party-guest   { grid-area: guest; }
-.party-apply   { grid-area: apply; }
-.party-comment {
-	grid-area: comment;
-	min-height: 320px;
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-}
-
-/* 영역 제목 (각 div 첫 span) */
-.party-info  > span,
-.party-guest > span,
-.party-apply > span,
-.party-comment > span {
-	display: block;
-	font-weight: 700;
-	font-size: 15px;
-	margin-bottom: 12px;
-	padding-bottom: 8px;
-	border-bottom: 2px solid var(--border);
-}
-
-/* ===== 테이블 공통 ===== */
-table {
-	width: 100%;
-	border-collapse: collapse;
-	text-align: center;
-	font-size: 14px;
-}
-
-.party th, .party td,
-.apply th, .apply td,
-.guest th, .guest td {
-	padding: 10px 8px;
-	border-bottom: 1px solid var(--border);
-	word-break: break-word;   /* 긴 단어/연속 문자 강제 줄바꿈 */
-	white-space: normal;      /* 한 줄 유지 방지, 자동 줄바꿈 허용 */
-	overflow-wrap: anywhere;  /* 어디서든 줄바꿈 가능 */
-}
-
-.party th,
-.apply thead th,
-.guest thead th {
-	background: #f7f8fa;
-	color: var(--muted);
-	font-weight: 600;
-}
-
-.apply tbody tr:hover,
-.guest tbody tr:hover {
-	background: #fafbfc;
-}
-
-/* ===== 버튼 ===== */
-button 
+.comment-list
 {
-	cursor: pointer;
-	border: 1px solid var(--border);
-	background: var(--surface);
-	color: var(--text);
-	padding: 6px 12px;
-	border-radius: 8px;
-	font-size: 13px;
-	transition: .15s;
-}
-button:hover { background: #f0f1f4; }
-
-.party-info button { margin-right: 6px; margin-top: 12px; }
-
-/* ===== 댓글 ===== */
-.comment-show 
-{
-	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	background: #fafbfc;
-	border: 1px solid var(--border);
-	width: 100%;
-	flex: 1;
-	min-height: 200px;
-	overflow-y: auto;
-	padding: 12px;
-	box-sizing: border-box;
+	height: 400px;
+	overflow-y: auto; 
+	border: 1px solid #ddd;
+	border-radius: 5px;
 }
 
-.msg { display: flex; gap: 6px; align-items: center; }
-.msg.other { justify-content: flex-start; }
-.msg.mine  { justify-content: flex-end; }
+.comment-item
+{
+	align-items: center;
+	max-width: 80%;
+}
 
-.msg .writer {
+.comment-write-form
+{
+	justify-content: center;
+}
+
+.other
+{
+	margin-right: auto;
+}
+
+.mine
+{
+	margin-left: auto;
+}
+
+.writer
+{
 	font-size: 12px;
-	color: var(--muted);
-	white-space: nowrap;
+	
+	padding: 2px 8px;
+	border-radius: 15px;
+	
+	background: orange;
 }
 
-.msg .comment {
-	padding: 8px 12px;
-	border-radius: 14px;
-	max-width: 70%;
-	word-break: break-word;
-	font-size: 14px;
-	line-height: 1.4;
-}
-
-.msg.other .comment { background: #eceef1;}
-.msg.mine  .comment { background: var(--primary); color:#fff; }
-
-.msg button {
-	padding: 2px 6px;
-	font-size: 11px;
-	color: var(--muted);
-}
-
-.comment-input {
-	display: flex;
-	gap: 8px;
-	margin-top: 12px;
-}
-.comment-input input {
-	flex: 1;
-	padding: 10px 12px;
-	border: 1px solid var(--border);
-	font-size: 14px;
-}
-
-.comment-input button {
-	background: var(--primary);
-	border-color: var(--primary);
-	color: #fff;
-}
-
-/* 스크롤 박스: 높이는 원하는 값으로 조절 */
-.party-guest .table-scroll,
-.party-apply .table-scroll
- {
-	height: 300px;
-	overflow-y: auto;
-	border: 1px solid var(--border);
-	border-radius: 8px;
-}
-
-.party-guest .table-scroll
+.comment
 {
+	font-size: 15px;
+	padding: 6px 10px;	
+	border: 1px solid #f5f5f5;
+	border-radius: 10px;
+	background: #f5f5f5;
+}
+
+.comment-delete
+{
+	font-size: 10px;
+	border: none;
+	background: none;
+	color: #999;
+}
+
+
+.right-wrap > div
+{
+	display: flex;
+	flex-direction: column;		
+	gap: 5px;
+	padding: 5px;
+	margin: 5px;
+	border: 1px solid black;
+	border-radius: 5px;
+	overflow-y: auto;
+}
+
+/* crew */
+.party-crew
+{
+	font-size: 15px;
 	height: 220px;
 }
 
-/* 스크롤해도 헤더 고정 */
-.apply thead th,
-.guest thead th {
-	position: sticky;
-	top: 0;
-	z-index: 1;
-	background: #f7f8fa;   /* 투명 방지 */
-}
-
-.info-control {
-	display: flex;
-	justify-content: center;
-	gap: 8px;
-	margin-top: 12px;
-}
-
-#comment
+.party-crew-list,
+.crew,
+.crew-action
 {
-	max-height: 30px;
-	overflow-y: auto;
-	text-align: left;
+	margin: 5px;
+	display: flex;
+	gap: 5px;
+}
+
+.party-crew-list
+{
+	flex-direction: column;
+	height: 120px;
+	overflow-y: auto; 
+}
+
+.crew
+{
+	justify-content: space-between;
+}
+
+.crew-action
+{
+	justify-content: center;
+}
+
+
+/* 파티 신청 */
+.party-apply
+{
+	height: 500px;
+}
+
+.party-apply-list,
+.apply-item,
+.apply-info,
+.apply-action
+{
+	display: flex;
+	gap: 5px;
+}
+
+.party-apply-list,
+.apply-item
+{
+	flex-direction: column;
+}
+
+.apply-item
+{
+	border: 1px solid black;
+	border-radius: 5px;
+	margin: 5px;
+	padding: 5px;
+}
+
+.apply-action
+{
+	justify-content: center;
 }
 
 </style>
@@ -244,249 +253,334 @@ button:hover { background: #f0f1f4; }
 		<div class="ne-container">
 			<div class="container">
 				
-				<div class="party-room">
-				
-					<div class="party-info">
+				<div class="left-wrap">
 					
-						<span>파티 정보</span>
-					
-							<!-- 파티명 / 파티한마디 / 테마 / 시간 / 수정하기버튼 -->
-							<table class="party">
-								<tr>
-									<th>파티명</th>
-									<td colspan="3">주열룸</td>
-								</tr>
-								<tr>
-									<th>테마명</th>
-									<td colspan="3">그레이</td>
-								</tr>
-								<tr>
-									<th>일시</th>
-									<td>2026-06-03 18:00</td>
-									<th>파티장</th>
-									<td>윤주열</td>
-								</tr>
-								<tr>
-									<th>방장 한마디</th>
-									<td colspan="3">
-										<div id="comment">미쿠미쿠</div>
-									</td>	
-								</tr>
-							</table>
+					<div class="party-info-wrap">
 						
-						<div class="info-control">
+						<span class="title">파티 정보</span>
+						<hr>
+						
+						<div class="party-name">
+							<span>주열룸</span>
+						</div>
+						
+						<div class="theme-info">
+							<span>우주별&nbsp;&nbsp;</span>
+							<span>그레이&nbsp;&nbsp;</span>
+							<span>2026-06-01&nbsp;&nbsp;</span>
+							<span>18:00&nbsp;&nbsp;</span>
+							<span>2명 ~ 4명</span>
+						</div>
+						
+						<div class="party-condition">
+							<span>성별 동성/무관</span>
+							<span>미쿠 좋아하는 사람만 오셈</span>						
+						</div> 
+						
+						<div class="party-action">
 							
-							<button type="button" class="ne-st ne-st-blue">예약 확정</button>
-							<button type="button" class="ne-st ne-st-green">파티 수정</button>
-							<button type="button" class="ne-st ne-st-red">파티 해산</button>
+							<button type="button" class="btn btn-primary">예약하기</button>
+							<button type="button" class="btn btn-outline-primary">파티 수정</button>
+							<button type="button" class="btn ne-btn-deact">파티 해산</button>
 							
 						</div>
 						
-					</div> <!-- .party-info -->
-					
-					
-					<div class="party-apply">
-					
-						<span>신청 목록</span>
-					
-						<div class="table-scroll">
-
-							<!-- 파티 신청자 닉네임 / 매너온도 / 한마디 / 방장은 승인/거절 버튼 -->
-							<table class="apply">
-								<thead>
-									<tr>
-										<th class="">닉네임</th>
-										<th class="">매너온도</th>
-										<th class="">성별</th>
-										<th class="">나이</th>
-										<th class="">한마디</th>
-										<th>버튼</th>
-									</tr>
-								</thead>
-								
-								<tbody>
-									<tr>
-										<td>윤주열윤주열윤주열윤주열윤주열윤주열윤주열</td>
-										<td>-50</td>
-										<td>여</td>
-										<td>7</td>
-										<td>미쿠 좋아하심?미쿠 좋아하심?미쿠 좋아하심?미쿠 좋아하심?미쿠 좋아하심?미쿠 좋아하심?</td>
-										<td>
-											<button type="button" class="ne-st ne-st-green">승인</button>
-											<button type="button" class="ne-st ne-st-red">거절</button>
-										</td>
-									</tr>
-									
-									<tr>
-										<td>김주열</td>
-										<td>36.5</td>
-										<td>남</td>
-										<td>19</td>
-										<td>ㅎㅇ</td>
-										<td>
-											<button type="button" class="ne-st ne-st-green">승인</button>
-											<button type="button" class="ne-st ne-st-red">거절</button>
-										</td>
-									</tr>
-									<tr>
-										<td>김주열</td>
-										<td>36.5</td>
-										<td>남</td>
-										<td>19</td>
-										<td>ㅎㅇ</td>
-										<td>
-											<button type="button" class="ne-st ne-st-green">승인</button>
-											<button type="button" class="ne-st ne-st-red">거절</button>
-										</td>
-									</tr>
-									<tr>
-										<td>김주열</td>
-										<td>36.5</td>
-										<td>남</td>
-										<td>19</td>
-										<td>ㅎㅇ</td>
-										<td>
-											<button type="button" class="ne-st ne-st-green">승인</button>
-											<button type="button" class="ne-st ne-st-red">거절</button>
-										</td>
-									</tr>
-									<tr>
-										<td>김주열</td>
-										<td>36.5</td>
-										<td>남</td>
-										<td>19</td>
-										<td>ㅎㅇ</td>
-										<td>
-											<button type="button" class="ne-st ne-st-green">승인</button>
-											<button type="button" class="ne-st ne-st-red">거절</button>
-										</td>
-									</tr>
-									<tr>
-										<td>김주열</td>
-										<td>36.5</td>
-										<td>남</td>
-										<td>19</td>
-										<td>ㅎㅇ</td>
-										<td>
-											<button type="button" class="ne-st ne-st-green">승인</button>
-											<button type="button" class="ne-st ne-st-red">거절</button>
-										</td>
-									</tr>
-								</tbody>
-								
-							</table>
-							
-						</div>
-						
-					</div> <!-- .party-apply -->
+					</div>
 					
 					
 					<div class="party-comment">
 					
-						<span>파티 댓글</span>
+						<span class="title">파티 댓글</span>
+						<hr>
 					
-						<!-- 댓글 창 / 댓글 작성 창 -->
-						<div class="comment-show">
+						<div class="comment-list">
 							
-							<div class="msg other">
+							<div class="comment-item other">
 								<span class="writer">윤주열</span>
 								<span class="comment">미쿠 티셔츠 샀음</span>
 							</div>
 							
-							<div class="msg mine">
-								<button type="button" class="ne-st ne-st-red" style="font-size: small;">삭제</button>
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
 								<span class="comment">오 얼마임?</span>
 								<span class="writer">김주열</span>
 							</div>
 							
-							<div class="msg other">
-								<span class="writer">윤주열</span>
-								<span class="comment">50만원</span>
-							</div>
-							<div class="msg other">
+							<div class="comment-item other">
 								<span class="writer">윤주열</span>
 								<span class="comment">삭제된 댓글입니다.</span>
 							</div>
-							<div class="msg other">
+							
+							<div class="comment-item other">
 								<span class="writer">윤주열</span>
-								<span class="comment">50만원</span>
-							</div>
-							<div class="msg other">
-								<span class="writer">윤주열</span>
-								<span class="comment">50만원</span>
-							</div>
-							<div class="msg other">
-								<span class="writer">윤주열</span>
-								<span class="comment">50만원50만원50만원50만원50만원50만원50만원50만원50만원</span>
+								<span class="comment">5억</span>
 							</div>
 							
-							<div class="msg mine">
-								<button type="button" class="ne-st ne-st-red" style="font-size: small;">삭제</button>
-								<span class="comment">제 정신임?제 정신임?제 정신임?제 정신임?제 정신임?제 정신임?제 정신임?</span>
+							<div class="comment-item mine">
+								<span class="comment">삭제된 댓글입니다.</span>
+								<span class="writer">김주열</span>
+							</div>
+							
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
+								<span class="comment">제 정신임?</span>
+								<span class="writer">김주열</span>
+							</div>
+							
+							
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
+								<span class="comment">제 정신임?</span>
+								<span class="writer">김주열</span>
+							</div>
+							
+							
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
+								<span class="comment">제 정신임?</span>
+								<span class="writer">김주열</span>
+							</div>
+							
+							
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
+								<span class="comment">제 정신임?</span>
+								<span class="writer">김주열</span>
+							</div>
+							
+							
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
+								<span class="comment">제 정신임?</span>
+								<span class="writer">김주열</span>
+							</div>
+							
+							
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
+								<span class="comment">제 정신임?</span>
+								<span class="writer">김주열</span>
+							</div>
+							
+							
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
+								<span class="comment">제 정신임?</span>
+								<span class="writer">김주열</span>
+							</div>
+							
+							
+							<div class="comment-item mine">
+								<button type="button" class="comment-delete">삭제</button>
+								<span class="comment">제 정신임?</span>
 								<span class="writer">김주열</span>
 							</div>
 							
 						</div>
+					
+						<div class="comment-write-form">
 						
-						<div class="comment-input">
+							<input type="text" name="partyComment" placeholder="댓글">
+							<button type="button" class="btn btn-primary">작성</button>		
+						
+						</div>
+								
+					</div>
+										
+				</div>
+				 
+				 
+				<div class="right-wrap">
+					
+					<div class="party-crew">
+						
+						<span class="title">파티원</span>
+						<hr>
+						
+						<div class="party-crew-list">
+							<div class="crew">
+								
+								<div class="crew-info">
+									<span>윤주열</span>
+									<span>29세</span>
+									<span>남자</span>
+									<span>🌡️36.5</span>
+								</div>
+								
+								<div class="crew-status">
+									<span class="ne-st ne-st-amber">준비 완료</span>
+									<span class="ne-st ne-st-green">파티장</span>
+								</div>
+								
+							</div>
 							
-							<input type="text" placeholder="댓글"> 
-							<button type="button" class="ne-st ne-st-blue">작성</button>
-						</div>
-					
-					</div> <!-- .party-comment -->
-					
-					
-					<div class="party-guest">
-					
-						<span>파티원</span>
-					
-						<div class="table-scroll">
-					
-							<!-- 각각의 파티원 닉네임 / 레디 상태 / 탈퇴-레디 버튼 -->
-							<table class="guest">
-								<thead>
-									<tr>
-										<th>닉네임</th>
-										<th>성별</th>
-										<th>나이</th>
-										<th>레디상태</th>
-										<th>버튼</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>윤주열윤주열윤주열윤주열윤주열윤주열윤주열</td>
-										<td>여</td>
-										<td>9</td>
-										<td>준비 중</td>
-										<td>
-											<button type="button" class="ne-st ne-st-green">Ready</button>
-											<button type="button" class="ne-st ne-st-red">탈퇴하기</button>
-											<!-- <button type="button" class="btn-danger">강퇴하기</button> -->
-										</td>
-									</tr>
-									<tr>
-										<td>최주열</td>
-										<td>남</td>
-										<td>39</td>
-										<td>준비완료</td>
-										<td>
-											<button type="button" class="ne-st ne-st-green">Ready</button>
-											<button type="button" class="ne-st ne-st-red">탈퇴하기</button>
-											<!-- <button type="button" class="btn-danger">강퇴하기</button> -->
-										</td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="crew">
+							
+								<div class="crew-info">
+									<span>김주열</span>
+									<span>29세</span>
+									<span>남자</span>
+									<span>🌡️36.5</span>
+								</div>
+								
+								<div class="crew-position">
+									<span class="ne-st ne-st-red">준비 중</span>
+									<span class="ne-st ne-st-blue">파티원</span>
+								</div>
+								
+							</div>
+						</div> 
 						
+						<div class="crew-action">
+							
+							<button type="button" class="btn btn-primary">레디</button>
+							
 						</div>
+						
+					</div>
+										
+					<div class="party-apply">
+						
+						<span class="title">파티 신청</span>
+						<hr>
+						
+						<div class="party-apply-list">
+							
+							<div class="apply-item">
+								
+								<div class="apply-info">
+									
+									<span>최주열</span>
+									<span>15세</span>
+									<span>여자</span>
+									<span>🌡️47.2</span>
+									
+								</div>
+								
+								<div class="apply-comment">
+									
+									<p>안녕하세요!</p>
+																	
+								</div>
+								
+								<div class="apply-action">
+									
+									<button type="button" class="btn btn-primary">승인</button>
+									<button type="button" class="btn btn-outline-primary">거절</button>
+									
+								</div>
+								
+							</div>
+							
+							<div class="apply-item">
+								
+								<div class="apply-info">
+									
+									<span>최주열</span>
+									<span>15세</span>
+									<span>여자</span>
+									<span>🌡️47.2</span>
+									
+								</div>
+								
+								<div class="apply-comment">
+									
+									<p>안녕하세요!</p>
+																	
+								</div>
+								
+								<div class="apply-action">
+									
+									<button type="button" class="btn btn-primary">승인</button>
+									<button type="button" class="btn btn-outline-primary">거절</button>
+									
+								</div>
+								
+							</div>
+							
+							<div class="apply-item">
+								
+								<div class="apply-info">
+									
+									<span>최주열</span>
+									<span>15세</span>
+									<span>여자</span>
+									<span>🌡️47.2</span>
+									
+								</div>
+								
+								<div class="apply-comment">
+									
+									<p>안녕하세요!</p>
+																	
+								</div>
+								
+								<div class="apply-action">
+									
+									<button type="button" class="btn btn-primary">승인</button>
+									<button type="button" class="btn btn-outline-primary">거절</button>
+									
+								</div>
+								
+							</div>
+							
+							<div class="apply-item">
+								
+								<div class="apply-info">
+									
+									<span>최주열</span>
+									<span>15세</span>
+									<span>여자</span>
+									<span>🌡️47.2</span>
+									
+								</div>
+								
+								<div class="apply-comment">
+									
+									<p>안녕하세요!</p>
+																	
+								</div>
+								
+								<div class="apply-action">
+									
+									<button type="button" class="btn btn-primary">승인</button>
+									<button type="button" class="btn btn-outline-primary">거절</button>
+									
+								</div>
+								
+							</div>
+							
+							<div class="apply-item">
+								
+								<div class="apply-info">
+									
+									<span>최주열</span>
+									<span>15세</span>
+									<span>여자</span>
+									<span>🌡️47.2</span>
+									
+								</div>
+								
+								<div class="apply-comment">
+									
+									<p>안녕하세요!</p>
+																	
+								</div>
+								
+								<div class="apply-action">
+									
+									<button type="button" class="btn btn-primary">승인</button>
+									<button type="button" class="btn btn-outline-primary">거절</button>
+									
+								</div>
+								
+							</div>
+							
+						</div>
+						
+					</div>
 					
-					</div> <!-- .party-guest -->
-					
-					
-				</div> <!-- .party-room -->
-				
+				</div>
 				 
 			</div>
 		</div>

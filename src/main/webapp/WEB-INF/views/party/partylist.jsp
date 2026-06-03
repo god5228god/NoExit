@@ -9,86 +9,87 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
-	
-.list
-{
-	display: grid;
-	grid-template-columns: repeat(2, 2fr);
-	gap: 10px;
-}
 
-.ne-sc
+.container
 {
 	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding-top: 10px;
 }
 
-.image
+.search-wrap
 {
-	background-color: gray;
-	flex: 0 0 50%;
-}
-
-.description
-{
-	text-align: center;
-	flex: 0 0 1;
-	min-width: 0;
-	table-layout: fixed;
-	width: 100%;
-	text-align: center;
+	display: grid;
+	grid-template-columns : 4fr 1fr;
 }
 
 .search-form
 {
-	padding-bottom: 20px;
-	position: relative;
-	height: 150px;
+	display: flex;
+	justify-content: center;
+	height: 80px;
+	padding: 10px;
 }
 
-.search
+.search-form select,
+.search-form input,
+.search-form button
 {
-	text-align: center;
+	height: 50px;
 }
 
-.search-type,
-.search > .search-input,
-.search > .btn 
+.search-filter
 {
-	font-size: 18px;
-	padding: 10px 14px;
-	vertical-align: middle;
-	margin-top: 40px;
+	font-size: 10px;
+	display: flex;
+	flex-direction: column;
 }
 
-.search > .search-input 
+.filter-item input
 {
-	width: 260px;
+	width: 60px;
 }
 
-.filter
+
+.party-list
 {
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 220px;          
-	font-size: 12px;
-	text-align: right;
-	line-height: 1.8;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
 }
 
-.search-input 
+.party-item
 {
-	width: 80px;
-	font-size: 12px;
-	padding: 2px 4px;
+	display: grid;
+	grid-template-columns: 3fr 2fr;
+	gap: 10px;
+	border: 1px solid black;
+	padding: 5px;
 }
 
-.ne-sc:hover
+.party-image
 {
-	background: none;        /* 배경 강조 제거 */
-	box-shadow: none;        /* 그림자/광택(글로우) 제거 */
-	color: inherit;          /* 글자색 변화 제거 */
-	text-decoration: none;   /* 밑줄 제거 */
+	background-color: #f5f5f5;
+}
+
+.party-info
+{
+	display: flex;
+	flex-direction: column;
+}
+
+.info-item
+{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.party-add
+{
+	display: flex;
+	justify-content: center;
 }
 
 </style>
@@ -100,78 +101,197 @@
 	<main class="ne-main-content ne-body-offset">
 		<div class="ne-container">
 			<div class="container">
-			
-				<div class="search-form">
+				
+				<div class="search-wrap">
 					
-					<form action="" class="search">
+					<div class="search-form">
+						<form action="" method="post" name="searchForm">
+							
+							<select name="schType">
+								<option value="themeName">테마명</option>
+								<option value="partyName">파티명</option>
+							</select>
+							
+							<input type="text" name="kwd" placeholder="검색 키워드">
+							
+							<button type="button" onclick="" class="btn btn-primary">검색</button>
+							<button type="button" onclick="" class="btn btn-outline-primary">초기화</button>
+							
+						</form>
+					</div>
+					
+					<div class="search-filter">
+						<span>필터</span>
 						
-						<select class="search-type">
-							<option value="themeName">테마명</option>
-							<option value="partyName">파티명</option>
-						</select>
-						
-						<input type="text" class="search-input" placeholder="검색키워드">
-						
-						<button type="button" class="btn btn-primary">검색</button>
-						
-						<br>
-						
-						<div class="filter">
-						
-							필터
-							<br>
-							날짜
-							<input type="text" class="search-input" name="minRegDate" placeholder="최소 날짜">
-							<input type="text" class="search-input" name="maxRegDate" placeholder="최대 날짜">
-							<br>
-							시간
-							<input type="text" class="search-input" name="minTime" placeholder="최소 시간">
-							<input type="text" class="search-input" name="maxTime" placeholder="최대 시간">
-							<br>
+						<div class="filter-item">
+							<span>날짜</span>
+							<input type="text" name="minDate" placeholder="최소 날짜">
+							~
+							<input type="text" name="maxDate" placeholder="최대 날짜"> 
 						</div>
 						
-					</form>
+						<div class="filter-item">
+							<span>시간</span>
+							<input type="text" name="minTime" placeholder="최소 시간">
+							~
+							<input type="text" name="maxTime" placeholder="최대 시간"> 
+						</div>
+						
+					</div>	
 					
 				</div>
 				
-				<div class="list">
+				<div class="party-list">
+				
+					<a href="" class="party-item">
 					
-			
-					<a class="ne-sc" href="" >
+						<div class="party-image">
+							<span>테마이미지</span>
+						</div>
 						
-						<div class="image">테마 이미지</div>
+						<div class="party-info">
+						
+							<div class="info-item">
+								<span>테마명</span>
+								<span>그레이</span>
+							</div>
 							
-							<table class="description">
-								<tr>
-									<th>방이름</th>
-									<td>그레이</td>
-								</tr>
-								<tr>
-									<th>장르</th>
-									<td>추리</td>
-								</tr>
-								<tr>
-									<th>날짜</th>
-									<td>2026-06-02</td>
-								</tr>
-								<tr>
-									<th>시간</th>
-									<td>10:00</td>
-								</tr>
-								<tr>
-									<th>파티명</th>
-									<td>주열룸</td>
-								</tr>
-								<tr>
-									<th>현재인원수</th>
-									<td>2명</td>
-								</tr>
-							</table>
-					</a>
+							<div class="info-item">
+								<span>날짜</span>
+								<span>06-12</span>
+							</div>
+							
+							<div class="info-item">
+								<span>시간</span>
+								<span>18:00</span>
+							</div>
+							
+							<div class="info-item">
+								<span>파티명</span>
+								<span>주열룸</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평균 매너온도</span>
+								<span>🌡️ 36.5</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평균 나이</span>
+								<span>29.3</span>
+							</div>
+							
+							<div class="info-item">
+								<span>현재 인원 수</span>
+								<span>2</span>
+							</div>
+							
+						</div>
 					
+					</a>
+				
+					<a href="" class="party-item">
+					
+						<div class="party-image">
+							<span>테마이미지</span>
+						</div>
+						
+						<div class="party-info">
+						
+							<div class="info-item">
+								<span>테마명</span>
+								<span>그레이</span>
+							</div>
+							
+							<div class="info-item">
+								<span>날짜</span>
+								<span>06-12</span>
+							</div>
+							
+							<div class="info-item">
+								<span>시간</span>
+								<span>18:00</span>
+							</div>
+							
+							<div class="info-item">
+								<span>파티명</span>
+								<span>주열룸</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평균 매너온도</span>
+								<span>🌡️ 36.5</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평균 나이</span>
+								<span>29.3</span>
+							</div>
+							
+							<div class="info-item">
+								<span>현재 인원 수</span>
+								<span>2</span>
+							</div>
+							
+						</div>
+					
+					</a>
+				
+					<a href="" class="party-item">
+					
+						<div class="party-image">
+							<span>테마이미지</span>
+						</div>
+						
+						<div class="party-info">
+						
+							<div class="info-item">
+								<span>테마명</span>
+								<span>그레이</span>
+							</div>
+							
+							<div class="info-item">
+								<span>날짜</span>
+								<span>06-12</span>
+							</div>
+							
+							<div class="info-item">
+								<span>시간</span>
+								<span>18:00</span>
+							</div>
+							
+							<div class="info-item">
+								<span>파티명</span>
+								<span>주열룸</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평균 매너온도</span>
+								<span>🌡️ 36.5</span>
+							</div>
+							
+							<div class="info-item">
+								<span>평균 나이</span>
+								<span>29.3</span>
+							</div>
+							
+							<div class="info-item">
+								<span>현재 인원 수</span>
+								<span>2</span>
+							</div>
+							
+						</div>
+					
+					</a>
+				
+				</div>
+				
+				<div class="party-add">
+					
+					<button type="button" class="btn btn-primary">더보기</button>	
 					
 				</div>
-			
+				
 			</div>
 		</div>
 	</main>

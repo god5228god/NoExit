@@ -10,185 +10,102 @@
 
 <style type="text/css">
 
-.container {
+.container 
+{
   display: flex;
-  gap: 24px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  gap: 20px;
   align-items: flex-start;
-  padding: 24px 0;
 }
 
-.party-info {
-  flex: 0 0 600px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.party-apply {
-  flex: 1;
-  position: sticky;
-  top: 24px;
-}
-
-/* 공통 카드 */
-.party-info > div,
-.party-apply {
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+.party-info-wrap 
+{
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 50%
 }
 
-/* 파티명 */
-.party-name span {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1f2937;
+.party-apply-wrap 
+{
+  padding: 20px;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 40%;
 }
 
-/* 테마 정보 */
-.theme-info {
+.title 
+{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+hr 
+{
+  border-top: 1px solid #ccc;
+}
+
+.party-info-wrap > div 
+{
   display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 5px;
+}
+
+.party-name 
+{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.theme-info
+{
+  flex-direction: row !important;
   flex-wrap: wrap;
-  gap: 8px;
 }
 
-.theme-info .theme {
-  font-size: 13px;
-  padding: 4px 10px;
-  background-color: #f3f4f6;
-  border-radius: 999px;
-  color: #4b5563;
-}
-
-/* 파티장 정보 */
-.party-host {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: #374151;
-}
-
-.party-host *
+.party-condition 
 {
-  font-size: 13px;
-  padding: 4px 10px;
-  background-color: #f3f4f6;
-  border-radius: 999px;
+  flex-wrap: wrap;
 }
 
-.party-host .temp 
+.party-crew 
 {
-  font-weight: 700;
-  color: #f97316;
+ 	display: flex;
+ 	flex-direction: column;
+ 	gap: 5px;
 }
 
-.party-host .name {
-  font-weight: 600;
+.crew 
+{
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
 }
 
-.party-host .gender,
-.party-host .age {
-  color: #6b7280;
-}
-
-/* 모집 조건 */
-.party-condition {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.party-condition .comment {
-  font-size: 14px;
-  color: #374151;
-  line-height: 1.5;
-}
-
-.party-condition .gender-condition {
-  font-size: 13px;
-  color: #6b7280;
-}
-
-/* 파티 현황 */
-.party-crew > span {
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
+.party-apply-wrap form 
+{
   margin-bottom: 12px;
-  color: #1f2937;
 }
 
-.party-crew .crew {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background-color: #f9fafb;
-  margin-bottom: 8px;
-}
-
-.party-crew .crew .nickname {
-  font-weight: 500;
-  color: #374151;
-}
-
-.party-crew .crew .position {
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background-color: #e0e7ff;
-  color: #4338ca;
-}
-
-/* 파티 신청 */
-.party-apply > span {
-  display: block;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #1f2937;
-}
-
-.party-apply form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.party-apply textarea {
+.apply-comment 
+{
   width: 100%;
-  min-height: 120px;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  resize: vertical;
-  font-size: 14px;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-.party-apply textarea:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-}
-
-.party-apply .btn {
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: #6366f1;
-  color: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.15s;
 }
 
+.party-apply-wrap button 
+{
+  width: 100%;
+  border-radius: 5px;
 }
 
 </style>
@@ -201,55 +118,65 @@
 		<div class="ne-container">
 			<div class="container">
 				
-				<div class="party-info">
-						
+				<div class="party-info-wrap">
+					
+					<span class="title">파티 정보</span>
+					<hr>
+					
 					<div class="party-name">
 						<span>주열룸</span>
-					</div>	
-					
-					<div class="theme-info">
-						<span class="theme">우주별</span>
-						<span class="theme">그레이</span>
-						<span class="theme">2026-06-01 16:00</span>
 					</div>
 					
-					<div class="party-host">
-						<span class="temp">36.5</span>
-						<span class="name">윤주열</span>
-						<span class="gender">남</span>
-						<span class="age">49</span>
+					<div class="theme-info">
+						<span>우주별&nbsp;&nbsp;</span>
+						<span>그레이&nbsp;&nbsp;</span>
+						<span>2026-06-01&nbsp;&nbsp;</span>
+						<span>18:00&nbsp;&nbsp;</span>
+						<span>2명 ~ 4명</span>
 					</div>
 					
 					<div class="party-condition">
-						<span class="comment">미쿠 좋아하는 사람만 오셈</span>
-						<span class="gender-condition">무관/동성</span>
-					</div>
+						<span>성별 동성/무관</span>
+						<span>미쿠 좋아하는 사람만 오셈</span>						
+					</div> 
 					
 					<div class="party-crew">
-						<span>파티현황</span>
+					
+						<span>파티 현황</span>
+						
 						<div class="crew">
-							<span class="nickname">윤주열</span>
-							<span class="position">파티장</span>
+							<span>윤주열</span>
+							<span>29세</span>
+							<span>남자</span>
+							<span>🌡️36.5</span>
+							<span class="ne-st ne-st-green">파티장</span>
 						</div>
+						
 						<div class="crew">
-							<span class="nickname">김주열</span>
-							<span class="position">파티원</span>
+							<span>김주열</span>
+							<span>29세</span>
+							<span>남자</span>
+							<span>🌡️36.5</span>
+							<span class="ne-st ne-st-blue">파티원</span>
 						</div>
-					</div>
-											
-				</div>
+					</div> 
+					
+				</div> <!-- .party-info-wrap -->
 				
-				<div class="party-apply">
-					<span>파티 신청</span>
+				<div class="party-apply-wrap">
 					
-					<form action="" name="party-aprv">
+					<span class="title">파티 신청</span>
+					<hr>
+					
+					<form action="" name="party-apply-form" method="post">
 						
-						<textarea name="aprv-comment" placeholder="신청 메시지"></textarea>
-						
-						<button type="button" class="btn">신청하기</button>
+						<input type="text" class="apply-comment" placeholder="신청 메시지" name="applyComment">
+						<input type="hidden" value="partyId" name="partyId">
 					</form>
-					
-				</div>
+					 
+					<button type="button" class="btn btn-primary" onclick="partyApply()">신청하기</button>
+					 
+				</div> <!-- .party-apply-wrap -->
 				
 			</div>
 		</div>
