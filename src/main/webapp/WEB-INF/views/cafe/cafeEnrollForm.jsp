@@ -55,8 +55,9 @@
 			</div>
 
 			<div class="text-end mt-4">
-				<button type="button" class="btn btn-outline-primary" onclick="history.back()">취소</button>
 				<button type="submit" class="btn btn-primary">등록 신청</button>
+				<button type="button" class="btn btn-outline-primary" onclick="history.back()">취소</button>
+				
 			</div>
 
 		</form>
