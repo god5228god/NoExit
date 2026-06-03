@@ -1,0 +1,115 @@
+.resListWrap{
+	padding: 30px;
+	box-sizing: border-box;
+}
+
+
+.tabWrap{
+	margin: 20px 0;
+}
+
+.tab{
+	border: 1.5px solid #222;
+	background-color: #fff;
+	border-radius: 20px;
+	padding: 5px 15px;
+	margin-right: 10px;
+	font-weight: bold;
+	color: #555;
+	box-sizing: border-box;
+	font-size: 14px;
+}
+.tab:hover{
+	border-color: #fdb800;
+	color: #fdb800;
+}
+
+.tab.on{
+	border: none;
+	background-color: #222;
+	color: #fff;
+}
+.tab span{
+	margin-left: 10px;
+}
+
+.listWrap .ne-card{
+	padding: 15px 30px;
+	margin-bottom: 20px;
+}
+
+.reservDate{
+	font-weight: bold;
+	color: #333;
+	font-size: 16px;
+	margin-left: 5px;
+}
+.theme{
+	font-weight: bold;
+	font-size: 18px;
+}
+.theme + span{
+	margin-left: 5px;
+	position: relative;
+	top: -3px;
+}
+
+.listWrap .btn-outline-secondary, .listWrap .btn-primary{
+	font-size: 14px;
+}
+
+.listWrap .btn-outline-secondary:hover{
+	background-color: #fff;
+}
+
+.canceled .ne-card{
+	background-color: #eee;
+	opacity: 0.7;
+}
+
+
+.ne-tooltip {
+    position: relative;
+    cursor: pointer;
+    font-size: 20px;
+
+}
+.ne-tooltip svg{
+	color: #fdb400;
+}
+
+.ne-tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 135%; 
+    left: 50%;
+    transform: translateX(-90%);
+    background-color: #777;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ne-tooltip:hover::before {
+    content: "";
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    z-index: 100;
+}
+
+.done, .canceled{
+	display: none;
+}
+
+
+
+

@@ -30,7 +30,11 @@
 			</ul>
 		</div>
 		<div class="logo">
-			<h1 class="m-0"><a href="/"> NoExit </a></h1>
+			<h1 class="m-0">
+				<a href="${pageContext.request.contextPath }/" class="no-hover">
+					<img src="${pageContext.request.contextPath }/dist/images/logo.png" alt="로고이미지" style="height: 40px;" />
+				</a>
+			</h1>
 		</div>
 		<div class="nav-right">
 			<ul class="d-flex m-0 gap-3">

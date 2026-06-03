@@ -139,6 +139,12 @@
 a { color: inherit; text-decoration: none; }
 a:hover { color: var(--ne-primary-dark); opacity: .8; }
 
+a.no-hover:hover{
+	color: revert;
+	font-weight: revert;
+	opacity: 1;
+}
+
 /* nav-link */
 .nav-link.active,
 .nav-pills .nav-link.active,
@@ -167,6 +173,29 @@ a:hover { color: var(--ne-primary-dark); opacity: .8; }
   border-color: var(--ne-primary);
   color: #111;
 }
+ 
+/* 페이징 변경 */
+
+.paginate{
+	margin-top: 10px;
+	text-align: center;
+}
+.paginate > *{
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	border: 1px solid #ccc;
+	line-height: 30px;
+	box-sizing: border-box;
+}
+.paginate span{
+	background-color: #fdb800;
+	color: #fff;
+	font-weight: bold;
+	border: none;
+	
+}
+
 
 /* Progress bar */
 .progress-bar {
@@ -314,10 +343,6 @@ small, .small   { font-size: .875rem; }  /* 14px */
   padding: 0 2rem;
 }
 
-/* 헤더 높이만큼 본문 밀기 */
-.ne-body-offset {
-}
- */
 /* 로고 */
 .ne-logo {
   text-decoration: none;
@@ -1135,7 +1160,7 @@ small, .small   { font-size: .875rem; }  /* 14px */
 }
 
 /* 레이아웃 컨테이너 */
-.ne-container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+.ne-container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
 
 /* sticky top 보정 (헤더 높이 반영) */
 .ne-sticky { position: sticky; top: 74px; }
