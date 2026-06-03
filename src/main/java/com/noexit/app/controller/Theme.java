@@ -18,8 +18,7 @@ public class Theme
 	@GetMapping("info/{themeid}")
 	public String themeDetail(@PathVariable(name="themeid") int themeId)
 	{
-		// dto 로 담아서 넘겨줌
-
+		
 		return "theme/themedetail";
 	}
 

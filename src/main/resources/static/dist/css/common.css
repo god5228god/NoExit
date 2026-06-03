@@ -343,11 +343,6 @@ small, .small   { font-size: .875rem; }  /* 14px */
   padding: 0 2rem;
 }
 
-/* 헤더 높이만큼 본문 밀기 */
-/* .ne-body-offset {
-  padding-top: 125px;
-} */
- 
 /* 로고 */
 .ne-logo {
   text-decoration: none;
