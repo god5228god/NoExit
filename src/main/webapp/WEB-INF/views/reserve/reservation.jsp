@@ -50,7 +50,7 @@
 	<main class="ne-main-content ne-body-offset">
 		<div class="ne-container d-flex justify-content-between ">
 			<div class="col-md-8 ne-wrap">
-				<div class="themeWrap content-box-yellow mb-2 d-flex">
+				<div class="themeWrap content-box-yellow mb-2 d-flex align-items-center">
 					<div class="icon">🔐</div>
 					<div class="themeInfo">
 						<p class="cafeName">홍대 방탈출 공장</p>
@@ -77,7 +77,7 @@
 							<p class="label">총 방문 인원</p>
 							<div class="d-flex justify-content-between align-items-center mt-1" style="width: 20%;">
 								<button type="button" class="circle" data-action="minus">-</button>
-								<span class="personCount">2</span>
+								<span class="personCount">4</span>
 								<button type="button" class="circle" data-action="plus">+</button>
 								<span style="font-size: 14px; color: #666;">명</span>
 							</div>

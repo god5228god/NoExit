@@ -1,0 +1,13 @@
+.ne-container.mainWrap{
+	padding: 20px 40px;
+	box-sizing: border-box;
+}
+
+.slider{
+	width: 100%;
+	height: 500px;
+	background-image: url(../images/slider1.png);
+	background-position: 0 -307px;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
