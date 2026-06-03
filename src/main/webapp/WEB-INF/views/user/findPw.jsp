@@ -1,157 +1,165 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
-<%@ taglib prefix = "c" uri="jakarta.tags.core"%>
-<%@ taglib prefix = "fmt" uri="jakarta.tags.fmt"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>비밀번호 찾기 및 변경</title>
-<style type="text/css">
+<title>비밀번호 찾기</title>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dist/css/common.css">
 
-
-</style>
-
-
-<script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript">
-	/*
-	$(function(){
-		
-		// 인증번호 발송 요청
-		$("#authBtn").click(function(){
-			let name = $("#name").val().trim();
-			let userId = $("#userId").val().trim();
-					
-			if (name == "" || userId == "") {
-				alert("이름과 아이디를 모두 입력해주세요.");
-				return;
-			}
-			
-			// 서버로 인증번호 발송 요청 (이름과 아이디로 가입된 회원의 이메일로 발송)
-			$.post("findPwAuth.action", {
-				name : name,
-				userId : userId
-			}, function(data) {
-				$("#resultMsg").html("인증번호가 발송되었습니다.").css("color", "blue");
-				$("#authCodeArea").show(); // 인증번호 입력란 표시
-				$("#authBtn").text("재발송");
-			}).fail(function() {
-				alert("인증번호 발송에 실패했습니다. 입력 정보를 확인해주세요.");
-			});
+$(function(){
+	// 1. 인증번호 발송 요청
+	$("#authBtn").click(function(){
+		let name = $("#name").val().trim();
+		let userId = $("#userId").val().trim();
+
+		if (name == "" || userId == "") {
+			$("#resultMsg").html("이름과 아이디를 모두 입력해주세요.").css("color", "red");
+			return;
+		}
+
+		$.post("findPwAuth.action", {
+			name : name,
+			userId : userId
+		}, function(data) {
+			$("#resultMsg").html("인증번호가 발송되었습니다.").css("color", "blue");
+			$("#authCodeArea").show();
+			$("#authBtn").text("재발송");
+		}).fail(function() {
+			$("#resultMsg").html("인증번호 발송에 실패했습니다.").css("color", "red");
 		});
-		
-		// 인증번호 확인 버튼 클릭 (비밀번호 변경 창 열기)
-		$("#verifyBtn").click(function(){
-			let name = $("#name").val().trim();
-			let userId = $("#userId").val().trim();
-			let authCode = $("#authCode").val().trim();
-			
-			if (authCode == "") {
-				alert("인증번호를 입력해주세요.");
-				return;
+	});
+
+	// 2. 인증번호 확인
+	$("#verifyBtn").click(function(){
+		let name = $("#name").val().trim();
+		let userId = $("#userId").val().trim();
+		let authCode = $("#authCode").val().trim();
+
+		if (authCode == "") {
+			$("#resultMsg").html("인증번호를 입력해주세요.").css("color", "red");
+			return;
+		}
+
+		$.post("${pageContext.request.contextPath}/user/verifyCode", {
+			name : name,
+			userId : userId,
+			authCode : authCode
+		}, function(data) {
+			if (data.status === "success") {
+				$("#resultMsg").html("인증에 성공했습니다. 새 비밀번호를 입력해주세요.").css("color", "green");
+				$("#name").attr("readonly", true);
+				$("#userId").attr("readonly", true);
+				$("#authCodeArea").hide();
+				$("#authBtn").hide();
+				$("#resetPwArea").show();
+			} else {
+				$("#resultMsg").html(data.message).css("color", "red");
 			}
-			
-			// 인증번호 검증 요청
-			$.post("${pageContext.request.contextPath}/user/verifyPwAuthAjax", {
-				name : name,
-				userId : userId,
-				authCode : authCode
-			}, function(data) {
-				
-					$("#resultMsg").html("인증에 성공했습니다. 새 비밀번호를 입력해주세요.").css("color", "green");
-					
-					// 기존 입력창 및 인증창은 읽기전용(또는 숨김) 처리하고, 비밀번호 변경창 표시
-					$("#name").attr("readonly", true);
-					$("#userId").attr("readonly", true);
-					$("#authCodeArea").hide();
-					$("#authBtn").hide();
-					
-					$("#resetPwArea").show(); // 비밀번호 변경 영역 표시
-				} else {
-					$("#resultMsg").html(data.message).css("color", "red");
-				}
-			}, "json").fail(function() {
-				alert("인증 확인 중 오류가 발생했습니다.");
-			});
+		}, "json").fail(function() {
+			$("#resultMsg").html("인증 확인 중 오류가 발생했습니다.").css("color", "red");
 		});
-		
-		// 3. 새 비밀번호 저장 버튼 클릭
-		$("#changePwBtn").click(function(){
-			let userId = $("#userId").val().trim();
-			let newPw = $("#newPw").val().trim();
-			let newPwCheck = $("#newPwCheck").val().trim();
-			
-			if(newPw == "" || newPwCheck == "") {
-				alert("비밀번호를 입력해주세요.");
-				return;
+	});
+
+	// 3. 비밀번호 변경
+	$("#changePwBtn").click(function(){
+		let userId = $("#userId").val().trim();
+		let newPw = $("#newPw").val().trim();
+		let newPwCheck = $("#newPwCheck").val().trim();
+
+		if(newPw == "" || newPwCheck == "") {
+			$("#resultMsg").html("비밀번호를 입력해주세요.").css("color", "red");
+			return;
+		}
+
+		if(newPw !== newPwCheck) {
+			$("#resultMsg").html("비밀번호가 서로 일치하지 않습니다.").css("color", "red");
+			return;
+		}
+
+		$.post("${pageContext.request.contextPath}/user/resetPw", {
+			userId : userId,
+			newPw : newPw
+		}, function(data) {
+			if(data.status === "success") {
+				$("#resultMsg").html("비밀번호가 변경되었습니다.").css("color", "blue");
+				location.href = "${pageContext.request.contextPath}/user/login";
+			} else {
+				$("#resultMsg").html("비밀번호 변경에 실패했습니다: " + data.message).css("color", "red");
 			}
-			
-			if(newPw !== newPwCheck) {
-				alert("비밀번호가 서로 일치하지 않습니다.");
-				return;
-			}
-			
-			// 최종 비밀번호 변경 요청
-			$.post("${pageContext.request.contextPath}/user/resetPasswordAjax", {
-				userId : userId,
-				newPw : newPw
-			}, function(data) {
-				// 서버 응답 예시: { "status": "success" }
-				if(data.status === "success") {
-					alert("비밀번호가 성공적으로 변경되었습니다. 로그인 해주세요.");
-					location.href = "${pageContext.request.contextPath}/user/login"; // 로그인 페이지로 이동
-				} else {
-					alert("비밀번호 변경에 실패했습니다: " + data.message);
-				}
-			}, "json").fail(function() {
-				alert("서버 통신 중 오류가 발생했습니다.");
-			});
+		}, "json").fail(function() {
+			$("#resultMsg").html("서버 통신 중 오류가 발생했습니다.").css("color", "red");
 		});
-			
-	}); 
-	*/
+	});
+});
 </script>
 </head>
 <body>
 
-<div> 
-    <h2>비밀번호 찾기 / 변경</h2>
-    <p>가입하신 이름과 아이디를 입력해주세요.</p>
+<div class="container my-5" style="max-width: 480px;">
 
-	<form id="findPwForm">
-		<div>
-			<label for="name">이름</label><br>
-			<input type="text" id="name" name="name">
-		</div>
-		
-		<div>
-			<label for="userId">아이디</label><br>
-			<input type="text" id="userId" name="userId">
-			<button type="button" id="authBtn">인증요청</button>
-		</div>
-		
-		<div>
-			<label for="authCode">인증번호 입력</label><br>
-			<input type="text" id="authCode">
-			<button type="button" id="verifyBtn">인증확인</button>
-		</div>
-		
-		<div>
-			<div>
-				<label for="newPw">새 비밀번호</label><br>
-				<input type="password" id="newPw" name="newPw">
+	<a href="${pageContext.request.contextPath}/" class="d-block text-center mb-4 text-decoration-none">
+		<strong style="font-size: 28px;">Noexit</strong>
+	</a>
+
+	<div class="ne-sc">
+		<div class="ne-sc-title fs-5">비밀번호 찾기</div>
+		<p class="ne-hint mb-3">가입하신 이름과 아이디를 입력해주세요.</p>
+
+		<form id="findPwForm">
+
+			<div class="mb-3">
+				<label for="name" class="form-label">이름</label>
+				<input type="text" id="name" name="name" class="form-control" placeholder="이름 입력">
 			</div>
-			<div style="margin-top:10px;">
-				<label for="newPwCheck">새 비밀번호 확인</label><br>
-				<input type="password" id="newPwCheck">
+
+			<div class="mb-3">
+				<label for="userId" class="form-label">아이디</label>
+				<div class="input-group">
+					<input type="text" id="userId" name="userId" class="form-control" placeholder="아이디 입력">
+					<button type="button" id="authBtn" class="btn btn-outline-primary">인증요청</button>
+				</div>
 			</div>
-			<div>
-				<button type="button" id="changePwBtn" >비밀번호 변경하기</button>
+
+			<div class="mb-3" id="authCodeArea" style="display:none;">
+				<label for="authCode" class="form-label">인증번호</label>
+				<div class="input-group">
+					<input type="text" id="authCode" class="form-control" placeholder="인증번호 숫자">
+					<button type="button" id="verifyBtn" class="btn btn-primary">인증확인</button>
+				</div>
 			</div>
-		</div>
-		
-		<div id="resultMsg"></div>
-	</form>
+
+			<div id="resetPwArea" style="display:none;">
+				<hr>
+				<div class="mb-3">
+					<label for="newPw" class="form-label">새 비밀번호</label>
+					<input type="password" id="newPw" name="newPw" class="form-control" placeholder="8자 이상">
+				</div>
+				<div class="mb-3">
+					<label for="newPwCheck" class="form-label">새 비밀번호 확인</label>
+					<input type="password" id="newPwCheck" class="form-control" placeholder="다시 한 번 입력">
+				</div>
+				<button type="button" id="changePwBtn" class="btn btn-primary w-100">비밀번호 변경하기</button>
+			</div>
+
+			<div class="mt-2 text-center">
+				<span id="resultMsg" class="small fw-bold"></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="text-center mt-3 small">
+		<a href="${pageContext.request.contextPath}/user/login" class="text-decoration-none text-secondary">로그인</a>
+		<span class="mx-2 text-muted">|</span>
+		<a href="${pageContext.request.contextPath}/user/enroll" class="text-decoration-none text-secondary">회원가입</a>
+		<span class="mx-2 text-muted">|</span>
+		<a href="${pageContext.request.contextPath}/user/findId" class="text-decoration-none text-secondary">아이디 찾기</a>
+	</div>
+
 </div>
 
 </body>
