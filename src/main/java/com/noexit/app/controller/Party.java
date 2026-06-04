@@ -3,6 +3,7 @@ package com.noexit.app.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -12,24 +13,36 @@ public class Party
 	@GetMapping("write")
 	public String partyWrite()
 	{
-		return "party/partywrite";
+		return "/party/partywrite";
+	}
+	
+	@PostMapping("write")
+	public String partyInsert()
+	{
+		return "redirect:/party/board/1";
 	}
 	
 	@GetMapping("list")
 	public String partyList()
 	{
-		return "party/partylist";
+		return "/party/partylist";
 	}
 	
 	@GetMapping("info/{partyid}")
 	public String partyDetail(@PathVariable(name="partyid") int partyId)
 	{
-		return "party/partydetail";
+		return "/party/partydetail";
 	}
 	
 	@GetMapping("board/{partyid}")
 	public String partyBoard(@PathVariable(name="partyid") int partyId)
 	{
-		return "party/partyboard2";
+		return "/party/partyboard";
+	}
+	
+	@PostMapping("apply/{partyid}")
+	public String partyApply()
+	{
+		return "";
 	}
 }

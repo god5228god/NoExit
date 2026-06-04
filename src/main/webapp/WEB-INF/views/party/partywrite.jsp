@@ -63,7 +63,7 @@
   font-size: 15px;
 }
 
-.wrtie-btn 
+.write-btn 
 {
   display: flex;
   justify-content: center;
@@ -72,6 +72,38 @@
 }
 
 </style>
+
+<c:set var="path" value="${pageContext.request.contextPath }"></c:set>
+
+<script type="text/javascript">
+	
+	function partyWrite()
+	{
+		const f = document.writeForm;
+		
+		let str = f.partyname.value.trim();
+		
+		if(!str)
+		{
+			alert("파티명을 입력해야 합니다.");
+			f.partyname.focus();
+			return;
+		}
+		
+		str = f.partyComment.value.trim();
+		
+		if(!str)
+		{
+			alert("코멘트를 입력해야합니다.");
+			f.partyComment.focus();
+			return;
+		}
+		
+		f.action = '${path}/party/write';
+		f.submit();
+	}
+	
+</script>
 
 </head>
 <body>
@@ -96,22 +128,22 @@
 				</div>
 				
 				<div class="write-wrap">
-					<form action="" class="write-form" method="post">
+					<form action="" class="write-form" method="post" name="writeForm">
 						<span>파티명</span>
 						<input type="text" name="partyname">
 						<label>
 						<span>동성만</span>
 						<input type="checkbox" name="genderCondition">
 						</label>
-						<span>방장 한마디</span>
+						<span>코멘트</span>
 						<input type="text" name="partyComment">
 						<input type="hidden" value="slotId" name="slotId">
 					</form>
 				</div>
 				
-				<div class="wrtie-btn">
+				<div class="write-btn">
 					<button type="button" class="btn btn-primary" onclick="partyWrite()">파티 개설</button>				
-					<button type="button" class="btn btn-outline-primary" onclick="window.location.href='${path}/theme/list'">취소하기</button>
+					<button type="button" class="btn btn-outline-primary" onclick="window.location.href='${path}/theme/info/1'">취소하기</button>
 				</div>
 				
 			</div>

@@ -110,6 +110,45 @@ hr
 
 </style>
 
+<c:set var="path" value="${pageContext.request.contextPath }"></c:set>
+
+<script type="text/javascript">
+	
+	document.addEventListener("DOMContentLoaded",function()
+	{
+		const applyComment = document.querySelector("[name='applyComment']");
+		
+		applyComment.addEventListener("keydown",function(evt)
+		{
+			if(evt.key == "Enter")
+			{
+				evt.preventDefault();
+				
+				partyApply();
+			}
+		});
+	});
+	
+	function partyApply()
+	{
+		const f = document.partyApplyForm;
+		
+		let comment = f.applyComment.value.trim();
+		
+		if(!comment)
+		{
+			alert("신청 메시지를 작성하세요");
+			f.applyComment.focus();
+			return;
+		}
+		
+		f.action = "${path}/party/apply/${partyId}";
+		
+		f.submit();
+	}
+	
+</script>
+
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/common/header.jsp" %>
@@ -168,10 +207,8 @@ hr
 					<span class="title">파티 신청</span>
 					<hr>
 					
-					<form action="" name="party-apply-form" method="post">
-						
+					<form action="" name="partyApplyForm" method="post">
 						<input type="text" class="apply-comment" placeholder="신청 메시지" name="applyComment">
-						<input type="hidden" value="partyId" name="partyId">
 					</form>
 					 
 					<button type="button" class="btn btn-primary" onclick="partyApply()">신청하기</button>
