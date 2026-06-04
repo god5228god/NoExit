@@ -45,14 +45,18 @@
 
 .resWrap .ne-table{
 	margin-top: 50px;
+	
 }
 
-.ne-table th{
+.resList .ne-table th, .resList .ne-table td{
 	text-align: center;
+	/* width: 25%; */
 }
 
+.resList .ne-table th:first-child {
+	width: 5%;
 
-
+}
 
 
 

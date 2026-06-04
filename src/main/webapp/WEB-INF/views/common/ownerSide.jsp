@@ -11,10 +11,10 @@
 	$(function(){
     
     	let path = window.location.pathname;
-    	$(".sideBar a").removeClass("active");
+    	$(".ne-side-nav a").removeClass("active");
 		
         
-    	$(".sideBar a").each(function(){
+    	$(".ne-side-nav a").each(function(){
     		let findHref = $(this).attr("href");
 			
     		if(findHref && path.indexOf(findHref)!= -1){
@@ -28,8 +28,10 @@
 </script>
 </head>
 <body>
-	<nav class="sideBar snav">
-		<div class="sideTitle">CAFE</div>
+<!-- 	<nav class="sideBar snav"> -->
+	<nav class="ne-side-nav">
+		<!-- <div class="sideTitle">CAFE</div> -->
+		<div class="ne-side-nav-section">CAFE</div>
 		<ul>
 			<li>
 				<a href="${pageContext.request.contextPath }/owner/res/open" class="active">
