@@ -38,12 +38,12 @@
 		</div>
 		<div class="nav-right">
 			<ul class="d-flex m-0 gap-3">
-				<li><a href="#">CAFE</a></li>
-				<li><a href="${pageContext.request.contextPath }/user/login">LOGIN</a></li>
-
+				<c:if test="${role == 'OWNER'}">
+					<li><a href="${pageContext.request.contextPath }/owner/res/open">CAFE</a></li>
+				</c:if>
 				<c:choose>
 					<c:when test="${not empty sessionScope.loginAdmin}">
-						<li><span>${sessionScope.loginAdmin.name}(관리자)</span></li>
+						<li><span>${sessionScope.loginAdmin.loginId}(관리자)</span></li>
 						<li><a href="${pageContext.request.contextPath}/admin/dashboard">관리</a></li>
 						<li><a href="${pageContext.request.contextPath}/admin/logout">LOGOUT</a></li>
 					</c:when>

@@ -25,10 +25,6 @@
     <div class="ne-sc">
         <div class="ne-sc-title fs-5">관리자 로그인</div>
         
-        <c:if test="${not empty errorMessage}">
-            <div class="alert alert-danger small mt-3 mb-3">${errorMessage}</div>
-        </c:if>
-
         <form action="${pageContext.request.contextPath}/admin/login" method="post">
 
             <div class="mb-3">
@@ -39,6 +35,9 @@
             <div class="mb-3">
                 <label for="password" class="form-label">비밀번호</label>
                 <input type="password" id="password" name="password" class="form-control">
+                <c:if test="${not empty errorMessage}">
+                    <div class="text-danger">${errorMessage}</div>
+                </c:if>
             </div>
 
             <button type="submit" class="btn btn-dark w-100">관리자 로그인</button>

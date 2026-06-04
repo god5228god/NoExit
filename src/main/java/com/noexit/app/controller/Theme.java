@@ -8,6 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.noexit.app.mapper.CafeMapper;
+import com.noexit.app.model.Cafe;
+import com.noexit.app.model.User;
+
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/theme/*")
 public class Theme
@@ -15,13 +25,16 @@ public class Theme
 
     private final CafeController cafeController;
 
+    @Autowired
+    private CafeMapper cafeMapper;
+
     Theme(CafeController cafeController) {
         this.cafeController = cafeController;
     }
-    
+
     /*
      * themelist 페이지로 이동하는 메소드
-     * 파라미터로 schTpye, kwd 를 받고 
+     * 파라미터로 schTpye, kwd 를 받고
      * 키워드가 존재한다면 바인딩해서 넘겨준다
      */
 	@GetMapping("list")
@@ -31,26 +44,26 @@ public class Theme
 	{
 		/*
 		 * 유효성 검사 목록
-		 * 
+		 *
 		 * 없음
 		 */
-		
+
 		if(!kwd.isBlank())
 		{
 			model.addAttribute("schType", schType);
 			model.addAttribute("kwd", kwd);
 		}
-		
+
 		return "theme/themelist";
 	}
-	
+
 	/**
 	 * AJAX 요청을 받아서 데이터를 넘겨주는 메소드
-	 * 
+	 *
 	 * @param schType : 검색 타입
 	 * @param kwd     : 검색 키워드
 	 * @param lastId  : 마지막으로 받은 데이터 번호
-	 * @param model  
+	 * @param model
 	 * @return
 	 */
 	@PostMapping()
@@ -61,18 +74,18 @@ public class Theme
 	{
 		/*
 		 * 유효성 검사 목록
-		 * 
+		 *
 		 * 없음
 		 */
-		
+
 		return "";
 	}
-	
+
 	/**
 	 * 특정 테마의 세부 정보를 찾아주는 메소드
-	 * 
+	 *
 	 * @param themeId : 테마 번호
-	 * @param model  
+	 * @param model
 	 * @return
 	 */
 	@GetMapping("info/{themeid}")
@@ -80,18 +93,24 @@ public class Theme
 	{
 		/*
 		 * 유효성 검사 목록
-		 * 
+		 *
 		 * 존재하는 themeId 인가?
 		 */
-		
+
 		return "theme/themeinfo";
 	}
-	
+
 	// 테마 등록
 	@GetMapping("enroll")
-	public String enrollForm()
+	public String enrollForm(HttpSession session, Model model)
 	{
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/user/login";
+		}
+		List<Cafe> cafeList = cafeMapper.selectByUserId(loginUser.getUserId());
+		model.addAttribute("cafeList", cafeList);
 		return "theme/themeEnrollForm";
 	}
-	
+
 }

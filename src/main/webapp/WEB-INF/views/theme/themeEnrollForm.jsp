@@ -23,12 +23,20 @@
 
 		<form action="${pageContext.request.contextPath}/theme/enroll" method="post" enctype="multipart/form-data">
 
-			<!-- 로그인한 사장님의 카페 자동 주입 -->
-			<input type="hidden" name="cafeId" value="${loginCafeId}">
-
-			<div class="mb-3">
-				<label for="roomName" class="form-label">테마명<span class="form-required">*</span></label>
-				<input type="text" id="roomName" name="roomName" class="form-control" maxlength="100" placeholder="테마명을 입력해주세요" required>
+			<div class="row mb-3">
+				<div class="col-8">
+					<label for="roomName" class="form-label">테마명<span class="form-required">*</span></label>
+					<input type="text" id="roomName" name="roomName" class="form-control" maxlength="100" placeholder="테마명을 입력해주세요" required>
+				</div>
+				<div class="col-4">
+					<label for="cafeId" class="form-label">카페<span class="form-required">*</span></label>
+					<select id="cafeId" name="cafeId" class="form-select" required>
+						<option value="">-- 카페 선택 --</option>
+						<c:forEach var="cafe" items="${cafeList}">
+							<option value="${cafe.cafeId}">${cafe.cafeName}</option>
+						</c:forEach>
+					</select>
+				</div>
 			</div>
 
 			<div class="row mb-3">

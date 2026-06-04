@@ -82,10 +82,12 @@ public class UserController {
 
 	    if (dto == null) {
 	        model.addAttribute("errorMessage", "아이디 또는 비밀번호가 올바르지 않습니다.");
-	        return "user/loginForm";  
+	        return "user/loginForm";
 	    }
 
+	    String role = service.findRole(dto.getUserId());
 	    session.setAttribute("loginUser", dto);
+	    session.setAttribute("role", role);
 	    return "redirect:/theme/list";
 	}
 
