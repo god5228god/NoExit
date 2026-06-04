@@ -9,7 +9,16 @@
 <link rel="stylesheet"
 	href='${pageContext.request.contextPath }/dist/css/openRes.css' />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<script type="text/javascript">
 
+	function deleteOk(){
+		if(confirm('정말 비활성화 하시겠습니까?')){
+			//const url = "${pageContext.request.contextPath}/owner/res/delete/${dto.num}?;
+			location.href=url;
+		}
+	}
+	
+</script>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/common/header.jsp"%>
@@ -25,8 +34,15 @@
 					<div class="resOpen">
 						<div class="res-title">예약 시간 등록</div>
 						<form method="post" name="resOpenForm">
+							<div class="from-label">카페 선택</div>
+							<select name="" id="" class="selectBox ne-box">
+								<option value="" disabled selected>-- 카페 선택 --</option>
+								<option>지구별</option>
+								<option>우주별</option>
+							</select>
 							<div class="form-label">테마 선택</div>
 							<select name="" class="selectBox ne-box">
+								<option value="" disabled selected>-- 테마 선택 --</option>
 								<option value="">어둠의 저택</option>
 								<option value="">바이러스 연구소</option>
 							</select>
@@ -83,6 +99,11 @@
 							<div class="res-title d-flex justify-content-between align-items-center">
 								<span>등록된 슬롯</span>
 								 <form action="">
+								 	<select name="" id="" class="selectBox ne-box">
+								 		<option value="">전체 카페</option>
+								 		<option value="">지구별</option>
+								 		<option value="">우주별</option>
+								 	</select>
 								 	<input type="date" class="ne-box" value="2026-06-01" />
 								 </form>						
 							</div>
@@ -90,6 +111,7 @@
 						<table class="ne-table">
 							<thead>
 								<tr>
+									<th>카페</th>
 									<th>테마</th>
 									<th>날짜</th>
 									<th>시간</th>
@@ -98,43 +120,48 @@
 							</thead>
 							<tbody>
 								<tr>
+									<td>지구별</td>
 									<td>어둠의 저택</td>
 									<td>2026-06-01</td>
 									<td class="fw-bold">10:00</td>
 									<td>
-										<button type="button" class="btn ne-btn-deact">비활성화</button>
+										<button type="button" class="btn ne-btn-deact" onclick="deleteOk()">비활성화</button>
 									</td>
 								</tr>
 								<tr>
+									<td>지구별</td>
 									<td>어둠의 저택</td>
 									<td>2026-06-01</td>
 									<td class="fw-bold">15:00</td>
 									<td>
-										<button type="button" class="btn ne-btn-deact">비활성화</button>
+										<button type="button" class="btn ne-btn-deact" onclick="deleteOk()">비활성화</button>
 									</td>
 								</tr>
 								<tr>
+									<td>지구별</td>
 									<td>어둠의 저택</td>
 									<td>2026-06-01</td>
 									<td class="fw-bold">18:10</td>
 									<td>
-										<button type="button" class="btn ne-btn-deact">비활성화</button>
+										<button type="button" class="btn ne-btn-deact" onclick="deleteOk()">비활성화</button>
 									</td>
 								</tr>
 								<tr>
+									<td>우주별</td>
 									<td>바이러스 연구소</td>
 									<td>2026-06-01</td>
 									<td class="fw-bold">12:15</td>
 									<td>
-										<button type="button" class="btn ne-btn-deact">비활성화</button>
+										<button type="button" class="btn ne-btn-deact" onclick="deleteOk()">비활성화</button>
 									</td>
 								</tr>
 								<tr>
+									<td>우주별</td>
 									<td>바이러스 연구소</td>
 									<td>2026-06-01</td>
 									<td class="fw-bold">15:45</td>
 									<td>
-										<button type="button" class="btn ne-btn-deact">비활성화</button>
+										<button type="button" class="btn ne-btn-deact" onclick="deleteOk()">비활성화</button>
 									</td>
 								</tr>
 								

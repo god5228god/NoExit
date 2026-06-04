@@ -13,6 +13,42 @@
 	crossorigin="anonymous">
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/dist/css/common.css">
+<script src="https://code.jquery.com/jquery.min.js"></script>	
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<script type="text/javascript">
+
+$(function(){
+
+	$("#addrBtn").click(function(){
+			execDaumPostCode();		
+	});
+	
+	function execDaumPostCode(){
+		new daum.Postcode({
+			oncomplete: function(data){
+				
+				let fullAddr = (data.userSelectedType === 'R') ? data.roadAddress : data.jibunAddress;
+				
+				$("#postalCode").val(data.zonecode); // 우편번호
+				$("#address").val(fullAddr); // 기본주소
+				
+				$("#addressDetail").focus();
+			}
+			
+		}).open({
+			
+				  left: (window.screen.width / 2) - (500 / 2)
+				, top: (window.screen.height / 2) - (600 / 2)
+				, popupName: 'postcodePopup'
+			
+		});
+		
+	}
+});
+
+</script>
+	
 </head>
 <body>
 
@@ -44,12 +80,12 @@
 				<label class="form-label">주소<span class="form-required">*</span></label>
 
 				<div class="input-group mb-2">
-					<input type="text" id="postalCode" name="postalCode" class="form-control" maxlength="5" placeholder="우편번호" style="max-width: 160px;" required>
+					<input type="text" id="postalCode" name="postalCode" class="form-control" maxlength="5" placeholder="우편번호" style="max-width: 160px;" readonly required>
 					<%-- 카카오 우편번호 API 연동 자리 --%>
-					<button type="button" class="btn btn-outline-primary">주소 찾기</button>
+					<button type="button" id="addrBtn" class="btn btn-outline-primary">주소 찾기</button>
 				</div>
 
-				<input type="text" id="address" name="address" class="form-control mb-2" maxlength="100" placeholder="기본 주소" required>
+				<input type="text" id="address" name="address" class="form-control mb-2" maxlength="100" placeholder="기본 주소" readonly required>
 
 				<input type="text" id="addressDetail" name="addressDetail" class="form-control" maxlength="200" placeholder="상세 주소">
 			</div>
@@ -64,5 +100,6 @@
 	</div>
 </div>
 
+	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 </body>
 </html>

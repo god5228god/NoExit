@@ -6,18 +6,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/cafe")
-public class CafeController {
+@RequestMapping("/admin")
+public class Admin {
 
-	//카페 등록
-	@GetMapping("/enroll")
-	public String enrollForm() {
-		return "cafe/cafeEnrollForm";
-	}
-	//카페 등록
-	@PostMapping("/enroll")
-	public String enroll() {
-		return "redirect:/theme/list";
-	}
-
+	// 로그인
+    @GetMapping("/login")
+    public String loginForm() {
+        return "admin/adminLoginForm";
+    }
+    
+    
 }

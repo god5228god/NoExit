@@ -9,10 +9,21 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript">
 	$(function(){
-    $(".sideBar a").click(function(){
+    
+    	let path = window.location.pathname;
     	$(".sideBar a").removeClass("active");
-        $(this).addClass("active");	
-    });
+		
+        
+    	$(".sideBar a").each(function(){
+    		let findHref = $(this).attr("href");
+			
+    		if(findHref && path.indexOf(findHref)!= -1){
+    			
+		    	$(this).addClass("active");	
+    		}
+    	
+    	});
+    	
 });
 </script>
 </head>
@@ -21,7 +32,7 @@
 		<div class="sideTitle">CAFE</div>
 		<ul>
 			<li>
-				<a href="#" class="active">
+				<a href="${pageContext.request.contextPath }/owner/res/open" class="active">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus" viewBox="0 0 16 16">
 					  <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7"/>
 					  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
@@ -29,7 +40,7 @@
 					예약 등록
 				</a>
 			</li>
-			<li><a href="#">
+			<li><a href="${pageContext.request.contextPath }/owner/res/list">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
   <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
   <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>

@@ -704,6 +704,12 @@ small, .small   { font-size: .875rem; }  /* 14px */
   border-color: var(--ne-text);
   color: #ffffff;
 }
+
+.ne-tag-red {
+  background: var(--ne-red-bg);
+  border-color: var(--ne-red);
+  color: var(--ne-red);
+}
  
 /* 매너온도 칩 */
 .ne-mannero {

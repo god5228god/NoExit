@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,6 +13,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dist/css/common.css">
 </head>
 <body>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <div class="container my-5" style="max-width: 480px;">
 
@@ -32,6 +34,10 @@
 			<div class="mb-3">
 				<label for="password" class="form-label">비밀번호</label>
 				<input type="password" id="password" name="password" class="form-control">
+   				   <c:if test="${not empty errorMessage}">
+       				 <div class="text-danger">${errorMessage}</div>
+    			   </c:if>			
+			
 			</div>
 
 			<button type="submit" class="btn btn-primary w-100">로그인</button>
@@ -48,5 +54,6 @@
 
 </div>
 
+	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 </body>
 </html>

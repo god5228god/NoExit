@@ -1,6 +1,7 @@
 .ne-container.mainWrap{
-	padding: 20px 40px;
+	padding: 40px 60px;
 	box-sizing: border-box;
+	margin: 30px auto;
 }
 
 .slider{
@@ -16,7 +17,7 @@
 	width: 1200px;
 	height: 100%;
 	margin: 0 auto;
-	padding: 30px;
+	padding: 40px 30px;
 	box-sizing: border-box;
 	color: #fff;
 	font-weight: bold;
@@ -31,29 +32,47 @@
 	
 }
 
-.themeWrap{
+.themeWrap, .partyWrap{
 	position: relative;
+	margin-bottom: 50px;
 }
 
-.themeWrap .more{
+.more{
 	position: absolute;
 	top: 0;
 	right: 0;
 }
 
 
-
-.themeWrap .them a{
-	display: block;
-	
+.themeBox{
+	box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+	border-radius: 8px;
+	padding-bottom: 20px;
+	cursor: pointer;
 }
 
 
+.themeBox img{
+	border-radius: 8px 8px 0  0;
+}
 
 
+.badgeWrap{
+	padding: 10px 0 0 10px ;
+}
 
-
-
+.themeTitle{
+	font-size: 18px;
+	font-weight: bold;
+	padding: 10px 0 0 10px;
+	
+}
+.themeTitle span{
+	font-size: 14px;
+	color: #666;
+	font-weight: normal;
+	display: block;
+}
 
 
 

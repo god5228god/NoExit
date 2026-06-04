@@ -26,6 +26,11 @@
 						<div class="inputBox d-flex">
 							<input type="date" class="ne-box" value="2026-06-01" />
 							<select name="" id="" class="ne-box">
+								<option>전체 카페</option>
+								<option>지구별</option>
+								<option>우주별</option>
+							</select>
+							<select name="" id="" class="ne-box">
 								<option>전체 테마</option>
 								<option>어둠의 저택</option>
 								<option>바이러스 연구소</option>
@@ -34,7 +39,7 @@
 						<table class="ne-table">
 							<thead>
 								<tr>
-									<th>번호</th>
+									<th>카페</th>
 									<th>테마</th>
 									<th>예약일</th>
 									<th>예약자</th>
@@ -45,7 +50,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td class="text-center">1</td>
+									<td>지구별</td>
 									<td>어둠의 저택</td>
 									<td>2026-06-01<br> 14:00</td>
 									<td>홍길동</td>
@@ -56,7 +61,7 @@
 									</td>
 								</tr>
 								<tr class="cancle">
-									<td class="text-center">2</td>
+									<td>우주별</td>
 									<td>바이러스 연구소</td>
 									<td>2026-06-01 12:00</td>
 									<td>윤주열</td>
@@ -67,7 +72,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="text-center">3</td>
+									<td>지구별</td>
 									<td>어둠의 저택</td>
 									<td>2026-06-01 10:00</td>
 									<td>김민준</td>
