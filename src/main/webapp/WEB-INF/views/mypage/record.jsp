@@ -53,7 +53,7 @@
 
 	function openRecordDetail(cardElement) {
 		
-		// 1. 클릭된 카드 태그에 숨겨져 있는 data- 속성 정보들 추출
+		// 클릭된 카드 태그에 숨겨져 있는 data- 속성 정보들 추출
 		const themeTitle = cardElement.getAttribute('data-theme-title');
 		const playDate = cardElement.getAttribute('data-play-date');
 		const playTime = cardElement.getAttribute('data-play-time');
@@ -62,7 +62,7 @@
 		const isEscaped = cardElement.getAttribute('data-is-escaped');
 		const recordComment = cardElement.getAttribute('data-memo');
 		
-		// 2. 모달 내부 HTML 태그 ID 기준으로 데이터 바인딩
+		// 모달 내부 HTML 태그 ID 기준으로 데이터 바인딩
 		document.getElementById('md-record-theme').innerText = themeTitle;
 		document.getElementById('md-record-date').innerText = playDate;
 		document.getElementById('md-record-time').innerText = playTime;
@@ -70,18 +70,18 @@
 		document.getElementById('md-record-players').innerText = playerCount + "명";
 		document.getElementById('md-record-memo').innerText = recordComment ? recordComment : "등록된 메모가 없습니다.";
 		
-		//  Escaped 여부에 따른 
+		//  Escaped 여부에 따른 상태 뱃지 랜더링
 		const statusBadge = document.getElementById('md-record-status');
 		
 		if(isEscaped === "1") {
 			statusBadge.innerText = "성공";
-			statusBadge.className = "ne-st ne-st-amber"; // common.css 9번 앰버 스타일 활용
+			statusBadge.className = "ne-st ne-st-amber"; 
 		} else {
 			statusBadge.innerText = "실패";
-			statusBadge.className = "ne-st ne-st-red";   // common.css 9번 레드 스타일 활용
+			statusBadge.className = "ne-st ne-st-red"; 
 		}
 		
-		// 3. 세팅 완료된 모달 띄우기
+		// 세팅 완료된 모달 띄우기
 		let myModal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
 		myModal.show();
 	}
@@ -180,6 +180,14 @@
 										<%-- 유저가 탈출 성공/실패 기록을 입력해 둔 상태 --%>
 										<c:otherwise>
 											<div>
+											
+											<c:choose>
+												<%-- 리뷰가 비어있을 때 리뷰입력 버튼 랜더링 --%>
+												<c:when test="${empty review.reviewId}">
+													<button type="button" class="btn-sm btn-outline-primary px-3 fw-semibold" >리뷰 입력</button>
+												</c:when>
+											</c:choose>
+																			
 												<%-- 성공 or 실패 뱃지 출력 --%>
 												<c:choose>
 													<c:when test="${record.isEscaped == 1}">
@@ -218,19 +226,24 @@
 <%@ include file="/WEB-INF/views/common/rightSideBar.jsp" %>
 
 </div><!-- 메인 바디 영역 -->
+
+
+<!-- 개인 기록 모달 영역 -->
 <div class="modal fade" id="recordDetailModal" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered"> 
 		<div class="modal-content">
-			<%-- 모달 헤더: 테마 제목과 성공/실패 뱃지가 들어가는 곳 --%>
+		
+			<%-- 모달 헤더 --%>
 			<div class="modal-header">
 				<h5 class="modal-title" id="md-record-theme">테마 제목</h5>
 				<span id="md-record-status" class="ms-3"></span>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 			
-			<%-- 모달 본문: 자바스크립트가 ID 요소를 찾아 데이터를 꽂아줄 구역 --%>
+			<%-- 모달 본문 --%>
 			<div class="modal-body p-4" style="font-size: 14px;">
-				<%-- common.css 14번 가격 요약 박스 디자인을 재활용한 최종 기록 정보 레이아웃 --%>
+				
+				<%-- 최종 기록 정보 레이아웃 --%>
 				<div class="ne-price-box mb-4">
 					<div class="ne-price-row">
 						<span class="ne-text-muted">최종 소요 시간</span>
@@ -246,13 +259,14 @@
 					</div>
 				</div>
 				
+				
 				<%-- 플레이 일시 영역 --%>
 				<div class="mb-3">
 					<label class="form-label ne-text-muted">플레이 일시</label>
 					<div id="md-record-date" class="p-2 border-bottom text-dark fw-semibold"></div>
 				</div>
 				
-				<%-- 기록 메모 영역 (common.css 16번 노란 안내창 안내 디자인 재활용) --%>
+				<%-- 기록 메모 영역 --%>
 				<div>
 					<label class="form-label ne-text-muted">기록 메모</label>
 					<div id="md-record-memo" class="ne-notice ne-notice-warning p-3 text-dark" style="min-height: 80px; white-space: pre-wrap;"></div>
@@ -265,7 +279,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div><!-- 개인 기록 모달 영역 -->
 
 
 <!-- 푸터 import -->
