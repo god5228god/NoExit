@@ -34,11 +34,8 @@ public class UserServiceImpl implements UserService {
 		User dto = null;
 
 		try {
-			dto = userMapper.selectByLoginId(user.getLoginId());
+			dto = userMapper.selectByLoginId(user);
 
-			if (dto != null && ! dto.getPassword().equals(user.getPassword())) {
-				dto = null;
-			}
 
 		} catch (Exception e) {
 			log.info("login : ", e);

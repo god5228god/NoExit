@@ -3,6 +3,7 @@ package com.noexit.app.controller;
 import java.io.IOException;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,26 +71,22 @@ public class UserController {
 
 	// 로그인 처리 (POST)
 	@PostMapping("/login")
-	public String login(User user, HttpSession session) {
+	public String login(User user, HttpSession session, Model model) {
 
-		User dto = null;
+	    User dto = null;
+	    try {
+	        dto = service.login(user);
+	    } catch (Exception e) {
+	        log.info("login : ", e);
+	    }
 
-		try {
-			dto = service.login(user);
-		} catch (Exception e) {
-			log.info("login : ", e);
-		}
+	    if (dto == null) {
+	        model.addAttribute("errorMessage", "아이디 또는 비밀번호가 올바르지 않습니다.");
+	        return "user/loginForm";  
+	    }
 
-		if (dto == null) {
-			return "redirect:/user/login";
-		}
-
-		String role = service.findRole(dto.getUserId());
-
-		session.setAttribute("loginUser", dto);
-		session.setAttribute("role", role);
-
-		return "redirect:/";
+	    session.setAttribute("loginUser", dto);
+	    return "redirect:/theme/list";
 	}
 
 	// 로그아웃

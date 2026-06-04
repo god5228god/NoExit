@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.noexit.app.mapper.UserMapper">
+<mapper namespace="com.noexit.app.mapper.AdminMapper">
 
 <insert id="insertAccount" parameterType="com.noexit.app.model.User">
 
@@ -12,9 +12,7 @@
 	</selectKey>
 
 	INSERT INTO USER_ACCOUNT (USER_ID, LOGIN_ID, PASSWORD, NICKNAME)
-	VALUES (#{userId}, #{loginId}
-		   , CRYPTPACK.ENCRYPT(#{password}, '12341234')
-		   , #{nickname})
+	VALUES (#{userId}, #{loginId}, #{password}, #{nickName})
 </insert>
 
 
@@ -28,11 +26,10 @@
       SELECT COUNT(*) FROM USER_ACCOUNT WHERE LOGIN_ID = #{loginId}
 </select>
 
-<select id="selectByLoginId" parameterType="com.noexit.app.model.User" resultType="com.noexit.app.model.User">
-      SELECT USER_ID, LOGIN_ID, NICKNAME, CREATED_AT
+<select id="selectByLoginId" parameterType="string" resultType="com.noexit.app.model.User">
+      SELECT USER_ID, LOGIN_ID, PASSWORD, NICKNAME, CREATED_AT
       FROM USER_ACCOUNT
       WHERE LOGIN_ID = #{loginId}
-      AND PASSWORD = CRYPTPACK.ENCRYPT(#{password}, '12341234')
 </select>
 
 <select id="countCafeByUserId" parameterType="long" resultType="int">

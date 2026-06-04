@@ -39,6 +39,7 @@ public class Theme
 		return "theme/themeinfo";
 	}
 	
+	// 테마 등록
 	@GetMapping("enroll")
 	public String enrollForm()
 	{

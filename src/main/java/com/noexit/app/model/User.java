@@ -10,6 +10,6 @@ import lombok.Setter;
 public class User {
 
 	private Long userId;
-	private String loginId, nickName, name, email, phone, gender, birthDate, password;
+	private String loginId, nickname, name, email, phone, gender, birthDate, password;
 
 }
