@@ -53,20 +53,17 @@
 	width: 60px;
 }
 
-.theme-list,
+.theme-list
+{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
 .theme-item
 {
 	display: grid;
 	gap: 10px;
-}
-
-.theme-list
-{
-	grid-template-columns: 1fr 1fr;
-}
-
-.theme-item
-{
 	grid-template-columns: 3fr 2fr;
 	border: 1px solid black;
 	border-radius: 15px;

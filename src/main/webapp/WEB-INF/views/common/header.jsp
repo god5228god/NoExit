@@ -25,8 +25,8 @@
 	<header class="ne-header d-flex justify-content-around align-items-center bg-white shadow-sm">
 		<div class="nav-left">
 			<ul class="d-flex m-0 gap-3">
-				<li><a href="#" >PARTY</a></li>
-				<li><a href="#">THEME</a></li>
+				<li><a href="${pageContext.request.contextPath }/party/list" >PARTY</a></li>
+				<li><a href="${pageContext.request.contextPath }/theme/list">THEME</a></li>
 			</ul>
 		</div>
 		<div class="logo">
@@ -39,6 +39,7 @@
 		<div class="nav-right">
 			<ul class="d-flex m-0 gap-3">
 				<li><a href="#">CAFE</a></li>
+				<li><a href="${pageContext.request.contextPath }/user/login">LOGIN</a></li>
 
 				<c:choose>
 					<c:when test="${not empty sessionScope.loginAdmin}">

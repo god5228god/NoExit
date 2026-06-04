@@ -133,7 +133,7 @@
 						<input type="text" name="partyname">
 						<label>
 						<span>동성만</span>
-						<input type="checkbox" name="genderCondition">
+						<input type="checkbox" name="genderCondition" value="1">
 						</label>
 						<span>코멘트</span>
 						<input type="text" name="partyComment">
