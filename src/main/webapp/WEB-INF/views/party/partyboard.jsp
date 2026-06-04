@@ -179,7 +179,7 @@
 .party-crew
 {
 	font-size: 15px;
-	height: 220px;
+	height: 300px;
 }
 
 .party-crew-list,
@@ -194,7 +194,7 @@
 .party-crew-list
 {
 	flex-direction: column;
-	height: 120px;
+	height: 200px;
 	overflow-y: auto; 
 }
 
@@ -212,7 +212,7 @@
 /* 파티 신청 */
 .party-apply
 {
-	height: 500px;
+	height: 400px;
 }
 
 .party-apply-list,
@@ -244,6 +244,122 @@
 }
 
 </style>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+
+<c:set var="path" value="${pageContext.request.contextPath }"></c:set>
+
+<script type="text/javascript">
+	
+	$(function()
+	{
+		$("[name='partyComment']").on("keydown",function(evt)
+		{
+			if(evt.key == "Enter")
+			{
+				evt.preventDefault();
+				
+				commentWrite();
+			}
+		});
+		
+		// 댓글 삭제
+		$(".comment-delete").click(function()
+		{
+			alert(this.getAttribute("data-comment-id"));
+		});
+		
+		// 파티 승인
+		$(".aprv-apply").click(function()
+		{
+			alert(this.getAttribute("data-apply-id"));
+		});
+		
+		// 파티 거절
+		$(".reject-apply").click(function()
+		{
+			alert(this.getAttribute("data-apply-id"));	
+		});
+	
+		// 파티 탈퇴;
+		$(".btn-out").click(function()
+		{
+			alert(this.getAttribute("data-apply-id"));
+		});
+		
+		// 파티 강퇴
+		$(".btn-kick").click(function()
+		{
+			alert(this.getAttribute("data-apply-id"));
+		});
+		
+	});
+	
+	function commentWrite()
+	{
+		let comment = document.querySelector("[name='partyComment']");
+		
+		if(!comment.value.trim())
+		{
+			alert("메시지가 없습니다.");
+			comment.focus();
+			return;
+		}
+		
+		alert("댓글 작성");
+		comment.value = "";
+		
+		// ajax 댓글 작성
+	}
+			
+	function deleteComment(commentId)
+	{
+		// ajax 삭제 요청
+	}
+	
+	function onReady()
+	{
+		alert("레디");
+		// ajax 레디 요청
+	}
+	
+	function approveApply(applyId)
+	{
+		alert("승인");
+		// ajax 승인 요청
+	}
+	
+	function rejectApply(applyId)
+	{
+		alert("거절");
+		// ajax 거절 요청
+	}
+	
+	function reservation()
+	{
+		alert("예약");
+		// 예약 페이지 이동
+	}
+	
+	function partyUpdate()
+	{
+		alert("파티 수정");
+		// 파티 수정 페이지 이동
+	}
+	
+	function partyDelete()
+	{
+		alert("파티 해산");
+		// confirm 만 물어보고 바로 delete 처리
+		// 이후 마이 페이지로
+	}
+	
+	function getData()
+	{
+		alert("ajax 데이터 요청 및 바인딩");
+	}
+	
+</script>
 
 </head>
 <body>
@@ -279,9 +395,9 @@
 						
 						<div class="party-action">
 							
-							<button type="button" class="btn btn-primary">예약하기</button>
-							<button type="button" class="btn btn-outline-primary">파티 수정</button>
-							<button type="button" class="btn ne-btn-deact">파티 해산</button>
+							<button type="button" class="btn btn-primary" onclick="reservation()">예약하기</button>
+							<button type="button" class="btn btn-outline-primary" onclick="partyUpdate()">파티 수정</button>
+							<button type="button" class="btn ne-btn-deact" onclick="partyDelete()">파티 해산</button>
 							
 						</div>
 						
@@ -301,14 +417,14 @@
 							</div>
 							
 							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
+								<button type="button" class="comment-delete" data-comment-id="1">삭제</button>
 								<span class="comment">오 얼마임?</span>
 								<span class="writer">김주열</span>
 							</div>
 							
 							<div class="comment-item other">
 								<span class="writer">윤주열</span>
-								<span class="comment">삭제된 댓글입니다.</span>
+								<span class="comment">삭제된 댓글입니다</span>
 							</div>
 							
 							<div class="comment-item other">
@@ -317,61 +433,12 @@
 							</div>
 							
 							<div class="comment-item mine">
-								<span class="comment">삭제된 댓글입니다.</span>
+								<span class="comment">삭제된 댓글입니다</span>
 								<span class="writer">김주열</span>
 							</div>
 							
 							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
-								<span class="comment">제 정신임?</span>
-								<span class="writer">김주열</span>
-							</div>
-							
-							
-							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
-								<span class="comment">제 정신임?</span>
-								<span class="writer">김주열</span>
-							</div>
-							
-							
-							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
-								<span class="comment">제 정신임?</span>
-								<span class="writer">김주열</span>
-							</div>
-							
-							
-							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
-								<span class="comment">제 정신임?</span>
-								<span class="writer">김주열</span>
-							</div>
-							
-							
-							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
-								<span class="comment">제 정신임?</span>
-								<span class="writer">김주열</span>
-							</div>
-							
-							
-							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
-								<span class="comment">제 정신임?</span>
-								<span class="writer">김주열</span>
-							</div>
-							
-							
-							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
-								<span class="comment">제 정신임?</span>
-								<span class="writer">김주열</span>
-							</div>
-							
-							
-							<div class="comment-item mine">
-								<button type="button" class="comment-delete">삭제</button>
+								<button type="button" class="comment-delete" data-comment-id="2" >삭제</button>
 								<span class="comment">제 정신임?</span>
 								<span class="writer">김주열</span>
 							</div>
@@ -381,7 +448,7 @@
 						<div class="comment-write-form">
 						
 							<input type="text" name="partyComment" placeholder="댓글">
-							<button type="button" class="btn btn-primary">작성</button>		
+							<button type="button" class="btn btn-primary" onclick="commentWrite()">작성</button>		
 						
 						</div>
 								
@@ -408,8 +475,24 @@
 								</div>
 								
 								<div class="crew-status">
-									<span class="ne-st ne-st-amber">준비 완료</span>
 									<span class="ne-st ne-st-green">파티장</span>
+								</div>
+								
+							</div>
+							
+							<div class="crew">
+							
+								<div class="crew-info">
+									<span>김주열</span>
+									<span>29세</span>
+									<span>남자</span>
+									<span>🌡️36.5</span>
+								</div>
+								
+								<div class="crew-position">
+									<span class="ne-st ne-st-amber">준비 완료</span>
+									<span class="ne-st ne-st-blue">파티원</span>
+									<button class="btn ne-btn-deact btn-out" data-apply-id="1">탈퇴</button>
 								</div>
 								
 							</div>
@@ -426,14 +509,16 @@
 								<div class="crew-position">
 									<span class="ne-st ne-st-red">준비 중</span>
 									<span class="ne-st ne-st-blue">파티원</span>
+									<button class="btn ne-btn-deact btn-kick" data-apply-id="2">강퇴</button>
 								</div>
 								
 							</div>
+							
 						</div> 
 						
 						<div class="crew-action">
 							
-							<button type="button" class="btn btn-primary">레디</button>
+							<button type="button" class="btn btn-primary" onclick="onReady()">레디</button>
 							
 						</div>
 						
@@ -465,112 +550,8 @@
 								
 								<div class="apply-action">
 									
-									<button type="button" class="btn btn-primary">승인</button>
-									<button type="button" class="btn btn-outline-primary">거절</button>
-									
-								</div>
-								
-							</div>
-							
-							<div class="apply-item">
-								
-								<div class="apply-info">
-									
-									<span>최주열</span>
-									<span>15세</span>
-									<span>여자</span>
-									<span>🌡️47.2</span>
-									
-								</div>
-								
-								<div class="apply-comment">
-									
-									<p>안녕하세요!</p>
-																	
-								</div>
-								
-								<div class="apply-action">
-									
-									<button type="button" class="btn btn-primary">승인</button>
-									<button type="button" class="btn btn-outline-primary">거절</button>
-									
-								</div>
-								
-							</div>
-							
-							<div class="apply-item">
-								
-								<div class="apply-info">
-									
-									<span>최주열</span>
-									<span>15세</span>
-									<span>여자</span>
-									<span>🌡️47.2</span>
-									
-								</div>
-								
-								<div class="apply-comment">
-									
-									<p>안녕하세요!</p>
-																	
-								</div>
-								
-								<div class="apply-action">
-									
-									<button type="button" class="btn btn-primary">승인</button>
-									<button type="button" class="btn btn-outline-primary">거절</button>
-									
-								</div>
-								
-							</div>
-							
-							<div class="apply-item">
-								
-								<div class="apply-info">
-									
-									<span>최주열</span>
-									<span>15세</span>
-									<span>여자</span>
-									<span>🌡️47.2</span>
-									
-								</div>
-								
-								<div class="apply-comment">
-									
-									<p>안녕하세요!</p>
-																	
-								</div>
-								
-								<div class="apply-action">
-									
-									<button type="button" class="btn btn-primary">승인</button>
-									<button type="button" class="btn btn-outline-primary">거절</button>
-									
-								</div>
-								
-							</div>
-							
-							<div class="apply-item">
-								
-								<div class="apply-info">
-									
-									<span>최주열</span>
-									<span>15세</span>
-									<span>여자</span>
-									<span>🌡️47.2</span>
-									
-								</div>
-								
-								<div class="apply-comment">
-									
-									<p>안녕하세요!</p>
-																	
-								</div>
-								
-								<div class="apply-action">
-									
-									<button type="button" class="btn btn-primary">승인</button>
-									<button type="button" class="btn btn-outline-primary">거절</button>
+									<button type="button" class="btn btn-primary aprv-apply" data-apply-id="1">승인</button>
+									<button type="button" class="btn btn-outline-primary reject-apply" data-apply-id="1">거절</button>
 									
 								</div>
 								

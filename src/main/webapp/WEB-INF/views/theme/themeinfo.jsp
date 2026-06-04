@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>themedetail.jsp</title>
+<title>themeinfo.jsp</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
@@ -156,6 +156,23 @@
 
 </style>
 
+<c:set var="path" value="${pageContext.request.contextPath }"></c:set>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+
+<script type="text/javascript">
+	
+	$(function()
+	{
+		$(".slot-btn").click(function()
+		{
+			window.location.href = "${path}/party/write?slotId=" + this.getAttribute("data-slot");
+		});
+		
+	});
+
+</script>
+
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/common/header.jsp" %>
@@ -242,9 +259,11 @@
 						
 						<div class="slot-time">
 							<span class="ne-st ne-st-gray">10:00</span>
-							<button type="button" value="slotId" onclick="">12:00</button>
-							<button type="button" value="slotId" onclick="">14:00</button>
-							<button type="button" value="slotId" onclick="">16:00</button>
+							<button type="button" data-slot="1" class="slot-btn">12:00</button>
+							<button type="button" data-slot="2" class="slot-btn">14:00</button>
+							<button type="button" data-slot="3" class="slot-btn">16:00</button>
+							<button type="button" data-slot="4" class="slot-btn">18:00</button>
+							<button type="button" data-slot="5" class="slot-btn">20:00</button>
 						</div>
 						
 					</div>
@@ -256,10 +275,10 @@
 						</div>
 						
 						<div class="slot-time">
-							<button type="button" value="slotId" onclick="">10:00</button>
-							<button type="button" value="slotId" onclick="">12:00</button>
-							<button type="button" value="slotId" onclick="">14:00</button>
-							<button type="button" value="slotId" onclick="">16:00</button>
+							<button type="button" data-slot="6" class="slot-btn">12:00</button>
+							<button type="button" data-slot="7" class="slot-btn">14:00</button>
+							<button type="button" data-slot="8" class="slot-btn">16:00</button>
+							<button type="button" data-slot="9" class="slot-btn">18:00</button>
 						</div>
 						
 					</div>

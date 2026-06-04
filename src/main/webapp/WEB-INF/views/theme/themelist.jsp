@@ -8,6 +8,8 @@
 <title>themelist.jsp</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
+<c:set var="path" value="${pageContext.request.contextPath }"></c:set>
+
 <style type="text/css">
 
 .container
@@ -98,6 +100,57 @@
 
 </style>
 
+<script type="text/javascript">
+
+
+	document.addEventListener("DOMContentLoaded",function()
+	{
+		const kwdInput = document.querySelector("[name='kwd']");
+		
+		kwdInput.addEventListener("keydown",(evt)=>
+		{
+			if(evt.key == "Enter")
+			{
+				evt.preventDefault();
+				
+				search();
+			}
+		});
+	})
+
+	let schType = "${schType}";
+	let kwd = "${kwd}";
+	let lastId;
+	let minPrice = "${minPrice}";
+	let maxPrice = "${maxPrice}";
+	let minScore = "${minScore}";
+	let maxScore = "${maxScore}";
+	let minHorror = "${minHorror}";
+	let maxHorror = "${maxHorror}";
+	
+	function search()
+	{
+		const f = document.searchForm;
+		
+		if(!f.kwd.value.trim())
+		{
+			alert("키워드를 입력하세요");
+			f.kwd.focus();
+			return;
+		}
+		
+		f.action = '${path}/theme/list';
+		
+		f.submit();
+	}
+	
+	function addList()
+	{
+		alert("schType : " + schType + " / kwd : " + kwd);
+	}
+
+</script>
+
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/common/header.jsp" %>
@@ -109,17 +162,17 @@
 				<div class="search-wrap">
 					
 					<div class="search-form">
-						<form action="" method="post" name="searchForm">
+						<form action="" method="get" name="searchForm">
 							
 							<select name="schType">
-								<option value="cafeName">카페명</option>
-								<option value="themeName">테마명</option>
+								<option value="cafeName" ${schType == 'cafeName' ? 'selected' : '' }>카페명</option>
+								<option value="themeName" ${schType == 'themeName' ? 'selected' : '' }>테마명</option>
 							</select>
 							
-							<input type="text" name="kwd" placeholder="검색 키워드">
+							<input type="text" name="kwd" placeholder="검색 키워드" value="${kwd }">
 							
-							<button type="button" onclick="" class="btn btn-primary">검색</button>
-							<button type="button" onclick="" class="btn btn-outline-primary">초기화</button>
+							<button type="button" onclick="search()" class="btn btn-primary">검색</button>
+							<button type="button" onclick="window.location.href='${path}/theme/list'" class="btn btn-outline-primary">초기화</button>
 							
 						</form>
 					</div>
@@ -154,7 +207,7 @@
 				
 				<div class="theme-list">
 				
-					<a href="" class="theme-item">
+					<a href="${path }/theme/info/1" class="theme-item">
 					
 						<div class="theme-image">
 							<span>테마이미지</span>
@@ -201,7 +254,7 @@
 					
 					</a>
 				
-					<a href="" class="theme-item">
+					<a href="${path }/theme/info/1" class="theme-item">
 					
 						<div class="theme-image">
 							<span>테마이미지</span>
@@ -248,7 +301,7 @@
 					
 					</a>
 				
-					<a href="" class="theme-item">
+					<a href="${path }/theme/info/1" class="theme-item">
 					
 						<div class="theme-image">
 							<span>테마이미지</span>
@@ -299,7 +352,7 @@
 				
 				<div class="theme-add">
 					
-					<button type="button" class="btn btn-primary">더보기</button>	
+					<button type="button" class="btn btn-primary" onclick="addList()">더보기</button>	
 					
 				</div>
 				

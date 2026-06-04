@@ -65,6 +65,7 @@
 	grid-template-columns: 3fr 2fr;
 	gap: 10px;
 	border: 1px solid black;
+	border-radius: 15px;
 	padding: 5px;
 }
 
@@ -77,6 +78,7 @@
 {
 	display: flex;
 	flex-direction: column;
+	gap: 5px;
 }
 
 .info-item
@@ -94,6 +96,57 @@
 
 </style>
 
+<c:set var="path" value="${pageContext.request.contextPath }"></c:set>
+
+<script type="text/javascript">
+	
+	document.addEventListener("DOMContentLoaded",function()
+	{
+		const kwdInput = document.querySelector("[name='kwd']");
+		
+		kwdInput.addEventListener("keydown",(evt)=>
+		{
+			if(evt.key == "Enter")
+			{
+				evt.preventDefault();
+				
+				search();
+			}
+		});
+		
+	})
+	
+	let schType = '${schType}';
+	let kwd = "${kwd}";
+	let lastId;
+	let minDate = "${minDate}";
+	let maxDate = "${maxDate}";
+	let minTime = "${minTime}";
+	let maxTime = "${maxTime}";
+	
+	function search()
+	{
+		const f = document.searchForm;
+		
+		if(!f.kwd.value.trim())
+		{
+			alert("키워드를 입력하세요");
+			f.kwd.focus();
+			return;
+		}
+		
+		f.action = '${path}/party/list';
+		
+		f.submit();
+	}
+
+	function addList()
+	{
+		alert("추가");
+	}
+	
+</script>
+
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/common/header.jsp" %>
@@ -105,7 +158,7 @@
 				<div class="search-wrap">
 					
 					<div class="search-form">
-						<form action="" method="post" name="searchForm">
+						<form action="" method="get" name="searchForm">
 							
 							<select name="schType">
 								<option value="themeName">테마명</option>
@@ -114,8 +167,8 @@
 							
 							<input type="text" name="kwd" placeholder="검색 키워드">
 							
-							<button type="button" onclick="" class="btn btn-primary">검색</button>
-							<button type="button" onclick="" class="btn btn-outline-primary">초기화</button>
+							<button type="button" onclick="search()" class="btn btn-primary">검색</button>
+							<button type="button" onclick="window.location.href='${path}/party/list'" class="btn btn-outline-primary">초기화</button>
 							
 						</form>
 					</div>
@@ -288,7 +341,7 @@
 				
 				<div class="party-add">
 					
-					<button type="button" class="btn btn-primary">더보기</button>	
+					<button type="button" class="btn btn-primary" onclick="addList()">더보기</button>	
 					
 				</div>
 				
