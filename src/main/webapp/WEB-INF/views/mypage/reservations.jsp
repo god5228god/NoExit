@@ -13,12 +13,12 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/common/header.jsp"%>
-	<main class="ne-main-content">
+	<main class="ne-main-content" >
 		<div class="ne-container d-flex justify-content-between" style="margin: 30px auto;">
 			<aside class="">
-				<%@ include file="/WEB-INF/views/common/myside.jsp" %>
+				<%@ include file="/WEB-INF/views/common/leftSideBar.jsp" %>
 			</aside>
-			<div class="ne-card resListWrap" style="width: 55%;">
+			<div class="ne-card resListWrap" style="width: 55%; margin: 0 20px;">
 				<div class="title ne-sc-title">예약현황</div>
 				<div class="tabWrap d-flex">
 					<button type="button" class="tab on">예약 중 <span>3</span></button>
@@ -210,8 +210,8 @@
 			
 				</div>
 			</div>
-			<aside class="d-flex justify-content-end">
-				<%@ include file="/WEB-INF/views/common/myside.jsp" %>
+			<aside class="d-flex justify-content-end" style="width: 25%;">
+				<%@ include file="/WEB-INF/views/common/rightSideBar.jsp" %>
 			</aside>
 
 		</div>

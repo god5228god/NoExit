@@ -14,15 +14,37 @@
 
 	<main class="ne-main-content">
 		<div class="slider">
-			같이 방탈출 할 사람을 
-			찾고 있나요?
-			
+			<div class="sliderContent">
+				같이 방탈출ㄱ?
+				<button type="button" class="btn">파티</button>
+			</div>			
 		</div>
 		<div class="ne-container ne-card mainWrap">
 			
 			<div class="themeWrap">
 				<div class="title">인기 테마</div>
-				<div class="theme"></div>
+				<div class="more">
+					<a href="">▶ 더보기</a>
+				</div>
+				<div class="theme d-flex justify-content-between ">
+					<a href="" class="d-flex flex-column ">
+						<img src="http://placehold.co/120x160" alt="" />
+						<span>장르명</span>
+						<span>The BackRoom</span>
+					</a>
+					<a href="" class="d-flex flex-column ">
+						<img src="http://placehold.co/120x160" alt="" />
+						<span>The BackRoom</span>
+					</a>
+					<a href="" class="d-flex flex-column ">
+						<img src="http://placehold.co/120x160" alt="" />
+						<span>The BackRoom</span>
+					</a>
+					<a href="" class="d-flex flex-column ">
+						<img src="http://placehold.co/120x160" alt="" />
+						<span>The BackRoom</span>
+					</a>
+				</div>
 			</div>
 			<div class="partyWrap">
 				<div class="title">모집 중인 파티</div>
