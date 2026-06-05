@@ -11,5 +11,20 @@
 		WHERE USER_ID = #{userId}
 		ORDER BY CAFE_ID
 	</select>
+	
+	<insert id="insertCafe" parameterType="com.noexit.app.model.Cafe">
+    <selectKey keyProperty="cafeId" resultType="long" order="BEFORE">
+        SELECT CAFE_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO CAFE (
+        CAFE_ID, USER_ID, BR_NO, CAFE_NAME, PHONE
+      , POSTAL_CODE, ADDRESS, ADDRESS_DETAIL
+    ) VALUES (
+        #{cafeId}, #{userId}, #{brNo}, #{cafeName}, #{phone}
+      , #{postalCode}, #{address}, #{addressDetail}
+    )
+	</insert>	
+	
+	
 
 </mapper>

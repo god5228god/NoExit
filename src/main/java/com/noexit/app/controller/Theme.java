@@ -8,29 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.noexit.app.mapper.CafeMapper;
-import com.noexit.app.model.Cafe;
-import com.noexit.app.model.User;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/theme/*")
 public class Theme
 {
-
-    private final CafeController cafeController;
-
-    @Autowired
-    private CafeMapper cafeMapper;
-
-    Theme(CafeController cafeController) {
-        this.cafeController = cafeController;
-    }
 
     /*
      * themelist 페이지로 이동하는 메소드
@@ -100,17 +84,6 @@ public class Theme
 		return "theme/themeinfo";
 	}
 
-	// 테마 등록
-	@GetMapping("enroll")
-	public String enrollForm(HttpSession session, Model model)
-	{
-		User loginUser = (User) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			return "redirect:/user/login";
-		}
-		List<Cafe> cafeList = cafeMapper.selectByUserId(loginUser.getUserId());
-		model.addAttribute("cafeList", cafeList);
-		return "theme/themeEnrollForm";
-	}
+
 
 }

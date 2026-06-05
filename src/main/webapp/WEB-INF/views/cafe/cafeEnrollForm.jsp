@@ -81,7 +81,7 @@ $(function(){
 
 				<div class="input-group mb-2">
 					<input type="text" id="postalCode" name="postalCode" class="form-control" maxlength="5" placeholder="우편번호" style="max-width: 160px;" readonly required>
-					<%-- 카카오 우편번호 API 연동 자리 --%>
+					
 					<button type="button" id="addrBtn" class="btn btn-outline-primary">주소 찾기</button>
 				</div>
 

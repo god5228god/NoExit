@@ -13,11 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class Party
 {
 
-    private final CafeController cafeController;
-
-    Party(CafeController cafeController) {
-        this.cafeController = cafeController;
-    }
 	/*
 	 * 파티 개설 폼으로 이동
 	 */
