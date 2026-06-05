@@ -22,12 +22,12 @@
 	<div class="ne-sc">
 		<div class="ne-sc-title fs-5">테마 등록 신청</div>
 
-		<form action="${pageContext.request.contextPath}/theme/enroll" method="post" enctype="multipart/form-data">
+		<form action="${pageContext.request.contextPath}/owner/theme/enroll" method="post" enctype="multipart/form-data">
 
 			<div class="row mb-3">
 				<div class="col-8">
-					<label for="roomName" class="form-label">테마명<span class="form-required">*</span></label>
-					<input type="text" id="roomName" name="roomName" class="form-control" maxlength="100" placeholder="테마명을 입력해주세요" required>
+					<label for="themeName" class="form-label">테마명<span class="form-required">*</span></label>
+					<input type="text" id="themeName" name="themeName" class="form-control" maxlength="100" placeholder="테마명을 입력해주세요" required>
 				</div>
 				<div class="col-4">
 					<label for="cafeId" class="form-label">카페<span class="form-required">*</span></label>
@@ -42,8 +42,8 @@
 
 			<div class="row mb-3">
 				<div class="col">
-					<label for="genreId" class="form-label">장르<span class="form-required">*</span></label>
-					<select id="genreId" name="genreId" class="form-select" required>
+					<label for="genre" class="form-label">장르<span class="form-required">*</span></label>
+					<select id="genre" name="genre" class="form-select" required>
 						<option value="">-- 장르 선택 --</option>
 						<c:forEach var="genre" items="${genreList}">
 							<option value="${genre.genreId}">${genre.genreName}</option>
@@ -51,8 +51,8 @@
 					</select>
 				</div>
 				<div class="col">
-					<label for="isAdult" class="form-label">성인 전용 여부<span class="form-required">*</span></label>
-					<select id="isAdult" name="isAdult" class="form-select" required>
+					<label for="adult" class="form-label">성인 전용 여부<span class="form-required">*</span></label>
+					<select id="adult" name="adult" class="form-select" required>
 						<c:forEach var="c" items="${commonList}">
 							<option value="${c.commonId}">
 								<c:choose>
@@ -95,15 +95,15 @@
 					<select id="difficulty" name="difficulty" class="form-select" required>
 						<option value="1">★☆☆☆☆ (1단계)</option>
 						<option value="2">★★☆☆☆ (2단계)</option>
-						<option value="3" selected>★★★☆☆ (3단계)</option>
+						<option value="3">★★★☆☆ (3단계)</option>
 						<option value="4">★★★★☆ (4단계)</option>
 						<option value="5">★★★★★ (5단계)</option>
 					</select>
 				</div>
 				<div class="col">
-					<label for="horrorLevel" class="form-label">공포도<span class="form-required">*</span></label>
-					<select id="horrorLevel" name="horrorLevel" class="form-select" required>
-						<option value="1" selected>없음 (1단계)</option>
+					<label for="horror" class="form-label">공포도<span class="form-required">*</span></label>
+					<select id="horror" name="horror" class="form-select" required>
+						<option value="1">없음 (1단계)</option>
 						<option value="2">약간 (2단계)</option>
 						<option value="3">보통 (3단계)</option>
 						<option value="4">높음 (4단계)</option>
@@ -111,8 +111,8 @@
 					</select>
 				</div>
 				<div class="col">
-					<label for="activityLevel" class="form-label">활동성<span class="form-required">*</span></label>
-					<select id="activityLevel" name="activityLevel" class="form-select" required>
+					<label for="activity" class="form-label">활동성<span class="form-required">*</span></label>
+					<select id="activity" name="activity" class="form-select" required>
 						<option value="1" selected>낮음 (1단계)</option>
 						<option value="2">보통 (2단계)</option>
 						<option value="3">높음 (3단계)</option>
@@ -121,13 +121,13 @@
 			</div>
 
 			<div class="mb-3">
-				<label for="roomDesc" class="form-label">테마 설명</label>
-				<textarea id="roomDesc" name="roomDesc" rows="4" class="form-control" placeholder="테마의 줄거리, 분위기, 주의사항 등을 작성해주세요"></textarea>
+				<label for="description" class="form-label">테마 설명</label>
+				<textarea id="description" name="description" rows="4" class="form-control" placeholder="테마의 줄거리, 분위기, 주의사항 등을 작성해주세요"></textarea>
 			</div>
 
 			<div class="mb-3">
-				<label for="uploadImg" class="form-label">테마 이미지 포스터<span class="form-required">*</span></label>
-				<input type="file" id="uploadImg" name="uploadImg" class="form-control" accept="image/*" required>
+				<label for="themeImageFile" class="form-label">테마 이미지 포스터<span class="form-required">*</span></label>
+				<input type="file" id="themeImageFile" name="themeImageFile" class="form-control" accept="image/*" required>
 				<div class="ne-hint">테마 메인에 노출될 포스터 이미지를 업로드하세요.</div>
 			</div>
 

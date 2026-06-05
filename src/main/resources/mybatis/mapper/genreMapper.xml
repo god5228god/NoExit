@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noexit.app.mapper.GenreMapper">
+
+	<select id="getGenreList" resultType="com.noexit.app.model.Genre">
+		SELECT GENRE_ID, GENRE_NAME
+		FROM ROOM_GENRE
+		ORDER BY GENRE_ID
+	</select>
+
+</mapper>

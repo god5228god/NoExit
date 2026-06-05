@@ -22,7 +22,7 @@ public interface ThemeService
 	// 장르목록 DTO 필요
 	/*장르목록DTO*/ void getGenreList();
 	List<Cafe> getCafeList(long userId);
-	int themeInsert(ThemeDTO dto);
+	int themeInsert(ThemeDTO dto) throws Exception;
 	ThemeDTO getThemeById(long themeId);
 	int themeUpdate(ThemeDTO dto);
 	int themeDelete(long themeId);

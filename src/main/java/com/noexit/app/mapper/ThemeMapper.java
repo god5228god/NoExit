@@ -13,16 +13,13 @@ import com.noexit.app.model.ThemeSlotDTO;
 @Mapper
 public interface ThemeMapper
 {
-		void getGenreList();
-		List<Cafe> getCafeList(long userId);
-		int themeInsert(ThemeDTO dto);
-		ThemeDTO getThemeById(long themeId);
-		int themeUpdate(ThemeDTO dto);
-		int themeDelete(long themeId);
+	public void getGenreList();
+	public List<Cafe> getCafeList(long userId);
+	public int themeInsert(ThemeDTO dto);
+	public ThemeDTO getThemeById(long themeId);
+	public int themeUpdate(ThemeDTO dto);
+	public int themeDelete(long themeId);
 		
-		/*
-		 * ↑ 위 메소드는 명철님이 사용함 
-		 */
 		
 		/*
 		 * 테마 목록을 가져오는 메소드
