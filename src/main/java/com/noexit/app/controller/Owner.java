@@ -1,5 +1,7 @@
 package com.noexit.app.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.noexit.app.common.AuthUtil;
+import com.noexit.app.model.AttendanceListDTO;
 import com.noexit.app.model.Manager;
 import com.noexit.app.model.Manner;
 import com.noexit.app.model.ThemeDTO;
@@ -50,49 +53,108 @@ public class Owner {
 		return "owner/resList";
 	}
 
-	// 테마 등록 폼
-	@GetMapping("/theme/enroll")
-	public String enrollForm(HttpSession session, Model model) {	
-		
-		String redirect = AuthUtil.checkOwner(session); 
-		if (redirect != null) 
+	// 테마 관리 (본인 카페 테마 리스트 — 사장만)
+	@GetMapping("/theme/manage")
+	public String themeManage(HttpSession session, Model model) {
+
+		String redirect = AuthUtil.checkOwner(session);
+		if (redirect != null)
+			return redirect;
+
+		User loginUser = (User) session.getAttribute("loginUser");
+		model.addAttribute("themeList", themeService.selectListByOwnerUserId(loginUser.getUserId()));
+		return "theme/themeManage";
+	}
+
+	// 테마 등록/수정 폼 (mode=write|update)
+	@GetMapping("/theme/write")
+	public String writeForm(@RequestParam(name = "mode") String mode,
+	                        @RequestParam(name = "roomId", required = false) Long roomId,
+	                        HttpSession session, Model model) {
+
+		String redirect = AuthUtil.checkOwner(session);
+		if (redirect != null)
 			return redirect;
 
 		User loginUser = (User) session.getAttribute("loginUser");
 		model.addAttribute("cafeList",   cafeService.selectByUserId(loginUser.getUserId()));
 		model.addAttribute("genreList",  genreService.getGenreList());
 		model.addAttribute("commonList", commonService.getCommonList());
-		return "theme/themeEnrollForm";
+		model.addAttribute("mode", mode);
+
+		if ("update".equals(mode) && roomId != null) {
+			model.addAttribute("dto", themeService.getThemeById(roomId));
+		}
+		return "theme/themeWriteForm";
 	}
 
-	// 테마 등록 처리
-	@PostMapping("/theme/enroll")
-	public String enroll(ThemeDTO dto, HttpSession session, Model model) {
-		
-		String redirect = AuthUtil.checkOwner(session); 
-		if (redirect != null) return redirect;
+	// 테마 등록/수정 처리
+	@PostMapping("/theme/write")
+	public String write(@RequestParam(name = "mode") String mode,
+	                    ThemeDTO dto, HttpSession session, Model model) {
+
+		String redirect = AuthUtil.checkOwner(session);
+		if (redirect != null)
+			return redirect;
 
 		try {
-			themeService.themeInsert(dto);
+			if ("update".equals(mode)) {
+				themeService.themeUpdate(dto);
+			} else {
+				themeService.themeInsert(dto);
+			}
 		} catch (Exception e) {
-			log.info("themeInsert : ", e);
+			log.info("theme write (" + mode + ") : ", e);
 
 			User loginUser = (User) session.getAttribute("loginUser");
-			model.addAttribute("errorMessage", "테마 등록 중 오류가 발생했습니다.");
+			model.addAttribute("errorMessage", "테마 " + ("update".equals(mode) ? "수정" : "등록") + " 중 오류 발생");
 			model.addAttribute("cafeList",   cafeService.selectByUserId(loginUser.getUserId()));
 			model.addAttribute("genreList",  genreService.getGenreList());
 			model.addAttribute("commonList", commonService.getCommonList());
-			return "theme/themeEnrollForm";
+			model.addAttribute("mode", mode);
+			return "theme/themeWriteForm";
 		}
-		return "redirect:/theme/list";
+		return "redirect:/owner/theme/manage";
 	}
 
 
 	// 출석체크
 	@GetMapping("/attendance")
-	public String attendance(HttpSession session) {
-		String redirect = AuthUtil.checkStaff(session); if (redirect != null) return redirect;
+	public String attendance(HttpSession session, Model model) {
+		String redirect = AuthUtil.checkStaff(session);
+		if (redirect != null)
+			return redirect;
+
+		User loginUser = (User) session.getAttribute("loginUser");
+		String role    = (String) session.getAttribute("role");
+
+		List<AttendanceListDTO> attendList;
+		if ("OWNER".equals(role)) {
+			attendList = attendanceService.selectListByOwnerUserId(loginUser.getUserId());
+		} else {
+			attendList = attendanceService.selectListByManagerUserId(loginUser.getUserId());
+		}
+
+		model.addAttribute("attendList", attendList);
 		return "owner/attendance";
+	}
+
+	// 출석/노쇼 처리 (출석체크 페이지에서 호출)
+	@PostMapping("/attendance/attend")
+	public String attend(AttendanceListDTO dto, HttpSession session) {
+		String redirect = AuthUtil.checkStaff(session);
+		if (redirect != null)
+			return redirect;
+
+		User loginUser = (User) session.getAttribute("loginUser");
+		dto.setUserId(loginUser.getUserId());
+
+		try {
+			attendanceService.attend(dto);
+		} catch (Exception e) {
+			log.info("attend : ", e);
+		}
+		return "redirect:/owner/attendance";
 	}
 
 	// 노쇼 처리 (출석체크 페이지에서 호출)

@@ -57,12 +57,43 @@ public class ThemeServiceImpl implements ThemeService {
 
 	@Override
 	public ThemeDTO getThemeById(long themeId) {
-		return null;
+		ThemeDTO dto = null;
+		try {
+			dto = themeMapper.getThemeById(themeId);
+		} catch (Exception e) {
+			log.info("getThemeById : ", e);
+		}
+		return dto;
 	}
 
 	@Override
-	public int themeUpdate(ThemeDTO dto) {
-		return 0;
+	public int themeUpdate(ThemeDTO dto) throws Exception {
+		int result = 0;
+		try {
+			String saveFilename = saveThemeImage(dto);
+			if (saveFilename != null) {
+				dto.setImagePath(saveFilename);
+			} else {
+				ThemeDTO old = themeMapper.getThemeById(dto.getThemeId());
+				dto.setImagePath(old.getImagePath());
+			}
+			result = themeMapper.themeUpdate(dto);
+		} catch (Exception e) {
+			log.info("themeUpdate : ", e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Override
+	public List<ThemeDTO> selectListByOwnerUserId(long ownerUserId) {
+		List<ThemeDTO> list = null;
+		try {
+			list = themeMapper.selectListByOwnerUserId(ownerUserId);
+		} catch (Exception e) {
+			log.info("selectListByOwnerUserId : ", e);
+		}
+		return list;
 	}
 
 	@Override

@@ -24,8 +24,9 @@ public interface ThemeService
 	List<Cafe> getCafeList(long userId);
 	int themeInsert(ThemeDTO dto) throws Exception;
 	ThemeDTO getThemeById(long themeId);
-	int themeUpdate(ThemeDTO dto);
+	int themeUpdate(ThemeDTO dto) throws Exception;
 	int themeDelete(long themeId);
+	List<ThemeDTO> selectListByOwnerUserId(long ownerUserId);
 	
 	/*
 	 * ↑ 위 메소드는 명철님이 사용함 

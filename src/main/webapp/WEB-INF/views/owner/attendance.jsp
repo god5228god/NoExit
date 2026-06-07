@@ -10,22 +10,19 @@
 	href='${pageContext.request.contextPath }/dist/css/attendance.css' />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <script type="text/javascript">
-/*
-	function attendOk(num){
-		if(confirm('출석 처리 하시겠습니까?')){
-			const url = "${pageContext.request.contextPath}/owner/attendance/check/" + num;
-			location.href=url;
-		}
-	}
-	
-	function noshowOk(userId){
-		if(confirm('노쇼 처리 하시겠습니까?')){
-			let f = document.createElement('form');
 
-			f.submit();
+	function attendOk(formId){
+		if(confirm('출석 처리 하시겠습니까?')){
+			document.getElementById(formId).submit();
 		}
 	}
-*/
+
+	function noshowOk(formId){
+		if(confirm('노쇼 처리 하시겠습니까?')){
+			document.getElementById(formId).submit();
+		}
+	}
+
 </script>
 </head>
 <body>
@@ -38,93 +35,69 @@
 			</aside>
 			<div class="col-md-10 resWrap">
 				<div class="title">출석 체크</div>
-				<c:if test="${not empty resultMessage}">
-					<div class="alert alert-info">${resultMessage}</div>
-				</c:if>
 				<div class="d-flex justify-content-between">
-					<div class="resList">
-						<div class="inputBox d-flex">
-							<input type="date" class="ne-box" value="2026-06-05" />
-							<select name="" id="" class="ne-box">
-								<option>전체 카페</option>
-								<option>카페1</option>
-								<option>카페2</option>
-							</select>
-							<select name="" id="" class="ne-box">
-								<option>전체 테마</option>
-								<option>테마1</option>
-								<option>테마2</option>
-							</select>
+					<div class="resList" style="width:100%">
+						<div class="attend-list">
+
+							<div class="row fw-bold border-bottom py-2 m-0">
+								<div class="col-1">시간</div>
+								<div class="col-2">카페</div>
+								<div class="col-2">테마</div>
+								<div class="col-2">예약자</div>
+								<div class="col-1">인원</div>
+								<div class="col-2">상태</div>
+								<div class="col-2"></div>
+							</div>
+
+							<c:forEach var="r" items="${attendList}">
+								<div class="row align-items-center border-bottom py-2 m-0">
+									<div class="col-1 fw-bold">
+									<fmt:formatDate value="${r.openAt}" pattern="MM-dd"/><br>
+									<fmt:formatDate value="${r.openAt}" pattern="HH:mm"/>
+								</div>
+									<div class="col-2">${r.cafeName}</div>
+									<div class="col-2">${r.roomName}</div>
+									<div class="col-2">${r.leaderNickname}</div>
+									<div class="col-1">${r.totalMember}명</div>
+									<c:choose>
+										<c:when test="${r.statusName == '출석 완료'}">
+											<div class="col-2"><span class="status-done">출석</span></div>
+											<div class="col-2">-</div>
+										</c:when>
+										<c:when test="${r.statusName == '노쇼'}">
+											<div class="col-2"><span class="status-noshow">노쇼</span></div>
+											<div class="col-2">-</div>
+										</c:when>
+										<c:otherwise>
+											<div class="col-2"><span class="status-wait">대기</span></div>
+											<div class="col-2">
+												<form id="attendForm-${r.reservationId}"
+												      action="${pageContext.request.contextPath}/owner/attendance/attend"
+												      method="post" style="display:inline">
+													<input type="hidden" name="reservationId"  value="${r.reservationId}">
+													<input type="hidden" name="leaderId"       value="${r.leaderId}">
+													<input type="hidden" name="attendStatusId" value="1">
+													<button type="button" class="btn btn-primary"
+													        onclick="attendOk('attendForm-${r.reservationId}')">출석</button>
+												</form>
+												<form id="noshowForm-${r.reservationId}"
+												      action="${pageContext.request.contextPath}/owner/attendance/attend"
+												      method="post" style="display:inline">
+													<input type="hidden" name="reservationId"  value="${r.reservationId}">
+													<input type="hidden" name="leaderId"       value="${r.leaderId}">
+													<input type="hidden" name="attendStatusId" value="2">
+													<button type="button" class="btn ne-btn-deact"
+													        onclick="noshowOk('noshowForm-${r.reservationId}')">노쇼</button>
+												</form>
+											</div>
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</c:forEach>
+							<c:if test="${empty attendList}">
+								<div class="text-center py-3">조회된 예약이 없습니다.</div>
+							</c:if>
 						</div>
-						<table class="ne-table">
-							<thead>
-								<tr>
-									<th>시간</th>
-									<th>카페</th>
-									<th>테마</th>
-									<th>예약자</th>
-									<th>인원</th>
-									<th>상태</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td class="fw-bold">10:00</td>
-									<td>카페1</td>
-									<td>테마1</td>
-									<td>사용자1</td>
-									<td>2명</td>
-									<td><span class="status-wait">대기</span></td>
-									<td>
-										<button type="button" class="btn btn-primary" onclick="attendOk()">출석</button>
-										<button type="button" class="btn ne-btn-deact" onclick="noshowOk()">노쇼</button>
-									</td>
-								</tr>
-								<tr>
-									<td class="fw-bold">12:00</td>
-									<td>카페2</td>
-									<td>테마2</td>
-									<td>사용자2</td>
-									<td>2명</td>
-									<td><span class="status-done">출석</span></td>
-									<td>-</td>
-								</tr>
-								<tr>
-									<td class="fw-bold">14:00</td>
-									<td>카페1</td>
-									<td>테마2</td>
-									<td>사용자3</td>
-									<td>3명</td>
-									<td><span class="status-noshow">노쇼</span></td>
-									<td>-</td>
-								</tr>
-								<tr>
-									<td class="fw-bold">16:00</td>
-									<td>카페2</td>
-									<td>테마1</td>
-									<td>사용자4</td>
-									<td>5명</td>
-									<td><span class="status-wait">대기</span></td>
-									<td>
-										<button type="button" class="btn btn-primary" onclick="attendOk()">출석</button>
-										<button type="button" class="btn ne-btn-deact" onclick="noshowOk()">노쇼</button>
-									</td>
-								</tr>
-								<tr>
-									<td class="fw-bold">18:00</td>
-									<td>카페2</td>
-									<td>테마2</td>
-									<td>사용자5</td>
-									<td>2명</td>
-									<td><span class="status-wait">대기</span></td>
-									<td>
-										<button type="button" class="btn btn-primary" onclick="attendOk()">출석</button>
-										<button type="button" class="btn ne-btn-deact" onclick="noshowOk()">노쇼</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
 						<div class="paginate">							
 							<span class="active">1</span>
 							<a href="#">2</a>

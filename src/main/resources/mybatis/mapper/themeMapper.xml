@@ -35,8 +35,48 @@
  		)
  	</insert>
 
+ 	<!-- 테마 단일 조회 (수정 폼용) -->
+ 	<select id="getThemeById" parameterType="long" resultType="com.noexit.app.model.ThemeDTO">
+ 		SELECT ROOM_ID themeId, ROOM_IMG imagePath, CAFE_ID cafeId,
+ 		       ROOM_NAME themeName, GENRE_ID genre, DURATION duration,
+ 		       DIFFICULTY difficulty, HORROR_GRADE horror, ACTIVITY_GRADE activity,
+ 		       PRICE price, IS_ADULT adult, MIN_PLAYERS minPlayers,
+ 		       MAX_PLAYERS maxPlayers, ROOM_DESC description
+ 		  FROM ROOM
+ 		 WHERE ROOM_ID = #{themeId}
+ 	</select>
 
+ 	<!-- 본인 카페의 테마 리스트 (사장 수정 메뉴용) -->
+ 	<select id="selectListByOwnerUserId" parameterType="long" resultType="com.noexit.app.model.ThemeDTO">
+ 		SELECT R.ROOM_ID themeId, R.ROOM_NAME themeName, R.ROOM_IMG imagePath,
+ 		       C.CAFE_ID cafeId, C.CAFE_NAME cafeName,
+ 		       G.GENRE_NAME genre,
+ 		       R.PRICE price, R.MAX_PLAYERS maxPlayers
+ 		  FROM ROOM R
+ 		  JOIN CAFE       C ON R.CAFE_ID  = C.CAFE_ID
+ 		  JOIN ROOM_GENRE G ON R.GENRE_ID = G.GENRE_ID
+ 		 WHERE C.USER_ID = #{ownerUserId}
+ 		 ORDER BY R.ROOM_ID DESC
+ 	</select>
 
+ 	<!-- 테마 수정 -->
+ 	<update id="themeUpdate" parameterType="com.noexit.app.model.ThemeDTO">
+ 		UPDATE ROOM
+ 		   SET CAFE_ID         = #{cafeId},
+ 		       ROOM_NAME       = #{themeName},
+ 		       GENRE_ID        = #{genre},
+ 		       DURATION        = #{duration},
+ 		       DIFFICULTY      = #{difficulty},
+ 		       HORROR_GRADE    = #{horror},
+ 		       ACTIVITY_GRADE  = #{activity},
+ 		       MIN_PLAYERS     = #{minPlayers},
+ 		       MAX_PLAYERS     = #{maxPlayers},
+ 		       ROOM_DESC       = #{description},
+ 		       ROOM_IMG        = #{imagePath},
+ 		       PRICE           = #{price},
+ 		       IS_ADULT        = #{adult}
+ 		 WHERE ROOM_ID = #{themeId}
+ 	</update>
 
 
  	<sql id="where-list">

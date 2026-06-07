@@ -4,11 +4,58 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.noexit.app.mapper.AttendanceMapper">
 
+	<insert id="insertAttendance" parameterType="com.noexit.app.model.AttendanceListDTO">
+		<selectKey keyProperty="attendanceId" resultType="Long" order="BEFORE">
+			SELECT ATTENDANCE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO ATTENDANCE (ATTENDANCE_ID, RESERVATION_ID, USER_ID)
+		VALUES (#{attendanceId}, #{reservationId}, #{userId})
+	</insert>
+
+	<insert id="insertAttendDetail" parameterType="com.noexit.app.model.AttendanceListDTO">
+		INSERT INTO ATTENDANCE_DETAIL (DETAIL_ID, ATTENDANCE_ID, USER_ID, ATTEND_STATUS_ID)
+		VALUES (ATTENDANCE_DETAIL_SEQ.NEXTVAL, #{attendanceId}, #{leaderId}, #{attendStatusId})
+	</insert>
+
 	<update id="insertNoshow" statementType="CALLABLE" parameterType="com.noexit.app.model.Manner">
 		{ CALL SP_INSERT_NOSHOW(
 			#{userId,  mode=IN,  jdbcType=NUMERIC},
 			#{newTemp, mode=OUT, jdbcType=NUMERIC}
 		) }
 	</update>
+
+	<select id="selectListByOwnerUserId" parameterType="Long"
+	        resultType="com.noexit.app.model.AttendanceListDTO">
+		SELECT VRA.RESERVATION_ID, VRA.OPEN_AT, VRA.CAFE_ID, VRA.CAFE_NAME,
+		       VRA.ROOM_ID, VRA.ROOM_NAME, VRA.LEADER_ID,
+		       UA.NICKNAME AS LEADER_NICKNAME,
+		       VRA.TOTAL_MEMBER,
+		       FN_GET_ATTEND_STATUS(VRA.RESERVATION_ID, VRA.LEADER_ID) AS STATUS_NAME
+		  FROM VW_RESERVATION_ALL VRA
+		  JOIN CAFE         C  ON VRA.CAFE_ID   = C.CAFE_ID
+		  JOIN USER_ACCOUNT UA ON VRA.LEADER_ID = UA.USER_ID
+		 WHERE C.USER_ID = #{ownerUserId}
+		   <![CDATA[
+		   AND VRA.OPEN_AT < SYSDATE
+		   ]]>
+		 ORDER BY VRA.OPEN_AT DESC
+	</select>
+
+	<select id="selectListByManagerUserId" parameterType="Long"
+	        resultType="com.noexit.app.model.AttendanceListDTO">
+		SELECT VRA.RESERVATION_ID, VRA.OPEN_AT, VRA.CAFE_ID, VRA.CAFE_NAME,
+		       VRA.ROOM_ID, VRA.ROOM_NAME, VRA.LEADER_ID,
+		       UA.NICKNAME AS LEADER_NICKNAME,
+		       VRA.TOTAL_MEMBER,
+		       FN_GET_ATTEND_STATUS(VRA.RESERVATION_ID, VRA.LEADER_ID) AS STATUS_NAME
+		  FROM VW_RESERVATION_ALL VRA
+		  JOIN V_ACTIVE_MANAGER VAM ON VAM.CAFE_ID   = VRA.CAFE_ID
+		  JOIN USER_ACCOUNT     UA  ON VRA.LEADER_ID = UA.USER_ID
+		 WHERE VAM.USER_ID = #{managerUserId}
+		   <![CDATA[
+		   AND VRA.OPEN_AT < SYSDATE
+		   ]]>
+		 ORDER BY VRA.OPEN_AT DESC
+	</select>
 
 </mapper>
