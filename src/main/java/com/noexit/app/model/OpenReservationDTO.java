@@ -11,9 +11,11 @@ public class OpenReservationDTO {
 	private long cafeId;
 	private String cafeName;
 	private long roomId;
-	private String roonName;
+	private String roomName;
 	private long ownerId;
 	private long managerId;
 	private String openAt;
+	private String openDate;
+	private String openTime;
 	private long resOpenId;
 }
