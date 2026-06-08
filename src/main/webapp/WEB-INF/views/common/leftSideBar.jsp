@@ -99,9 +99,7 @@
 		<a href="/mypage/record" id="record" class="${fn:contains(pageContext.request.requestURI, '/record') ? 'active' : ''}">개인 기록</a>
 		<a href="/mypage/party" id="party" class="${fn:contains(pageContext.request.requestURI, '/party') ? 'active' : ''}">매칭 목록</a>
 		<a href="/mypage/reservations" id="reservations" class="${fn:contains(pageContext.request.requestURI, '/reservations') ? 'active' : ''}">예약 내역</a>
-		
-		<div class="ne-side-nav-section">기타</div>
-		<a href="/" id="home">홈으로</a>
+		<a href="/mypage/cafe/enroll" id="reservations" class="${fn:contains(pageContext.request.requestURI, '/enroll') ? 'active' : ''}">카페 등록</a>
 	</nav>
 	
 	<!-- 상호평가 섹션 -->
