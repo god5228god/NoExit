@@ -53,7 +53,7 @@
  		       G.GENRE_NAME genre,
  		       R.PRICE price, R.MAX_PLAYERS maxPlayers
  		  FROM ROOM R
- 		  JOIN CAFE       C ON R.CAFE_ID  = C.CAFE_ID
+ 		  JOIN CAFE C ON R.CAFE_ID = C.CAFE_ID
  		  JOIN ROOM_GENRE G ON R.GENRE_ID = G.GENRE_ID
  		 WHERE C.USER_ID = #{ownerUserId}
  		 ORDER BY R.ROOM_ID DESC
@@ -62,19 +62,19 @@
  	<!-- 테마 수정 -->
  	<update id="themeUpdate" parameterType="com.noexit.app.model.ThemeDTO">
  		UPDATE ROOM
- 		   SET CAFE_ID         = #{cafeId},
- 		       ROOM_NAME       = #{themeName},
- 		       GENRE_ID        = #{genre},
- 		       DURATION        = #{duration},
- 		       DIFFICULTY      = #{difficulty},
- 		       HORROR_GRADE    = #{horror},
- 		       ACTIVITY_GRADE  = #{activity},
- 		       MIN_PLAYERS     = #{minPlayers},
- 		       MAX_PLAYERS     = #{maxPlayers},
- 		       ROOM_DESC       = #{description},
- 		       ROOM_IMG        = #{imagePath},
- 		       PRICE           = #{price},
- 		       IS_ADULT        = #{adult}
+ 		   SET CAFE_ID = #{cafeId}
+ 		     , ROOM_NAME = #{themeName}
+ 		     , GENRE_ID = #{genre}
+ 		     , DURATION = #{duration}
+ 		     , DIFFICULTY = #{difficulty}
+ 		     , HORROR_GRADE = #{horror}
+ 		     , ACTIVITY_GRADE = #{activity}
+ 		     , MIN_PLAYERS = #{minPlayers}
+ 		     , MAX_PLAYERS = #{maxPlayers}
+ 		     , ROOM_DESC = #{description}
+ 		     , ROOM_IMG = #{imagePath}
+ 		     , PRICE = #{price}
+ 		     , IS_ADULT = #{adult}
  		 WHERE ROOM_ID = #{themeId}
  	</update>
 

@@ -50,7 +50,7 @@
 							</div>
 
 							<c:forEach var="r" items="${attendList}">
-								<div class="row align-items-center border-bottom py-2 m-0">
+								<div class="row align-items-center border-bottom py-2 m-0 text-muted">
 									<div class="col-1 fw-bold">
 									<fmt:formatDate value="${r.openAt}" pattern="MM-dd"/><br>
 									<fmt:formatDate value="${r.openAt}" pattern="HH:mm"/>

@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.noexit.app.mapper.AttendanceMapper;
 import com.noexit.app.model.AttendanceListDTO;
-import com.noexit.app.model.Manner;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,22 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AttendanceServiceImpl implements AttendanceService {
 
 	private final AttendanceMapper mapper;
-
-	@Override
-	public Manner noshow(Long userId) throws Exception {
-
-		Manner manner = new Manner();
-		manner.setUserId(userId);
-
-		try {
-			mapper.insertNoshow(manner);
-		} catch (Exception e) {
-			log.info("noshow : ", e);
-			throw e;
-		}
-
-		return manner;
-	}
 
 
 	@Override
@@ -73,10 +56,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 			mapper.insertAttendDetail(dto);
 
 			if (dto.getAttendStatusId() == 2) {
-				Manner manner = new Manner();
-				manner.setUserId(dto.getLeaderId());
-				mapper.insertNoshow(manner);
-				dto.setStatusName("노쇼 처리 완료. 매너온도: " + manner.getNewTemp());
+				dto.setStatusName("노쇼 처리 완료");
 			} else {
 				dto.setStatusName("출석 처리 완료");
 			}

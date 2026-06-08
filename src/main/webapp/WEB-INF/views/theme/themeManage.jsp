@@ -23,7 +23,7 @@
 					<div class="resList" style="width:100%">
 						<div class="inputBox d-flex justify-content-end">
 							<a href="${pageContext.request.contextPath}/owner/theme/write?mode=write"
-							   class="btn btn-primary">테마 등록</a>
+							   class="btn btn-outline-dark">테마 등록</a>
 						</div>
 						<div class="theme-list">
 

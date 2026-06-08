@@ -33,7 +33,7 @@
 					<div class="resList" style="width:100%">
 						<div class="inputBox d-flex justify-content-end">
 							<a href="${pageContext.request.contextPath}/owner/manager/enroll"
-							   class="btn btn-primary">매니저 등록</a>
+							   class="btn btn-outline-dark">매니저 등록</a>
 						</div>
 						<div class="manager-list">
 							

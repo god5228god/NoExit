@@ -95,11 +95,11 @@ $(function(){
 		}
 
 		// 닉네임 2~10자
-		let nick = $("#nickName").val().trim();
+		let nick = $("#nickname").val().trim();
 		if (nick.length < 2 || nick.length > 10) {
 			$("#error").html("닉네임은 2~10자로 입력해주세요.")
 			           .css({color: "red", display: "inline"});
-			$("#nickName").focus();
+			$("#nickname").focus();
 			return;
 		}
 
@@ -180,8 +180,8 @@ $(function(){
 			</div>
 
 			<div class="mb-3">
-				<label for="nickName" class="form-label">닉네임<span class="form-required">*</span></label>
-				<input type="text" id="nickName" name="nickName" class="form-control" placeholder="2~10자">
+				<label for="nicnName" class="form-label">닉네임<span class="form-required">*</span></label>
+				<input type="text" id="nickname" name="nickname" class="form-control" placeholder="2~10자">
 			</div>
 
 			<div class="mb-3">

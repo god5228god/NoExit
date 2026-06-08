@@ -17,12 +17,6 @@
 		VALUES (ATTENDANCE_DETAIL_SEQ.NEXTVAL, #{attendanceId}, #{leaderId}, #{attendStatusId})
 	</insert>
 
-	<update id="insertNoshow" statementType="CALLABLE" parameterType="com.noexit.app.model.Manner">
-		{ CALL SP_INSERT_NOSHOW(
-			#{userId,  mode=IN,  jdbcType=NUMERIC},
-			#{newTemp, mode=OUT, jdbcType=NUMERIC}
-		) }
-	</update>
 
 	<select id="selectListByOwnerUserId" parameterType="Long"
 	        resultType="com.noexit.app.model.AttendanceListDTO">
@@ -32,7 +26,7 @@
 		       VRA.TOTAL_MEMBER,
 		       FN_GET_ATTEND_STATUS(VRA.RESERVATION_ID, VRA.LEADER_ID) AS STATUS_NAME
 		  FROM VW_RESERVATION_ALL VRA
-		  JOIN CAFE         C  ON VRA.CAFE_ID   = C.CAFE_ID
+		  JOIN CAFE C ON VRA.CAFE_ID = C.CAFE_ID
 		  JOIN USER_ACCOUNT UA ON VRA.LEADER_ID = UA.USER_ID
 		 WHERE C.USER_ID = #{ownerUserId}
 		   <![CDATA[
@@ -49,8 +43,8 @@
 		       VRA.TOTAL_MEMBER,
 		       FN_GET_ATTEND_STATUS(VRA.RESERVATION_ID, VRA.LEADER_ID) AS STATUS_NAME
 		  FROM VW_RESERVATION_ALL VRA
-		  JOIN V_ACTIVE_MANAGER VAM ON VAM.CAFE_ID   = VRA.CAFE_ID
-		  JOIN USER_ACCOUNT     UA  ON VRA.LEADER_ID = UA.USER_ID
+		  JOIN V_ACTIVE_MANAGER VAM ON VAM.CAFE_ID = VRA.CAFE_ID
+		  JOIN USER_ACCOUNT UA ON VRA.LEADER_ID = UA.USER_ID
 		 WHERE VAM.USER_ID = #{managerUserId}
 		   <![CDATA[
 		   AND VRA.OPEN_AT < SYSDATE
