@@ -4,20 +4,32 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.noexit.app.mapper.OpenReservationMapper">
 
+
+	<!-- 카페 목록 조회  -->
 	<select id="getCafeList" resultType="com.noexit.app.model.OpenReservationDTO" parameterType="Long">
 		SELECT DISTINCT CAFE_ID, CAFE_NAME
 		FROM VW_CAFE_ROOM_INFO
 		WHERE CAFE_OWNER = #{userId} OR CAFE_MANAGER= #{userId}
 	</select>
 	
+	<!-- 테마 목록 조회 -->
+	<select id="getThemeList" resultType="com.noexit.app.model.OpenReservationDTO" parameterType="Long">
+		SELECT ROOM_ID, ROOM_NAME
+		FROM ROOM
+		WHERE CAFE_ID =#{cafeId}
+		AND ROOM_ID NOT IN (SELECT ROOM_ID FROM ROOM_DROP)
+		ORDER BY ROOM_NAME
+	</select>
 
 	<!-- 예약 목록 조회 -->
 	<select id="getOpenReservationList" resultType="com.noexit.app.model.OpenReservationDTO"
-	parameterType="Long">
+	parameterType="map">
 		SELECT RO.RES_OPEN_ID
 		, R.CAFE_ID, C.CAFE_NAME
 		, RO.ROOM_ID, R.ROOM_NAME
 		, TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD HH24:MI') AS OPEN_AT
+		, TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD') AS OPEN_DATE
+		, TO_CHAR(RO.OPEN_AT, 'HH24:MI') AS OPEN_TIME
 		FROM RES_OPEN RO
 		    JOIN ROOM R
 		    ON RO.ROOM_ID = R.ROOM_ID
@@ -29,9 +41,9 @@
 			    FROM VW_CAFE_ROOM_INFO
 			    WHERE CAFE_OWNER = #{userId} OR CAFE_MANAGER= #{userId} 
 			) 
+			AND RO.RES_OPEN_ID NOT IN (SELECT RES_OPEN_ID FROM RES_DROP)
 			AND TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD') = #{schDate}
-			
-			<if test="schCafe != 'all'">
+			<if test="schCafe != null">
 				AND R.CAFE_ID = #{schCafe}
 			</if>
 		</where>
@@ -44,6 +56,26 @@
 	
 	<!-- 예약 오픈 비활성화 프로시저  -->
 	
+	<!--  예약 오픈 데이터 갯수  -->
+	<select id="dataCount" resultType="Integer" parameterType="map">
+		SELECT COUNT(*)
+		FROM RES_OPEN RO
+		    JOIN ROOM R
+		    ON RO.ROOM_ID = R.ROOM_ID
+		<where>		
+			RO.RES_OPEN_ID NOT IN 
+			    (SELECT RES_OPEN_ID FROM RES_DROP)
+			AND R.CAFE_ID IN (
+					            SELECT DISTINCT CAFE_ID
+					            FROM VW_CAFE_ROOM_INFO
+					            WHERE CAFE_OWNER = #{userId} OR CAFE_MANAGER = #{userId}
+					         )   
+			AND TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD') = #{schDate}
+			<if test="schCafe != null">
+				AND R.CAFE_ID = #{schCafe}
+			</if>
+		</where>
+	</select>
 
 
 </mapper> 
