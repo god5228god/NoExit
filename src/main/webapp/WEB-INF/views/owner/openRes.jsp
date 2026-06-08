@@ -34,7 +34,7 @@
 					<div class="resOpen">
 						<div class="res-title">예약 시간 등록</div>
 						<form method="post" name="resOpenForm">
-							<div class="from-label">카페 선택</div>
+							<div class="form-label">카페 선택</div>
 							<select name="" id="" class="selectBox ne-box">
 								<option value="" disabled selected>-- 카페 선택 --</option>
 								<option>지구별</option>

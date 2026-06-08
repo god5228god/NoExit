@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noexit.app.mapper.OpenReservationMapper">
+
+	<select id="getCafeList" resultType="com.noexit.app.model.OpenReservationDTO" parameterType="Long">
+		SELECT DISTINCT CAFE_ID, CAFE_NAME
+		FROM VW_CAFE_ROOM_INFO
+		WHERE CAFE_OWNER = #{userId} OR CAFE_MANAGER= #{userId}
+	</select>
+	
+
+	<!-- 예약 목록 조회 -->
+	<select id="getOpenReservationList" resultType="com.noexit.app.model.OpenReservationDTO"
+	parameterType="Long">
+		SELECT RO.RES_OPEN_ID
+		, R.CAFE_ID, C.CAFE_NAME
+		, RO.ROOM_ID, R.ROOM_NAME
+		, TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD HH24:MI') AS OPEN_AT
+		FROM RES_OPEN RO
+		    JOIN ROOM R
+		    ON RO.ROOM_ID = R.ROOM_ID
+		    JOIN CAFE C
+		    ON R.CAFE_ID = C.CAFE_ID
+		<where>
+			R.CAFE_ID IN(
+			    SELECT DISTINCT CAFE_ID
+			    FROM VW_CAFE_ROOM_INFO
+			    WHERE CAFE_OWNER = #{userId} OR CAFE_MANAGER= #{userId} 
+			) 
+			AND TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD') = #{schDate}
+			
+			<if test="schCafe != 'all'">
+				AND R.CAFE_ID = #{schCafe}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 예약 오픈 등록 프로시저 -->
+	<update id="openReservation" statementType="CALLABLE">
+		{ CALL PRC_RES_OPEN(#{userId}, #{roomId}, #{openAt})}
+	</update>
+	
+	<!-- 예약 오픈 비활성화 프로시저  -->
+	
+
+
+</mapper> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
