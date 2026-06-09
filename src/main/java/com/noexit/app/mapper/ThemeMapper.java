@@ -27,6 +27,7 @@ public interface ThemeMapper
 	 * 테마 리뷰 조회
 	 */
 	
+	
 	ThemeDTO getThemeInfoById(long themeId);
 	List<ThemeDTO> getThemeList(Map<String, Object> map);
 	List<ThemeSlotDTO> getThemeSlot(long themeId);
