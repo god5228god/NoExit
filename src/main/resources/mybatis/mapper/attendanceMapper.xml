@@ -4,6 +4,7 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.noexit.app.mapper.AttendanceMapper">
 
+
 	<insert id="insertAttendance" parameterType="com.noexit.app.model.AttendanceListDTO">
 		<selectKey keyProperty="attendanceId" resultType="Long" order="BEFORE">
 			SELECT ATTENDANCE_SEQ.NEXTVAL FROM DUAL
@@ -52,6 +53,7 @@
 		 ORDER BY VRA.OPEN_AT DESC
 	</select>
 
+	<!--한 예약에 대한 모든 파티원 정보  -->
 	<select id="selectCrewByReservationId" parameterType="Long"
 	        resultType="com.noexit.app.model.AttendCrew">
 		SELECT USER_ID, NICKNAME, POSITION
@@ -66,7 +68,7 @@
 		      FROM PARTY_MEMBER PM
 		      JOIN PARTY_APPLY  PA ON PA.APPLY_ID = PM.APPLY_ID
 		      JOIN USER_ACCOUNT UA ON UA.USER_ID = PA.USER_ID
-		      JOIN RESERVATION  R  ON R.PARTY_ID = PA.PARTY_ID
+		      JOIN RESERVATION R ON R.PARTY_ID = PA.PARTY_ID
 		     WHERE R.RESERVATION_ID = #{reservationId}
 		       AND NOT EXISTS (
 		           SELECT 1 FROM PARTY_KICK PK WHERE PK.MEMBER_ID = PM.MEMBER_ID
