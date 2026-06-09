@@ -9,23 +9,24 @@ import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
 import com.noexit.app.model.PartyCrewDTO;
 import com.noexit.app.model.PartyDTO;
-import com.noexit.app.model.ThemeDTO;
+import com.noexit.app.model.ThemeSlotDTO;
 
 @Mapper
 public interface PartyMapper
 {
 	List<PartyDTO> getPartyList(Map<String, Object> map);
 	PartyDTO getPartyById(long partyId);
+	int hasApply(PartyApplyDTO dto);
 	int partyApply(PartyApplyDTO dto);
 	
-	ThemeDTO getThemeById(long themeId);
+	ThemeSlotDTO getThemeById(long themeId);
 	
 	int partyInsert(PartyDTO dto);
 	
 	int partyUpdate(PartyDTO dto);
 	int partyDelete(long partyId);
 	
-	List<PartyCommentDTO> getPartyCommentList(long partyId);
+	List<PartyCommentDTO> getPartyCommentList(Map<String, Object> map);
 	int partyCommentInsert(PartyCommentDTO dto);
 	int partyCommentDelete(long commentId);
 	

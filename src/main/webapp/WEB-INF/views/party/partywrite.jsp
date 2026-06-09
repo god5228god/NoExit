@@ -103,6 +103,16 @@
 		f.submit();
 	}
 	
+	function cancel()
+	{
+		let mode = '${mode}';
+		
+		if(mode == 'write')
+		{
+			window.location.href = '${path}/theme/info/${dto.themeId}'
+		}	
+	}
+	
 </script>
 
 </head>
@@ -114,36 +124,38 @@
 			<div class="container">
 				
 				<div class="title-wrap">
-					<span class="title">파티 개설</span>
+					<span class="title">
+						${mode == 'write' ? '파티 개설' : '파티 수정'}
+					</span>
 					<hr>
 				</div>
 				
 				<div class="theme-info-wrap">
-					<span>카페명 : 우주별</span>	
-					<span>테마명 : 그레이</span>
-					<span>날짜 : 2026-06-01</span>
-					<span>시간 : 18:00</span>
-					<span>인원수 : 2 ~ 4</span>
-					<span>가격 : 30000</span>
+					<span>카페명 : ${dto.cafeName }</span>	
+					<span>테마명 : ${dto.themeName }</span>
+					<span>날짜 : ${dto.resDate }</span>
+					<span>시간 : ${dto.resTime }</span>
+					<span>인원수 : ${dto.minPlayers } ~ ${dto.maxPlayers }</span>
+					<span>가격 : ${dto.price }</span>
 				</div>
 				
 				<div class="write-wrap">
 					<form action="" class="write-form" method="post" name="writeForm">
 						<span>파티명</span>
-						<input type="text" name="partyname">
+						<input type="text" name="partyName" value="" maxlength="20">
 						<label>
 						<span>동성만</span>
 						<input type="checkbox" name="genderCondition" value="1">
 						</label>
 						<span>코멘트</span>
-						<input type="text" name="partyComment">
-						<input type="hidden" value="slotId" name="slotId">
+						<input type="text" name="partyComment" maxlength="30">
+						<input type="hidden" value="${dto.slotId }" name="slotId">
 					</form>
 				</div>
 				
 				<div class="write-btn">
-					<button type="button" class="btn btn-primary" onclick="partyWrite()">파티 개설</button>				
-					<button type="button" class="btn btn-outline-primary" onclick="window.location.href='${path}/theme/info/1'">취소하기</button>
+					<button type="button" class="btn btn-primary" onclick="partyWrite()">${mode == 'write' ? '파티개설' : '파티수정' }</button>				
+					<button type="button" class="btn btn-outline-primary" onclick="cancel()">취소하기</button>
 				</div>
 				
 			</div>

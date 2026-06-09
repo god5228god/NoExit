@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>partydetail.jsp</title>
+<title>partyinfo.jsp</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <style type="text/css">
@@ -83,9 +83,13 @@ hr
 
 .crew 
 {
-	display: flex;
-	gap: 10px;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: 25% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
+}
+
+.crew span
+{
+	text-align: left;
 }
 
 .party-apply-wrap form 
@@ -142,7 +146,12 @@ hr
 			return;
 		}
 		
-		f.action = "${path}/party/apply/${partyId}";
+		if(!confirm("신청하시겠습니까?"))
+		{
+			return;
+		}
+		
+		f.action = "${path}/party/apply/${dto.partyId}";
 		
 		f.submit();
 	}
@@ -163,28 +172,65 @@ hr
 					<hr>
 					
 					<div class="party-name">
-						<span>주열룸</span>
+						<span>${dto.partyName }</span>
 					</div>
 					
 					<div class="theme-info">
-						<span>우주별&nbsp;&nbsp;</span>
-						<span>그레이&nbsp;&nbsp;</span>
-						<span>2026-06-01&nbsp;&nbsp;</span>
-						<span>18:00&nbsp;&nbsp;</span>
-						<span>2명 ~ 4명</span>
-						<span>30000</span>
-						<span>예약 가능/예약 불가</span>
+						<span>${dto.cafeName }&nbsp;&nbsp;</span>
+						<span>${dto.themeName }&nbsp;&nbsp;</span>
+						<span>${dto.themeDate }&nbsp;&nbsp;</span>
+						<span>${dto.themeTime }&nbsp;&nbsp;</span>
+						<span>${dto.minPlayers }명 ~ ${dto.maxPlayers }명&nbsp;&nbsp;</span>
+						<span>${dto.price }원&nbsp;&nbsp;</span>
+						<span>
+							<c:choose>
+								<c:when test="${dto.slotStatus == 1 }">
+									예약 가능
+								</c:when>
+								<c:otherwise>
+									예약 불가
+								</c:otherwise>
+							</c:choose>
+						</span>
 					</div>
 					
 					<div class="party-condition">
-						<span>성별 동성/무관</span>
-						<span>미쿠 좋아하는 사람만 오셈</span>						
+						<span>${dto.genderName }</span>
+						<span>${dto.partyComment }</span>						
 					</div> 
 					
 					<div class="party-crew">
 					
 						<span>파티 현황</span>
 						
+						<c:forEach var="crew" items="${crewList }">
+							
+							<div class="crew">
+								<span>${crew.nickName }</span>
+								<span>${crew.age }세</span>
+								<span>
+								<c:choose>
+									<c:when test="${crew.gender == 'F' }">여</c:when>
+									<c:when test="${crew.gender == 'M' }">남</c:when>
+									<c:otherwise>성별확인불가</c:otherwise>
+								</c:choose>
+								</span>
+								<span>🌡️${crew.temp }</span>
+								
+								<c:choose>
+									<c:when test="${crew.position == 'HOST' }">
+										<span class="ne-st ne-st-green">파티장</span>
+									</c:when>
+									<c:otherwise>
+										<span class="ne-st ne-st-blue">파티원</span>
+									</c:otherwise>
+								</c:choose>
+								
+							</div>
+							
+						</c:forEach>
+						
+						<!-- 
 						<div class="crew">
 							<span>윤주열</span>
 							<span>29세</span>
@@ -199,23 +245,27 @@ hr
 							<span>남자</span>
 							<span>🌡️36.5</span>
 							<span class="ne-st ne-st-blue">파티원</span>
-						</div>
+						</div> -->
 					</div> 
 					
 				</div> <!-- .party-info-wrap -->
 				
-				<div class="party-apply-wrap">
+				<c:if test="${dto.partyStatus == 'open'}">
+						
+					<div class="party-apply-wrap">
+						
+						<span class="title">파티 신청</span>
+						<hr>
+						
+						<form action="" name="partyApplyForm" method="post">
+							<input type="text" class="apply-comment" placeholder="신청 메시지" name="applyComment" maxlength="30">
+						</form>
+						 
+						<button type="button" class="btn btn-primary" onclick="partyApply()">신청하기</button>
+						 
+					</div> <!-- .party-apply-wrap -->
 					
-					<span class="title">파티 신청</span>
-					<hr>
-					
-					<form action="" name="partyApplyForm" method="post">
-						<input type="text" class="apply-comment" placeholder="신청 메시지" name="applyComment">
-					</form>
-					 
-					<button type="button" class="btn btn-primary" onclick="partyApply()">신청하기</button>
-					 
-				</div> <!-- .party-apply-wrap -->
+				</c:if>
 				
 			</div>
 		</div>

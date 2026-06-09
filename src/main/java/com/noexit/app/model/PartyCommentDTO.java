@@ -9,7 +9,7 @@ public class PartyCommentDTO
 {
 	private long commentId;
 	private String name;
-	private String comment;
+	private String partyComment;
 	private long userId;
 	private boolean delete;
 	private String createdAt;

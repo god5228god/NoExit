@@ -98,6 +98,8 @@
 
 <c:set var="path" value="${pageContext.request.contextPath }"></c:set>
 
+<script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+
 <script type="text/javascript">
 	
 	document.addEventListener("DOMContentLoaded",function()
@@ -140,10 +142,80 @@
 		f.submit();
 	}
 
-	function addList()
+	$(function()
 	{
-		alert("추가");
+		$("#addBtn").click(function()
+		{
+			let params = new URLSearchParams(
+			{
+				kwd: kwd,
+				schType: schType,
+				lastId: lastId
+			}).toString();
+			
+			$.ajax(
+			{
+				"type":"POST"
+				, "url":"${path}/party/list"
+				, "data":params
+				, "dataType":"json"
+				, "success": function(data)
+				{
+					if(data == null || data.length == 0)
+					{
+						$("#addBtn").remove();
+						return;
+					}
+					
+					renderList(data);
+					
+					lastId = data[data.length-1].partyId;
+				}
+				, "error":function(e)
+				{
+					alert("에러 발생");
+					console.log(e.responseText);
+				}
+			});
+		});
+		
+		$("#addBtn").click();
+	});
+	
+	function renderList(list)
+	{
+		list.forEach(function(item)
+		{
+			$(".party-list").append(renderParty(item));
+		});
 	}
+	
+	function renderParty(item)
+	{
+		return "<a href='${path}/party/info/" + item.partyId + "' class='party-item'>"
+			 + "<div class='party-image'>"
+			 + "<span>" + item.themeImg + "</span>"
+			 + "</div>"
+			 + "<div class='party-info'>"
+			 + getItem("테마명",item.themeName)
+			 + getItem("날짜",item.themeDate)
+			 + getItem("시간",item.themeTime)
+			 + getItem("파티명",item.partyName)
+			 + getItem("평균 매너온도",'🌡️' + item.avgTemp)
+			 + getItem("평균 나이",item.avgAge + '세')
+			 + getItem("현재 인원 수",item.memberCount + '명')
+			 + "</div>"
+			 + "</a>";
+	}
+	
+	function getItem(title,value)
+	{
+		return "<div class='info-item'>"
+			 + "<span>" + title + "</span>"
+			 + "<span>" + value + "</span>"
+			 + "</div>";
+	}
+	
 	
 </script>
 
@@ -161,11 +233,11 @@
 						<form action="" method="get" name="searchForm">
 							
 							<select name="schType">
-								<option value="themeName">테마명</option>
-								<option value="partyName">파티명</option>
+								<option value="themeName" ${schType == 'themeName' ? 'selected' : '' }>테마명</option>
+								<option value="partyName" ${schType == 'partyName' ? 'selected' : '' }>파티명</option>
 							</select>
 							
-							<input type="text" name="kwd" placeholder="검색 키워드">
+							<input type="text" name="kwd" placeholder="검색 키워드" value="${kwd }">
 							
 							<button type="button" onclick="search()" class="btn btn-primary">검색</button>
 							<button type="button" onclick="window.location.href='${path}/party/list'" class="btn btn-outline-primary">초기화</button>
@@ -196,7 +268,7 @@
 				
 				<div class="party-list">
 				
-					<a href="" class="party-item">
+					<!-- <a href="" class="party-item">
 					
 						<div class="party-image">
 							<span>테마이미지</span>
@@ -335,13 +407,13 @@
 							
 						</div>
 					
-					</a>
+					</a> -->
 				
 				</div>
 				
 				<div class="party-add">
 					
-					<button type="button" class="btn btn-primary" onclick="addList()">더보기</button>	
+					<button type="button" class="btn btn-primary" id="addBtn">더보기</button>	
 					
 				</div>
 				

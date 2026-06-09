@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.noexit.app.model.Cafe;
 import com.noexit.app.model.ThemeDTO;
 import com.noexit.app.model.ThemeReviewDTO;
 import com.noexit.app.model.ThemeSlotDTO;

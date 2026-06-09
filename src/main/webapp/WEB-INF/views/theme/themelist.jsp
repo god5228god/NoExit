@@ -166,7 +166,7 @@
 				, "dataType":"json"
 				, "success":function(data)
 				{
-					if(data.length == 0)
+					if(data == null || data.length == 0)
 					{
 						$("#addList").remove();
 						return;
