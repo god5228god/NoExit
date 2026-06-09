@@ -582,7 +582,10 @@ END;
 -- 로그인한 아이디 확인(사장 혹은 매니저)
 -- 입력한 날짜가 오늘+24시간 이후인지 확인(등록일 기준으로 24시간 이후만 등록 가능)
 -- 동일한 카페, 룸, 일시가 있는지 확인
+-- 이미 오픈된 것 중에 같은 카페, 룸, 날짜를 비교하고
+-- 그 룸의 +소요시간이후만 등록 가능 처리
 -- 없으면 예약 오픈 등록 가능(res_open) insert
+
 -- 
 CREATE OR REPLACE PROCEDURE PRC_RES_OPEN
 (
@@ -594,14 +597,15 @@ IS
 
     V_HAS_ID    USER_ACCOUNT.USER_ID%TYPE;
     V_ROLE      NUMBER;
-    V_OPEN_AT   NUMBER;
+    V_DURATION  ROOM.DURATION%TYPE;
+    V_CONFLICT  NUMBER;
 
     ERR_INVALID_USER    EXCEPTION;
     ERR_INVALID_ROOM    EXCEPTION;
     ERR_INVALID_DATE    EXCEPTION;
     ERR_INVALID_RIGHT   EXCEPTION;
     ERR_INVALID_OPEN_AT EXCEPTION;
-    ERR_INVALID_ALREADY EXCEPTION;
+    ERR_TIME_CONFLICT   EXCEPTION;
 
 BEGIN
        -- 파라미터 체크
@@ -643,17 +647,26 @@ BEGIN
        IF (P_OPEN_AT <= SYSDATE+1)  THEN
            RAISE ERR_INVALID_OPEN_AT;
        END IF;
+
     
-    -- 동일한 카페, 룸, 일시가 있는지 확인
+    -- 이미 오픈된 것 중에 같은 룸아이디, 날짜를 비교, 
+    -- 해당 룸의 소요시간 이후만 가능하도록 처리
+    SELECT COUNT(*) INTO V_CONFLICT
+    FROM RES_OPEN RO
+        JOIN ROOM R 
+        ON RO.ROOM_ID = R.ROOM_ID
+    WHERE RO.ROOM_ID = P_ROOM_ID
+        AND RO.RES_OPEN_ID NOT IN 
+                        (SELECT RES_OPEN_ID 
+                        FROM RES_DROP)
+        AND P_OPEN_AT < RO.OPEN_AT + (R.DURATION+10) / 1440
+        AND P_OPEN_AT > RO.OPEN_AT - (R.DURATION+10) / 1440;
     
-        SELECT COUNT(*) INTO V_OPEN_AT
-        FROM RES_OPEN
-        WHERE ROOM_ID = P_ROOM_ID
-            AND OPEN_AT = P_OPEN_AT;
-            
-        IF (V_OPEN_AT > 0) THEN
-            RAISE ERR_INVALID_ALREADY;
-        END IF;
+    IF V_CONFLICT > 0 THEN
+        RAISE ERR_TIME_CONFLICT;
+    END IF;
+    
+
         
     -- 예약 오픈 등록
     INSERT INTO RES_OPEN 
@@ -677,11 +690,11 @@ BEGIN
         WHEN ERR_INVALID_OPEN_AT THEN
             ROLLBACK;
             RAISE_APPLICATION_ERROR(-20007, '예약은 현재 시간으로부터 24시간 이후부터 가능합니다.');
-        WHEN ERR_INVALID_ALREADY THEN
+        WHEN ERR_TIME_CONFLICT THEN
             ROLLBACK;
-            RAISE_APPLICATION_ERROR(-20008, '이미 등록된 시간입니다.');
+            RAISE_APPLICATION_ERROR(-20008, '해당 시간 대에 이미 등록된 슬롯이 있습니다.');
 END;
-
+/
 
 
 
@@ -695,6 +708,139 @@ END;
 -- 예약 오픈 아이디에 걸려있는 예약이 있는지 체크
 -- 걸려 있는 예약이 있다면 이미 예약이 있으니 예약 취소를 먼저하라고 안내하고 종료
 -- 걸려 있는 예약이 없다면 res_drop INSERT 
+
+CREATE OR REPLACE PROCEDURE PRC_RES_DROP
+( P_USER_ID         IN USER_ACCOUNT.USER_ID%TYPE
+, P_RES_OPEN_ID     IN RES_OPEN.RES_OPEN_ID%TYPE
+)
+IS
+
+    V_CAFE_ID               CAFE.CAFE_ID%TYPE;
+    V_HAS_RES               NUMBER;
+    V_IS_RES                NUMBER;
+    V_HAS_ID                NUMBER;
+    V_ROLE                  NUMBER;
+    
+    ERR_INVALID_USER        EXCEPTION;
+    ERR_INVALID_RES_OPEN    EXCEPTION;
+    ERR_INVALID_RIGHT       EXCEPTION;
+    ERR_HAS_RES             EXCEPTION;
+
+BEGIN
+
+     -- 파라미터 체크
+    IF P_USER_ID IS NULL THEN
+        RAISE ERR_INVALID_USER;
+    END IF;
+
+    IF P_RES_OPEN_ID IS NULL THEN
+        RAISE ERR_INVALID_RES_OPEN; 
+    END IF;
+
+    -- 사용자 아이디가 유효한지 검사
+    SELECT COUNT(*) INTO V_HAS_ID
+    FROM USER_INFO
+    WHERE USER_ID = P_USER_ID;
+    
+    IF (V_HAS_ID<1) THEN
+        RAISE ERR_INVALID_USER;
+    END IF;
+    
+    -- 예약 오픈 아이디 존재 여부 및 활성 상태인지 체크
+    SELECT COUNT(*) INTO V_HAS_RES
+    FROM RES_OPEN
+    WHERE RES_OPEN_ID = P_RES_OPEN_ID
+        AND RES_OPEN_ID NOT IN( SELECT RES_OPEN_ID
+                                FROM RES_DROP
+                                WHERE RES_OPEN_ID = P_RES_OPEN_ID
+                            );
+    IF (V_HAS_RES<1) THEN
+        RAISE ERR_INVALID_RES_OPEN;
+    END IF;
+
+    -- 권한 체크
+    -- 입력한 예약등록아이디의 매니저와 사장을 조회해서 있는 지 확인
+    SELECT R.CAFE_ID INTO V_CAFE_ID
+    FROM RES_OPEN RO
+        JOIN ROOM R 
+        ON RO.ROOM_ID = R.ROOM_ID
+    WHERE RES_OPEN_ID = P_RES_OPEN_ID;
+   
+    SELECT COUNT(*) INTO V_ROLE
+    FROM VW_CAFE_ROOM_INFO
+    WHERE CAFE_ID = V_CAFE_ID
+        AND (CAFE_OWNER=P_USER_ID OR CAFE_MANAGER=P_USER_ID);
+    
+    IF (V_ROLE<1) THEN
+        RAISE ERR_INVALID_RIGHT;
+    END IF;
+    
+    -- 예약 오픈 아이디에 걸려있는 예약이 있는지 체크
+    SELECT COUNT(*) INTO V_IS_RES
+    FROM VW_RES_OPEN_BOOKED
+    WHERE RES_OPEN_ID = P_RES_OPEN_ID;
+    
+    IF(V_IS_RES >0) THEN
+        RAISE ERR_HAS_RES;
+    END IF;
+    
+   INSERT INTO RES_DROP
+   VALUES(RES_DROP_SEQ.NEXTVAL, P_RES_OPEN_ID, SYSDATE);
+   
+   COMMIT;
+   
+   EXCEPTION
+        WHEN ERR_INVALID_USER THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20001, '회원 정보가 유효하지 않습니다.'); 
+        WHEN ERR_INVALID_RES_OPEN THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20009, '예약 오픈 번호가 유효하지 않습니다.'); 
+        WHEN ERR_INVALID_RIGHT THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20004, '권한이 없습니다.'); 
+        WHEN ERR_HAS_RES THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20010, '진행 중인 예약 건이 있어 삭제할 수 없습니다. 예약 취소 처리 후 다시 시도해 주세요.'); 
+END;
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -838,16 +984,8 @@ SELECT * FROM VW_RESERVATION_ALL WHERE ROWNUM = 1;
 
 
 
-
-
-
-
-
-SELECT USER_ID, OWNER_USER_ID
-FROM V_ACTIVE_MANAGER
-ORDER BY CAFE_ID;
-
-
+SELECT *
+FROM VW_RES_OPEN_BOOKED;
 
 
 

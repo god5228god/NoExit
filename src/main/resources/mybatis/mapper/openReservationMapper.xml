@@ -55,9 +55,12 @@
 	</update>
 	
 	<!-- 예약 오픈 비활성화 프로시저  -->
+	<update id="dropOpen" statementType="CALLABLE">
+		{ CALL PRC_RES_DROP(#{userId}, #{resOpenId})}
+	</update>
 	
 	<!--  예약 오픈 데이터 갯수  -->
-	<select id="dataCount" resultType="Integer" parameterType="map">
+	<!-- <select id="dataCount" resultType="Integer" parameterType="map">
 		SELECT COUNT(*)
 		FROM RES_OPEN RO
 		    JOIN ROOM R
@@ -75,7 +78,7 @@
 				AND R.CAFE_ID = #{schCafe}
 			</if>
 		</where>
-	</select>
+	</select> -->
 
 
 </mapper> 

@@ -3,6 +3,8 @@ package com.noexit.app.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.noexit.app.model.OpenReservationDTO;
 
 public interface OpenReservationService {
@@ -23,8 +25,8 @@ public interface OpenReservationService {
 	public void dropOpen(long userId, long resOpenId) throws Exception;
 	
 	// 예약 오픈 등록 페이징 처리 
-	public Map<String, Object> getListPaging(Map<String, Object> map);
+	//public Map<String, Object> getListPaging(Map<String, Object> map);
 	
 	// 예약 오픈 데이터 갯수
-	public int dataCount(Map<String, Object> map);
+	//public int dataCount(Map<String, Object> map);
 }

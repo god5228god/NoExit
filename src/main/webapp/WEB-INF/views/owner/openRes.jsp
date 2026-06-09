@@ -11,27 +11,35 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript">
-
-	function deleteOk(){
-		if(confirm('정말 비활성화 하시겠습니까?')){
-			//const url = "${pageContext.request.contextPath}/owner/res/delete/${dto.num}?;
-			location.href=url;
-		}
-	}
-	
 	$(function(){
 		
-		$("#cafeSelect").on('change', function(){
+		// 페이지 로드 시에 컨트롤러에서 넘겨준 schDate를 loadList()함수로 넘겨주기
+		// 목록조회 ajax 처리하는 함수 loadList(schDate, schCafe)
+		loadList("${schDate}", null);
+		//-- 오늘날짜, 전체카페(null) 로 목록 조회
+		
+		// schDate 변경 시 목록 조회
+		$("#selectDate").on("change", function(){
+			loadList($(this).val(), $("#selectCafe").val());			
+		});
+		
+		// schCafe 변경 시 목록 조회
+		$("#selectCafe").on("change", function(){
+			loadList($("#selectDate").val(), $(this).val());			
+		});
+		
+		// 카페 셀렉트 변경 시 테마 셀렉트 변경 AJAX
+		$("#cafeSelect").on("change", function(){
+			
 			const cafeId = $(this).val();
-
+			
 			$("#themeSelect").empty().append('<option value="" disabled selected>-- 테마 선택 --</option>');
 			
 			if(!cafeId)
 				return;
-		
 			
 			$.ajax({
-				  url: '/openRes/theme'
+				  url: '/owner/openRes/theme'
 				, type: 'GET'
 				, data: {cafeId:cafeId}
 				, success: function(res){
@@ -40,26 +48,25 @@
 					    });
 				}
 			});
-		
+			
 		});
-		
-		
-		// 예약시간 등록 버튼 클릭
-		$('#openResBtn').on('click', function(){
-
-		    const cafeId  = $('#cafeSelect').val();
+		// 예약 슬롯 등록 
+		$("#openResBtn").on("click", function(){
+			
+			const cafeId  = $('#cafeSelect').val();
 		    const roomId  = $('#themeSelect').val();
 		    const date    = $('#openDate').val();
 		    const hour    = $('select[name="hour"]').val();
 		    const min     = $('select[name="min"]').val();
-
-		    // 유효성 체크
+			
+		 // 유효성 체크
 		    if(!cafeId || cafeId == '') { alert('카페를 선택해주세요.'); return; }
 		    if(!roomId || roomId == '') { alert('테마를 선택해주세요.'); return; }
 		    if(!date)                   { alert('날짜를 선택해주세요.'); return; }
 
+		 // 예약 슬롯 등록 폼 구성 AJAX 처리
 		    $.ajax({
-		          url: '/openRes/open'
+		          url: '/owner/openRes/open'
 		        , type: 'POST'
 		        , data: {
 		              cafe:  cafeId
@@ -71,7 +78,10 @@
 		        , success: function(res){
 		            if(res.success){
 		                alert(res.message);
-		                location.reload();
+		                // 등록 성공 후 등록한 건에 맞는 목록 조회 
+		                $("#selectCafe").val(cafeId);
+		                $("#selectDate").val(date);
+		                loadList(date, cafeId);
 		            } else {
 		                alert(res.message);
 		            }
@@ -80,25 +90,26 @@
 		            alert('오류가 발생했습니다.');
 		        }
 		    });
+		    
 		});
-		
-		
 	});
 	
-	// 목록 조회 함수
+	// 목록 조회 - AJAX
 	function loadList(schDate, schCafe) {
 	    $.ajax({
-	          url: '/openRes/list'
+	          url: '/owner/openRes/list'
 	        , type: 'GET'
-	        , data: { schDate: schDate, schCafe: schCafe || '' }
+	        , data: { schDate: schDate, schCafe: schCafe}
 	        , success: function(res) {
+	        	
+	        	if(res.length==0){
+	        		$('#emptyList').show();
+	        	}else{
+	        		$('#emptyList').hide();
+	        	}
+	        	
 	            const tbody = $('tbody');
 	            tbody.empty();
-	            
-	            if(res.length == 0) {
-	                tbody.html('<tr><td colspan="5" class="text-center">등록된 슬롯이 없습니다.</td></tr>');
-	                return;
-	            }
 	            
 	            res.forEach(function(item) {
 	                tbody.append(
@@ -107,32 +118,44 @@
 	                    '<td>' + item.roomName + '</td>' +
 	                    '<td>' + item.openDate + '</td>' +
 	                    '<td class="fw-bold">' + item.openTime + '</td>' +
-	                    '<td><button type="button" class="btn ne-btn-deact">비활성화</button></td>' +
+	                    '<td><button type="button" class="btn ne-btn-deact" onclick="deleteOk('+item.resOpenId+')">슬롯 삭제</button></td>' +
 	                    '</tr>'
 	                );
 	            });
 	        }
 	    });
 	}
-
-	$(function(){
-	    // 페이지 로드시 오늘 날짜 목록 조회
-	    loadList('${schDate}', null);
-	    
-	    // 날짜 변경시
-	    $('input[name="schDate"]').on('change', function(){
-	        loadList($(this).val(), $('select[name="schCafe"]').val());
-	    });
-	    
-	    // 카페 변경시
-	    $('select[name="schCafe"]').on('change', function(){
-	        loadList($('input[name="schDate"]').val(), $(this).val());
-	    });
-	    
-	    // 등록 성공 후
-	    // success 안에서 location.reload() 대신
-	    // loadList(date, cafeId); 로 바꾸면 페이지 새로고침 없이 목록 갱신
-	});
+	
+	
+	// 비활성화 버튼 클릭
+	function deleteOk(resOpenId){
+	
+		if(confirm("정말 삭제하시겠습니까?")){
+			
+			// 예약 슬롯 비활성화 폼 구성 AJAX 처리
+		    $.ajax({
+		          url: '/owner/openRes/delete'
+		        , type: 'POST'
+		        , data: {
+		              resOpen:  resOpenId
+		          }
+		        , success: function(res){
+		            if(res.success){
+		                alert(res.message);
+		                // 비활성화 성공 후 목록 조회 
+		             	// 현재 선택된 날짜/카페로 목록 갱신
+		                loadList($('#selectDate').val(), $('#selectCafe').val());
+		            } else {
+		                alert(res.message);
+		            }
+		        }
+		        , error: function(){
+		            alert('오류가 발생했습니다.');
+		        }
+		    });
+			
+		}
+	}
 	
 </script>
 </head>
@@ -162,7 +185,8 @@
 								<option value="" disabled selected>-- 테마 선택 --</option>
 							</select>
 							<div class="form-label">날짜 선택</div>
-							<input type="date" id="openDate" name="date" class="ne-box selectBox" value="${schDate }"/>
+							<input type="date" id="openDate" name="date" class="ne-box selectBox" value="${minDate }"
+							min="<%= java.time.LocalDate.now().plusDays(1).toString() %>"/>
 							<div class="form-label">시간 선택</div>
 							<div class="timeWrap ">
 								<select name="hour" class="ne-box">
@@ -216,13 +240,14 @@
 								<span>등록된 슬롯</span>
 								 <form action="">
 								 
-								 	<select name="schCafe" class="selectBox ne-box">
+								 	<select name="schCafe" class="selectBox ne-box" id="selectCafe">
 								 		<option value="">전체 카페</option>
 								 		<c:forEach var="list" items="${cafeList }">
 									 		<option value="${list.cafeId }">${list.cafeName }</option>
 								 		</c:forEach>
 								 	</select>
-								 	<input type="date" class="ne-box" name="schDate" value="${schDate }"/>
+								 	<input type="date" class="ne-box" name="schDate" value="${schDate }" id="selectDate"
+								 	min="<%= java.time.LocalDate.now().toString() %>"/>
 								 </form>						
 							</div>
 						</div>
@@ -237,23 +262,22 @@
 								</tr>
 							</thead>
 							<tbody>
-							<c:forEach var="list" items="${openList.list }">
+							<c:forEach var="list" items="${openList}">
 								<tr>
 									<td>${list.cafeName }</td>
 									<td>${list.roomName }</td>
 									<td>${list.openDate }</td>
 									<td class="fw-bold">${list.openTime }</td>
 									<td>
-										<button type="button" class="btn ne-btn-deact" onclick="deleteOk()">비활성화</button>
+										<button type="button" class="btn ne-btn-deact" onclick="deleteOk(${list.resOpenId})">비활성화</button>
 									</td>
 								</tr>
 							</c:forEach>
 							</tbody>
 						</table>
-						<c:if test="${empty openList.list }">
-							<div class="text-center">등록된 슬롯이 없습니다.</div>
-						</c:if>
-						${openList.paging }
+						
+						<div class="text-center" id="emptyList" style="display: none; margin-top: 10px;">등록된 슬롯이 없습니다.</div>
+						
 					</div>
 				</div>
 			</div>
