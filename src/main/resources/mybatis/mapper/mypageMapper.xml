@@ -4,11 +4,25 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.noexit.app.mapper.MypageMapper">
 	
-	<select id="getUserRecord" parameterType="Integer" resultType="com.noexit.app.model.MyPage">
-		SELECT 
-	
-	
-	</select>
+	<select id="getUserRecord" parameterType="Long" resultType="com.noexit.app.model.MyPage">
+	    SELECT 
+	        C.ROOM_NAME AS roomName, 
+	        RC.PLAY_TIME AS playTime, 
+	        RC.HINT_COUNT AS hintCount, 
+	        RC.PLAYER_COUNT AS peopleCount, 
+	        RO.OPEN_AT AS playDate, 
+	        RC.RECORD_COMMENT AS comment
+	    FROM RECORD RC
+	    JOIN ATTENDANCE_DETAIL AD ON RC.DETAIL_ID = AD.DETAIL_ID
+	    JOIN ATTENDANCE AT ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID
+	    JOIN RESERVATION RS ON AT.RESERVATION_ID = RS.RESERVATION_ID
+	    JOIN PARTY P ON RS.PARTY_ID = P.PARTY_ID
+	    JOIN PARTY_ROOM PR ON P.PARTY_ID = PR.PARTY_ID
+	    JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
+	    JOIN ROOM C ON RO.ROOM_ID = C.ROOM_ID
+	    WHERE AD.USER_ID = #{userId}
+	    ORDER BY RO.OPEN_AT DESC
+</select>
 
 
 

@@ -6,5 +6,5 @@ import com.noexit.app.model.MyPage;
 
 public interface MyPageService {
 	
-	public List<MyPage> getUserRecord();
+	public List<MyPage> getUserRecord(Long userId);
 }

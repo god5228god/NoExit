@@ -9,5 +9,5 @@ import com.noexit.app.model.MyPage;
 @Mapper
 public interface MypageMapper {
 	
-	public List<MyPage> getUserRecord();
+	public List<MyPage> getUserRecord(Long userId);
 }
