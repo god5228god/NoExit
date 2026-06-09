@@ -14,11 +14,9 @@
 
 	<main class="ne-main-content ne-body-offset">
 		<div class="ne-container d-flex">
-			<aside class="col-md-2">
 					<%@ include file="/WEB-INF/views/common/ownerSide.jsp"%>
-			</aside>
 			<div class="col-md-10 resWrap">
-				<div class="title">출석 체크 - 파티원</div>
+				<div class="title">출석 체크</div>
 				<div class="d-flex justify-content-between">
 					<div class="resList" style="width:100%">
 						<form action="${pageContext.request.contextPath}/owner/attendance/saveDraft" method="post">
@@ -28,7 +26,7 @@
 
 								<div class="row fw-bold border-bottom py-2 m-0">
 									<div class="col-4">닉네임</div>
-									<div class="col-3">구분</div>
+									<div class="col-3">역할</div>
 									<div class="col-5">출석 여부</div>
 								</div>
 
@@ -58,7 +56,7 @@
 
 							<div class="text-end mt-4">
 								<button type="submit" class="btn btn-primary"
-								        onclick="return confirm('이대로 임시 저장하시겠습니까?');">확인</button>
+								        onclick="return confirm('이대로 저장하시겠습니까?');">확인</button>
 								<a class="btn btn-outline-secondary" href="${pageContext.request.contextPath}/owner/attendance">취소</a>
 							</div>
 						</form>

@@ -72,7 +72,9 @@
 
 .theme-image
 {
-	background: #f5f5f5;
+	width: 100%;
+	height: 100%;
+	
 }
 
 .theme-info
@@ -194,12 +196,13 @@
 			$(".theme-list").append(renderTheme(item));
 		});
 	}
-
+  
 	function renderTheme(item)
 	{
-		return "<a href='${path}/theme/info/" + item.themeId + "' class='theme-item'>" 
-			+ "<div class='theme-image'>" + "<span>" + item.imagePath + "</span></div>"
-			+ "<div class='theme-info'>" 
+		return "<a href='${path}/theme/info/" + item.themeId + "' class='theme-item'>"
+	    + "<div class='theme-image'><img src='" + (item.imagePath && item.imagePath.charAt(0) === '/' ? '${path}' + item.imagePath : '${path}/uploads/theme/' + item.imagePath)
+	    + "' style='width:100%; height:auto;'></div>" 
+	    + "<div class='theme-info'>"
 			+ getItem('카페명',item.cafeName)
 			+ getItem('테마명',item.themeName)
 			+ getItem('테마 장르',item.genre)

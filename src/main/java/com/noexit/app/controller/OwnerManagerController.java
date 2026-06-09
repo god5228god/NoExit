@@ -23,7 +23,7 @@ public class OwnerManagerController {
     private final UserService userService;
     private final CafeService cafeService;
 
-    @GetMapping
+    @GetMapping // 매니저 관리
     public String manager(HttpSession session, Model model) {
         String redirect = AuthUtil.checkOwner(session);
         if (redirect != null) 

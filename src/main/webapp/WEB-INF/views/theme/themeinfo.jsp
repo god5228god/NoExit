@@ -27,7 +27,9 @@
 
 .theme-image
 {
-	background-color: #f5f5f5;
+	/* background-color: #f5f5f5; */
+	width: 100%;
+	height: 100%;
 }
 
 .theme-info
@@ -184,7 +186,7 @@
 				<div class="theme-info-wrap">
 					
 					<div class="theme-image">
-						<span>${dto.imagePath }</span>
+						<img src="${pageContext.request.contextPath}/uploads/theme/${dto.imagePath}" style="width:100%; height: 100%;">
 					</div>
 					
 					<div class="theme-info">

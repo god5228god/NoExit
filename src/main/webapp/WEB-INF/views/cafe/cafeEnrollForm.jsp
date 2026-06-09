@@ -57,7 +57,7 @@ $(function(){
 	<div class="ne-sc">
 		<div class="ne-sc-title fs-5">카페 등록 신청</div>
 
-		<form action="${pageContext.request.contextPath}/cafe/enroll" method="post">
+		<form action="${pageContext.request.contextPath}/mypage/cafe/enroll" method="post">
 
 			<div class="mb-3">
 				<label for="cafeName" class="form-label">카페명<span class="form-required">*</span></label>

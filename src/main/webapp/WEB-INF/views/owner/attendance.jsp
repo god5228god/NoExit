@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>NoExit - 출석체크</title>
+<title>출석체크</title>
 <link rel="stylesheet"
 	href='${pageContext.request.contextPath }/dist/css/attendance.css' />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
@@ -13,13 +13,13 @@
 <body>
 	<%@ include file="/WEB-INF/views/common/header.jsp"%>
 
-	<main class="ne-main-content ne-body-offset">
+	<div class="ne-main-content ne-body-offset">
 		<div class="ne-container d-flex">
 			<aside class="col-md-2">
 					<%@ include file="/WEB-INF/views/common/ownerSide.jsp"%>
 			</aside>
 			<div class="col-md-10 resWrap">
-				<div class="title">출석 체크</div>
+				<div class="title">출석 체크 현황</div>
 				<div class="d-flex justify-content-between">
 					<div class="resList" style="width:100%">
 						<div class="attend-list">
@@ -97,7 +97,7 @@
 				</div>
 			</div>
 		</div>
-	</main>
+	</div>
 
 	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 </body>

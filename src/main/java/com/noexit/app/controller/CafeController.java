@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @Controller
-@RequestMapping("/cafe")
+@RequestMapping("/mypage/cafe")
 public class CafeController {
 	
 	private final CafeService cafeService;

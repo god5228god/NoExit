@@ -21,7 +21,7 @@ public class OwnerAttendanceController {
 
     private final AttendanceService attendanceService;
 
-    @GetMapping
+    @GetMapping("") // 출석체크
     public String attendance(HttpSession session, Model model) {
         String redirect = AuthUtil.checkStaff(session);
         if (redirect != null) return redirect;
