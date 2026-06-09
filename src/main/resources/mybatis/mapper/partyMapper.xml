@@ -172,6 +172,15 @@
 		WHERE A.PARTY_ID = #{partyId} AND A.MESSAGE_ID > #{lastCommentId} 
 		ORDER BY A.CREATED_AT
 
+	</select>
+	
+	<select id="getCommentDeleteList" parameterType="map" resultType="com.noexit.app.model.PartyCommentDeleteDTO">
+		
+		SELECT A.DELETE_ID AS deleteId, A.MESSAGE_ID as commentId
+		FROM MESSAGE_DELETE A
+		JOIN PARTY_MESSAGE B 
+		ON A.MESSAGE_ID = B.MESSAGE_ID
+		WHERE B.PARTY_ID = #{partyId} AND A.DELETE_ID > #{lastDeleteCommentId}
 		
 	</select>
 	

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.noexit.app.mapper.PartyMapper;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
+import com.noexit.app.model.PartyCommentDeleteDTO;
 import com.noexit.app.model.PartyCrewDTO;
 import com.noexit.app.model.PartyDTO;
 import com.noexit.app.model.ThemeSlotDTO;
@@ -154,7 +155,24 @@ public class PartyServiceImpl implements PartyService
 		
 		return list;
 	}
-
+	
+	@Override
+	public List<PartyCommentDeleteDTO> getCommentDeleteList(Map<String, Object> map)
+	{
+		List<PartyCommentDeleteDTO> list = null;
+		
+		try
+		{
+			list = mapper.getCommentDeleteList(map);
+		} 
+		catch (Exception e)
+		{
+			log.info("getCommentDeleteList : ",e);
+		}
+		
+		return list;
+	}
+	
 	@Override
 	public int partyCommentInsert(PartyCommentDTO dto)
 	{

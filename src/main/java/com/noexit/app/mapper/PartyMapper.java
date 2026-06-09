@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
+import com.noexit.app.model.PartyCommentDeleteDTO;
 import com.noexit.app.model.PartyCrewDTO;
 import com.noexit.app.model.PartyDTO;
 import com.noexit.app.model.ThemeSlotDTO;
@@ -27,6 +28,7 @@ public interface PartyMapper
 	int partyDelete(long partyId);
 	
 	List<PartyCommentDTO> getPartyCommentList(Map<String, Object> map);
+	List<PartyCommentDeleteDTO> getCommentDeleteList(Map<String, Object> map); 
 	int partyCommentInsert(PartyCommentDTO dto);
 	int partyCommentDelete(long commentId);
 	

@@ -257,6 +257,7 @@
 <script type="text/javascript">
 	
 	let lastCommentId = 0;
+	let lastDeleteCommentId = 0;
 	let partyId = '${partyId}';
 	let userId = '${userId}';
 	let position = '${position}';
@@ -269,7 +270,7 @@
 			//alert("1초");		
 			//alert(partyId + " | " + position + " | " + status);
 			
-			let param = "lastCommentId=" + lastCommentId;
+			let param = "lastCommentId=" + lastCommentId + "&lastDeleteCommentId=" + lastDeleteCommentId;
 			
 			$.ajax(
 			{
@@ -283,10 +284,16 @@
 					crewList(data.crewList);
 					applyList(data.applyList);
 					commentList(data.commentList);
+					commentsRemove(data.commentDeleteList);
 					
-					if(data.commentList.length != null && data.commentList.length > 0)
+					if(data.commentList != null && data.commentList.length > 0)
 					{
 						lastCommentId = data.commentList[data.commentList.length-1].commentId;
+					}
+					
+					if(data.commentDeleteList != null && data.commentDeleteList.length > 0)
+					{
+						lastDeleteCommentId = data.commentDeleteList[data.commentDeleteList.length-1].deleteId;
 					}
 				}
 				,"error":function(e)
@@ -511,6 +518,32 @@
 		 	 +  "</div>";
 		 		
 		return html;
+	}
+	
+	function commentsRemove(list)
+	{
+		list.forEach(function(item)
+		{
+			removeComment(item);
+		});
+	}
+	
+	function removeComment(item)
+	{
+		// alert(item.deleteId + " / " + item.commentId);
+		
+		let commentItem = document.querySelector(".comment[data-comment-id='" + item.commentId + "']");
+		let deleteBtn = document.querySelector(".comment-delete[data-comment-id='" + item.commentId + "']");
+		
+		if(deleteBtn != null)
+		{
+			deleteBtn.remove();
+		}
+		
+		if(commentItem != null)
+		{
+			commentItem.innerText = "삭제된 메세지 입니다";
+		}
 	}
 	
 	function commentWrite()

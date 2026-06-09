@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
+import com.noexit.app.model.PartyCommentDeleteDTO;
 import com.noexit.app.model.PartyCrewDTO;
 import com.noexit.app.model.PartyDTO;
 import com.noexit.app.model.ThemeSlotDTO;
@@ -693,6 +694,7 @@ public class Party
 	@PostMapping("data/{partyid}")
 	public Map<String, Object> partyData(@PathVariable(name = "partyid") long partyId
 										,@RequestParam(name="lastCommentId", defaultValue = "0") long lastCommentId
+										,@RequestParam(name="lastDeleteCommentId", defaultValue = "0") long lastDeleteCommentId
 										,HttpSession session)
 	{
 		/*
@@ -770,8 +772,11 @@ public class Party
 		
 		commentMap.put("partyId", partyId);
 		commentMap.put("lastCommentId", lastCommentId);
+		commentMap.put("lastDeleteCommentId", lastDeleteCommentId);
 		
 		List<PartyCommentDTO> commentList = service.getPartyCommentList(commentMap);
+		
+		List<PartyCommentDeleteDTO> commentDeleteList = service.getCommentDeleteList(commentMap);
 		
 		Map<String, Object> map = new HashMap<>();
 		
@@ -779,6 +784,7 @@ public class Party
 		map.put("crewList", crewList);
 		map.put("applyList", applyList);
 		map.put("commentList", commentList);
+		map.put("commentDeleteList", commentDeleteList);
 		
 		return map;
 	}
