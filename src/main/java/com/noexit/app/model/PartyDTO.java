@@ -19,7 +19,7 @@ public class PartyDTO
 	private String themeTime;
 	private double avgAge;
 	private double avgTemp;
-	private int count;
+	private int memberCount;
 	private int minPlayers;
 	private int maxPlayers;
 	private int price;

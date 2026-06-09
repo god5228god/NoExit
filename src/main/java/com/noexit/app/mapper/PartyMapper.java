@@ -16,6 +16,7 @@ public interface PartyMapper
 {
 	List<PartyDTO> getPartyList(Map<String, Object> map);
 	PartyDTO getPartyById(long partyId);
+	int hasApply(PartyApplyDTO dto);
 	int partyApply(PartyApplyDTO dto);
 	
 	ThemeSlotDTO getThemeById(long themeId);
@@ -25,7 +26,7 @@ public interface PartyMapper
 	int partyUpdate(PartyDTO dto);
 	int partyDelete(long partyId);
 	
-	List<PartyCommentDTO> getPartyCommentList(long partyId);
+	List<PartyCommentDTO> getPartyCommentList(Map<String, Object> map);
 	int partyCommentInsert(PartyCommentDTO dto);
 	int partyCommentDelete(long commentId);
 	

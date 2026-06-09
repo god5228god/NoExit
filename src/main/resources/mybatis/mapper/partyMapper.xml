@@ -7,6 +7,7 @@
 <!-- 
 	List<PartyDTO> getPartyList(Map<String, Object> map);
 	PartyDTO getPartyById(long partyId);
+	int hasApply
 	int partyApply(PartyApplyDTO dto);
 	
 	ThemeDTO getThemeById(long themeId);
@@ -38,39 +39,56 @@
 
 	<select id="getPartyList" parameterType="map" resultType="com.noexit.app.model.PartyDTO">
 	
-		SELECT A.PARTY_ID AS partyId ,D.ROOM_IMG AS themeImg, D.ROOM_NAME AS themeName
-		, TO_CHAR(C.OPEN_AT,'YYYY-MM-DD') AS themeDate, TO_CHAR(C.OPEN_AT,'HH24:MI') AS themeTime
-		, A.PARTY_NAME AS partyName, E.AGE AS avgAge, E.TEMP AS avgTemp, E.COUNT AS count
-		FROM PARTY A
-		JOIN PARTY_ROOM B
-		ON A.PARTY_ID = B.PARTY_ID
-		JOIN RES_OPEN C
-		ON B.RES_OPEN_ID = C.RES_OPEN_ID
-		JOIN ROOM D
-		ON C.ROOM_ID = D.ROOM_ID
-		JOIN 
+		SELECT partyId, themeImg, themeName, themeDate, themeTime, partyName, avgAge, avgTemp, memberCount, status
+		FROM
 		(
-		    SELECT PARTY_ID,TRUNC(NVL(AVG(AGE),-1),1) AS AGE, TRUNC(NVL(AVG(TEMP),-1),1) AS TEMP, COUNT(*) AS COUNT
-		    FROM VW_PARTY_ACTIVE_MEMBER
-		    GROUP BY PARTY_ID
-		) E
-		ON A.PARTY_ID = E.PARTY_ID
+			SELECT A.PARTY_ID AS partyId ,D.ROOM_IMG AS themeImg, D.ROOM_NAME AS themeName
+			, TO_CHAR(C.OPEN_AT,'YYYY-MM-DD') AS themeDate, TO_CHAR(C.OPEN_AT,'HH24:MI') AS themeTime
+			, A.PARTY_NAME AS partyName, E.AGE AS avgAge, E.TEMP AS avgTemp, E.COUNT AS memberCount
+			, FN_GET_PARTY_CONDITION(A.PARTY_ID) AS STATUS
+			FROM PARTY A
+			JOIN PARTY_ROOM B
+			ON A.PARTY_ID = B.PARTY_ID
+			JOIN RES_OPEN C
+			ON B.RES_OPEN_ID = C.RES_OPEN_ID
+			JOIN ROOM D
+			ON C.ROOM_ID = D.ROOM_ID
+			JOIN 
+			(
+			    SELECT PARTY_ID,TRUNC(NVL(AVG(AGE),-1),1) AS AGE, TRUNC(NVL(AVG(TEMP),-1),1) AS TEMP, COUNT(*) AS COUNT
+			    FROM VW_PARTY_ACTIVE_MEMBER
+			    GROUP BY PARTY_ID
+			) E
+			ON A.PARTY_ID = E.PARTY_ID
+		) T
 		
 		<where>
-		
-			A.PARRT_ID >=  #{}
+			
+			<if test="kwd != null and kwd != ''">
+				<include refid="where-list"></include>
+			</if>
+			
+			AND themeDate > SYSDATE + 1 AND STATUS = 'open'
+			
+			<if test="lastId != 0">
+				AND partyId &lt; #{lastId}
+			</if>
 			
 		</where>
+		
+		ORDER BY partyId DESC
+		FETCH FIRST 2 ROWS ONLY
 		
 	</select>
 	
 	<select id="getPartyById" parameterType="long" resultType="com.noexit.app.model.PartyDTO">
 	
-		SELECT E.CAFE_NAME AS cafeName, D.ROOM_NAME AS themeName
+		SELECT A.PARTY_ID AS partyId, A.PARTY_NAME AS partyName , E.CAFE_NAME AS cafeName, D.ROOM_NAME AS themeName
 		, TO_CHAR(C.OPEN_AT,'YYYY-MM-DD') AS themeDate
 		, TO_CHAR(C.OPEN_AT,'HH24:MI') AS themeTime
 		, D.MIN_PLAYERS AS minPlayers, D.MAX_PLAYERS AS maxPlayers
 		, D.PRICE AS Price, FN_RESERVATION_CHECK(C.RES_OPEN_ID) AS slotStatus
+		, A.GENDER_ID AS genderId
 		, F.GENDER_NAME AS genderName, A.MESSAGE AS partyComment
         , FN_GET_PARTY_CONDITION(A.PARTY_ID) AS partyStatus
 		FROM PARTY A
@@ -88,6 +106,14 @@
 		
 	</select>
 
+	<select id="hasApply" parameterType="com.noexit.app.model.PartyApplyDTO" resultType="integer">
+		
+		SELECT COUNT(*)
+		FROM PARTY_APPLY
+		WHERE PARTY_ID = #{partyId} AND USER_ID = #{userId}
+		
+	</select>
+	
 	
 	<insert id="partyApply" parameterType="com.noexit.app.model.PartyApplyDTO">
 		
@@ -137,14 +163,14 @@
 		
 	</insert>
 	
-	<select id="getPartyCommentList" parameterType="long" resultType="com.noexit.app.model.PartyCommentDTO">
+	<select id="getPartyCommentList" parameterType="map" resultType="com.noexit.app.model.PartyCommentDTO">
 		
-		SELECT A.MESSAGE_ID AS commentId, B.NICKNAME AS name, A.CONTENT AS comment, A.USER_ID AS userId, A.CREATED_AT AS createdAt
+		SELECT A.MESSAGE_ID AS commentId, B.NICKNAME AS name, A.CONTENT AS partyComment, A.USER_ID AS userId, A.CREATED_AT AS createdAt
 		FROM PARTY_MESSAGE A
 		JOIN USER_ACCOUNT B
 		ON A.USER_ID = B.USER_ID
-		WHERE A.PARTY_ID = #{partyId}
-		ORDER BY CREATED_AT
+		WHERE A.PARTY_ID = #{partyId} AND A.MESSAGE_ID > #{lastCommentId}  
+		ORDER BY A.CREATED_AT
 		
 	</select>
 	
@@ -164,7 +190,10 @@
 	
 	<select id="getPartyCrewList" parameterType="long" resultType="com.noexit.app.model.PartyCrewDTO">
 	
-		SELECT MEMBER_ID AS crewId, NICKNAME AS name, AGE AS age, GENDER AS gender, TEMP AS temp, READY AS ready, POSITION AS position
+		SELECT MEMBER_ID AS crewId,USER_ID AS userId
+		, NICKNAME AS nickName, AGE AS age, GENDER AS gender
+		, TEMP AS temp, READY AS ready, POSITION AS position
+		,APPLY_ID AS applyId
 		FROM VW_PARTY_ACTIVE_MEMBER
 		WHERE PARTY_ID = #{partyId}
 		ORDER BY JOINDT
@@ -200,7 +229,10 @@
 	
 	<select id="getPartyApplyList" parameterType="long" resultType="com.noexit.app.model.PartyApplyDTO">
 	
-		SELECT A.APPLY_ID AS applyId, B.NICKNAME AS name, C.GENDER AS gender,FN_GET_USER_AGE(C.BIRTHDATE) AS age,FN_GET_MANNER(A.USER_ID) AS temp, A.APPLY_MESSAGE AS applyComment, A.CREATED_AT AS createdAt
+		SELECT A.APPLY_ID AS applyId, B.NICKNAME AS nickName
+		, C.GENDER AS gender,FN_GET_USER_AGE(C.BIRTHDATE) AS age
+		,FN_GET_MANNER(A.USER_ID) AS temp, A.APPLY_MESSAGE AS applyComment
+		, A.CREATED_AT AS createdAt, A.PARTY_ID as partyId
 		FROM PARTY_APPLY A
 		JOIN USER_ACCOUNT B
 		ON A.USER_ID = B.USER_ID
@@ -212,6 +244,7 @@
 		    FROM PARTY_MEMBER D
 		    WHERE D.APPLY_ID = A.APPLY_ID
 		)
+		AND A.PARTY_ID = #{partyId}
 		ORDER BY A.CREATED_AT DESC
 		
 	</select>

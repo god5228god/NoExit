@@ -25,8 +25,18 @@ public class PartyServiceImpl implements PartyService
 	@Override
 	public List<PartyDTO> getPartyList(Map<String, Object> map)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List<PartyDTO> list = null;
+		
+		try
+		{
+			list = mapper.getPartyList(map);
+		} 
+		catch (Exception e)
+		{
+			log.info("getPartyList : ",e);
+		}
+		
+		return list;
 	}
 
 	@Override
@@ -36,7 +46,7 @@ public class PartyServiceImpl implements PartyService
 		
 		try
 		{
-			
+			dto = mapper.getPartyById(partyId);
 		} 
 		catch (Exception e)
 		{
@@ -47,10 +57,37 @@ public class PartyServiceImpl implements PartyService
 	}
 
 	@Override
+	public int hasApply(PartyApplyDTO dto)
+	{
+		int count = 0;
+		
+		try
+		{
+			count = mapper.hasApply(dto);
+		}
+		catch (Exception e)
+		{
+			log.info("hasApply : ",e);
+		}
+		
+		return count;
+	}
+	
+	@Override
 	public int partyApply(PartyApplyDTO dto)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try
+		{
+			result = mapper.partyApply(dto);
+		} 
+		catch (Exception e)
+		{
+			log.info("partyApply : ",e);
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -102,10 +139,20 @@ public class PartyServiceImpl implements PartyService
 	}
 
 	@Override
-	public List<PartyCommentDTO> getPartyCommentList(long partyId)
+	public List<PartyCommentDTO> getPartyCommentList(Map<String, Object> map)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List<PartyCommentDTO> list = null;
+		
+		try
+		{
+			list = mapper.getPartyCommentList(map);
+		} 
+		catch (Exception e)
+		{
+			log.info("getPartyCommentList : ",e);
+		}
+		
+		return list;
 	}
 
 	@Override
@@ -125,8 +172,18 @@ public class PartyServiceImpl implements PartyService
 	@Override
 	public List<PartyCrewDTO> getPartyCrewList(long partyId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List<PartyCrewDTO> list = null;
+		
+		try
+		{
+			list = mapper.getPartyCrewList(partyId);
+		} 
+		catch (Exception e)
+		{
+			log.info("getPartyCrewList : ",e);
+		}
+		
+		return list;
 	}
 
 	@Override
@@ -153,8 +210,18 @@ public class PartyServiceImpl implements PartyService
 	@Override
 	public List<PartyApplyDTO> getPartyApplyList(long partyId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List<PartyApplyDTO> list = null;
+		
+		try
+		{
+			list = mapper.getPartyApplyList(partyId);
+		}
+		catch (Exception e)
+		{
+			log.info("getPartyApplyList : ",e);
+		}
+		
+		return list;
 	}
 
 	@Override

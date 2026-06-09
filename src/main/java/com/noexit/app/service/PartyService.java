@@ -14,6 +14,7 @@ public interface PartyService
 	/*
 	파티 목록 조회
 	파티 정보 조회
+	파티 신청 조회
 	파티 신청
 	
 	테마 정보 조회
@@ -39,6 +40,7 @@ public interface PartyService
 	
 	List<PartyDTO> getPartyList(Map<String, Object> map);
 	PartyDTO getPartyById(long partyId);
+	int hasApply(PartyApplyDTO dto);
 	int partyApply(PartyApplyDTO dto);
 	
 	ThemeSlotDTO getThemeById(long themeId);
@@ -48,7 +50,7 @@ public interface PartyService
 	int partyUpdate(PartyDTO dto);
 	int partyDelete(long partyId);
 	
-	List<PartyCommentDTO> getPartyCommentList(long partyId);
+	List<PartyCommentDTO> getPartyCommentList(Map<String, Object> map);
 	int partyCommentInsert(PartyCommentDTO dto);
 	int partyCommentDelete(long commentId);
 	

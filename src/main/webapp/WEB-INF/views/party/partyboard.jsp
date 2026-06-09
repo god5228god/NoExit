@@ -251,8 +251,54 @@
 
 <script type="text/javascript">
 	
+	let lastCommentId = 0;
+	let partyId = '${partyId}';
+	let userId = '${userId}';
+	let position = '${position}';
+	let status = '${status}';
+	
 	$(function()
 	{
+		let interval = setInterval(function()
+		{
+			//alert("1초");		
+			//alert(partyId + " | " + position + " | " + status);
+			
+			let param = "lastCommentId=" + lastCommentId;
+			
+			$.ajax(
+			{
+				"type":"POST"
+				, "url":"${path}/party/data/" + partyId
+				, "data":param
+				, "dataType":"json"
+				, "success":function(data)
+				{
+					partyInfo(data.partyInfo);
+					crewList(data.crewList);
+					applyList(data.applyList);
+					commentList(data.commentList);
+				}
+				,"error":function(e)
+				{
+					clearInterval(interval);  
+		            if (e.status === 401) 
+		            {
+		                location.href = "/user/login";
+		            } 
+		            else if (e.status === 403 || e.status === 404) 
+		            {
+		                location.href = "/party/list";
+		            } 
+		            else 
+		            {
+		                console.log(e.responseText);   
+		            }
+				}
+			}); 
+			
+		},5000);
+		
 		$("[name='partyComment']").on("keydown",function(evt)
 		{
 			if(evt.key == "Enter")
@@ -293,7 +339,105 @@
 			alert(this.getAttribute("data-apply-id"));
 		});
 		
+		partyName = document.querySelector("#partyName");
+		cafeName = document.querySelector("#cafeName");
+		themeDate = document.querySelector("#themeDate");
+		themeTime = document.querySelector("#themeTime");
+		themePlayers = document.querySelector("#themePlayers");
+		themeStatus = document.querySelector("#themeStatus");
+		genderName = document.querySelector("#genderName");
+		partyComment = document.querySelector("#partyComment");
+		partyCrewList = document.querySelector(".party-crew-list");
 	});
+	
+	let partyName;
+	let cafeName;
+	let themeDate;
+	let themeTime;
+	let themePlayers;
+	let themeStatus;
+	let genderName;
+	let partyComment;
+	
+	function partyInfo(data)
+	{
+		partyName.innerText= data.partyName;
+		cafeName.innerText = data.cafeName;
+		themeDate.innerText = data.themeDate;
+		themeTime.innerText = data.themeTime;
+		themePlayers.innerText = data.minPlayers + "명 ~ " + data.maxPlayers + "명";
+		themeStatus.innerText = data.slotStatus == 1 ? "예약 가능" : "예약 불가" ;
+		genderName.innerText = data.genderName;
+		partyComment.innerText = data.partyComment;
+	}
+	
+	let partyCrewList;
+	
+	function crewList(list)
+	{
+		 partyCrewList.innerHTML = "";
+		 
+	    list.forEach(function(item)
+	    {
+	        partyCrewList.insertAdjacentHTML("beforeend", createCrew(item));
+	    });
+	}
+	
+	function createCrew(item)
+	{
+		let html = "<div class='crew'>"
+			 + "<div class='crew-info'>"
+			 + "<span>" + item.nickName + "</span>"
+			 + "<span>" + item.age + "세</span>"
+			 + "<span>" + item.gender + "</span>"
+			 + "<span>🌡️" + item.temp + "</span>"
+			 + "</div>"
+			 +"<div class='crew-position'>";
+			 
+		if(item.position == 'HOST')
+		{
+			html += "<span class='ne-st ne-st-green'>" + "파티장" + "</span>";
+		}
+		else
+		{
+			if(item.ready == 'READY')
+			{
+				html += "<span class='ne-st ne-st-amber'>준비 완료</span>";
+			}
+			else
+			{
+				html += "<span class='ne-st ne-st-red'>준비 중</span>";
+			}
+			
+			html += "<span class='ne-st ne-st-blue'>파티원</span>";
+			
+			// 방장이면
+			if(position=="HOST")
+			{
+				html += "<button class='btn ne-btn-deact btn-kick' data-apply-id='" + item.crewId + "'>강퇴</button>"; 
+			}
+			// 자기 자신이면
+			else if(item.userId == userId)
+			{
+				html += "<button class='btn ne-btn-deact btn-out' data-apply-id='" + item.applyId + "'>탈퇴</button>";
+			}
+			
+			html += "</div>";
+			html += "</div>";
+		}
+		
+		return item;
+	}
+	
+	function applyList(applyList)
+	{
+		
+	}
+	
+	function commentList(commentList)
+	{
+		
+	}
 	
 	function commentWrite()
 	{
@@ -354,11 +498,6 @@
 		// 이후 마이 페이지로
 	}
 	
-	function getData()
-	{
-		alert("ajax 데이터 요청 및 바인딩");
-	}
-	
 </script>
 
 </head>
@@ -377,21 +516,21 @@
 						<hr>
 						
 						<div class="party-name">
-							<span>주열룸</span>
+							<span id="partyName">주열룸</span>
 						</div>
 						
 						<div class="theme-info">
-							<span>우주별&nbsp;&nbsp;</span>
-							<span>그레이&nbsp;&nbsp;</span>
-							<span>2026-06-01&nbsp;&nbsp;</span>
-							<span>18:00&nbsp;&nbsp;</span>
-							<span>2명 ~ 4명</span>
-							<span>예약 가능/예약 불가</span>
+							<span id="cafeName">우주별&nbsp;&nbsp;</span>
+							<span id="themeName">그레이&nbsp;&nbsp;</span>
+							<span id="themeDate">2026-06-01&nbsp;&nbsp;</span>
+							<span id="themeTime">18:00&nbsp;&nbsp;</span>
+							<span id="themePlayers">2명 ~ 4명</span>
+							<span id="themeStatus">예약 가능/예약 불가</span>
 						</div>
 						
 						<div class="party-condition">
-							<span>성별 동성/무관</span>
-							<span>미쿠 좋아하는 사람만 오셈</span>						
+							<span id="genderName">성별 동성/무관</span>
+							<span id="partyComment">미쿠 좋아하는 사람만 오셈</span>						
 						</div> 
 						
 						<div class="party-action">
@@ -466,7 +605,8 @@
 						<hr>
 						
 						<div class="party-crew-list">
-							<div class="crew">
+						
+							<!-- <div class="crew">
 								
 								<div class="crew-info">
 									<span>윤주열</span>
@@ -475,7 +615,7 @@
 									<span>🌡️36.5</span>
 								</div>
 								
-								<div class="crew-status">
+								<div class="crew-position">
 									<span class="ne-st ne-st-green">파티장</span>
 								</div>
 								
@@ -513,7 +653,7 @@
 									<button class="btn ne-btn-deact btn-kick" data-apply-id="2">강퇴</button>
 								</div>
 								
-							</div>
+							</div> -->
 							
 						</div> 
 						

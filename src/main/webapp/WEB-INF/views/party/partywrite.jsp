@@ -142,13 +142,13 @@
 				<div class="write-wrap">
 					<form action="" class="write-form" method="post" name="writeForm">
 						<span>파티명</span>
-						<input type="text" name="partyName" value="">
+						<input type="text" name="partyName" value="" maxlength="20">
 						<label>
 						<span>동성만</span>
 						<input type="checkbox" name="genderCondition" value="1">
 						</label>
 						<span>코멘트</span>
-						<input type="text" name="partyComment">
+						<input type="text" name="partyComment" maxlength="30">
 						<input type="hidden" value="${dto.slotId }" name="slotId">
 					</form>
 				</div>

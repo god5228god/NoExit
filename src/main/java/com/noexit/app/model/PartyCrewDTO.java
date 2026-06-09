@@ -8,10 +8,12 @@ import lombok.Setter;
 public class PartyCrewDTO
 {
 	private long crewId;
-	private String name;
+	private String nickName;
+	private long userId;
+	private long applyId;
 	private int age;
 	private String gender;
-	private int temp;
-	private boolean ready;
+	private double temp;
+	private String ready;
 	private String position;
 }
