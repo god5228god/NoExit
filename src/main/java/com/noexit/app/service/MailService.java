@@ -97,6 +97,32 @@ public class MailService {
 	        log.error("sendUserIdMail", e);
 	    }
 	}
-	
-	
+
+
+	// 비밀번호 찾기 인증번호 메일
+	public void sendAuthCodeMail(String email, String authCode) {
+
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+
+			MimeMessageHelper helper =
+					new MimeMessageHelper(message, false, "UTF-8");
+
+			helper.setFrom(fromEmail, "NoExit");
+			helper.setTo(email);
+
+			helper.setSubject("[NoExit] 비밀번호 찾기 인증번호");
+
+			helper.setText(
+					"<h3>인증번호를 입력해주세요.</h3>"
+					+ "<p><b>" + authCode + "</b></p>", true);
+
+			mailSender.send(message);
+
+		} catch (Exception e) {
+			log.error("sendAuthCodeMail", e);
+		}
+	}
+
+
 }

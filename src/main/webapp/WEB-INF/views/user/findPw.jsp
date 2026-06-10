@@ -22,13 +22,17 @@ $(function(){
 			return;
 		}
 
-		$.post("findPwAuth.action", {
+		$.post("${pageContext.request.contextPath}/user/findPwAuth", {
 			name : name,
 			userId : userId
 		}, function(data) {
-			$("#resultMsg").html("인증번호가 발송되었습니다.").css("color", "blue");
-			$("#authCodeArea").show();
-			$("#authBtn").text("재발송");
+			if (data == "SUCCESS") {
+				$("#resultMsg").html("인증번호가 발송되었습니다.").css("color", "blue");
+				$("#authCodeArea").show();
+				$("#authBtn").text("재발송");
+			} else {
+				$("#resultMsg").html("일치하는 회원 정보가 없습니다.").css("color", "red");
+			}
 		}).fail(function() {
 			$("#resultMsg").html("인증번호 발송에 실패했습니다.").css("color", "red");
 		});

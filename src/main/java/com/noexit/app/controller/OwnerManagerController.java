@@ -74,9 +74,9 @@ public class OwnerManagerController {
     }
 
     @PostMapping("/deact")
-    public String managerDeact(@RequestParam("cafeId") Long cafeId,
-                               @RequestParam("userId") Long userId,
-                               HttpSession session) {
+    public String managerDeact(@RequestParam("cafeId") Long cafeId
+                              , @RequestParam("userId") Long userId
+                              , HttpSession session) {
         String redirect = AuthUtil.checkOwner(session);
         if (redirect != null) 
         	return redirect;

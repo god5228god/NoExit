@@ -30,3 +30,86 @@ END;
          SELECT MAX(MANAGER_HISTORY_ID) FROM MANAGER_HISTORY GROUP BY CAFE_ID, USER_ID
      )
      AND mh.REG_EVENT_ID = 1;
+
+
+-- 방탈출 종료 30분 후에도 사장님이 최종확인 안 누른 미처리 예약을
+-- 모든 파티원 출석(1)으로 자동 인서트
+CREATE OR REPLACE PROCEDURE SP_AUTO_ATTEND_ALL
+IS
+    V_ATTENDANCE_ID NUMBER;
+BEGIN
+    FOR rec IN (
+        SELECT VRA.RESERVATION_ID
+          FROM VW_RESERVATION_ALL VRA
+          JOIN ROOM R ON VRA.ROOM_ID = R.ROOM_ID
+         WHERE VRA.CANCEL_ID IS NULL
+           AND VRA.OPEN_AT + (R.DURATION + 30) / 1440 < SYSDATE
+           AND NOT EXISTS (
+               SELECT 1 FROM ATTENDANCE A
+                WHERE A.RESERVATION_ID = VRA.RESERVATION_ID
+           )
+    ) LOOP
+
+        -- ATTENDANCE 1행 (USER_ID NULL = 자동처리 = 사람이 안 처리함)
+        INSERT INTO ATTENDANCE (ATTENDANCE_ID, RESERVATION_ID, USER_ID)
+        VALUES (ATTENDANCE_SEQ.NEXTVAL, rec.RESERVATION_ID, NULL)
+        RETURNING ATTENDANCE_ID INTO V_ATTENDANCE_ID;
+
+        -- ATTENDANCE_DETAIL N행 : 파티장 + 활성 파티원 전부 출석(1)
+        INSERT INTO ATTENDANCE_DETAIL (DETAIL_ID, ATTENDANCE_ID, USER_ID, ATTEND_STATUS_ID)
+        SELECT ATTENDANCE_DETAIL_SEQ.NEXTVAL, V_ATTENDANCE_ID, T.USER_ID, 1
+          FROM (
+              SELECT P.USER_ID
+                FROM PARTY P
+                JOIN RESERVATION RV ON RV.PARTY_ID = P.PARTY_ID
+               WHERE RV.RESERVATION_ID = rec.RESERVATION_ID
+              UNION ALL
+              SELECT PA.USER_ID
+                FROM PARTY_MEMBER PM
+                JOIN PARTY_APPLY  PA ON PA.APPLY_ID = PM.APPLY_ID
+                JOIN RESERVATION  RV ON RV.PARTY_ID = PA.PARTY_ID
+               WHERE RV.RESERVATION_ID = rec.RESERVATION_ID
+                 AND NOT EXISTS (
+                     SELECT 1 FROM PARTY_KICK PK WHERE PK.MEMBER_ID = PM.MEMBER_ID
+                 )
+          ) T;
+
+    END LOOP;
+
+    COMMIT;
+END;
+/
+
+
+-- DB 스케줄러 잡 등록 : 1분마다 자동 실행
+BEGIN
+    -- 이미 있으면 지우고 다시 만듦 (재실행 안전)
+    BEGIN
+        DBMS_SCHEDULER.DROP_JOB('JOB_AUTO_ATTEND');
+    EXCEPTION
+        WHEN OTHERS THEN NULL;
+    END;
+
+    DBMS_SCHEDULER.CREATE_JOB (
+        job_name        => 'JOB_AUTO_ATTEND',
+        job_type        => 'PLSQL_BLOCK',
+        job_action      => 'BEGIN SP_AUTO_ATTEND_ALL; END;',
+        start_date      => SYSDATE,
+        repeat_interval => 'FREQ=MINUTELY; INTERVAL=1',
+        enabled         => TRUE,
+        comments        => '방탈출 종료 30분 후 미처리 예약 자동 출석'
+    );
+END;
+/
+
+
+-- 잡 상태 확인용 (수동 실행)
+-- SELECT JOB_NAME, ENABLED, STATE, LAST_START_DATE, NEXT_RUN_DATE
+--   FROM USER_SCHEDULER_JOBS WHERE JOB_NAME = 'JOB_AUTO_ATTEND';
+-- SELECT JOB_NAME, STATUS, ACTUAL_START_DATE, ERROR#
+--   FROM USER_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME = 'JOB_AUTO_ATTEND'
+--  ORDER BY ACTUAL_START_DATE DESC FETCH FIRST 10 ROWS ONLY;
+
+-- 잡 잠시 끄기 (시연 직전 안전용)
+-- BEGIN DBMS_SCHEDULER.DISABLE('JOB_AUTO_ATTEND'); END;
+-- BEGIN DBMS_SCHEDULER.ENABLE('JOB_AUTO_ATTEND'); END;

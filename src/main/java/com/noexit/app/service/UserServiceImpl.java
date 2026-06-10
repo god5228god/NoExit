@@ -1,11 +1,14 @@
 package com.noexit.app.service;
 
+import java.util.Random;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.noexit.app.mapper.UserMapper;
 import com.noexit.app.model.User;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
 	private final UserMapper userMapper;
 	private final ManagerService managerService;
+	private final MailService mailService;
 
 	@Override
 	@Transactional
@@ -72,17 +76,93 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User findByNameAndEmail(String name, String email) {
+	public User findByNameAndEmail(User user) {
 
 	    User dto = null;
 
 	    try {
-	        dto = userMapper.findByNameAndEmail(name, email);
+	        dto = userMapper.findByNameAndEmail(user);
 	    } catch (Exception e) {
 	        log.info("findByNameAndEmail : ", e);
 	    }
 
 	    return dto;
+	}
+
+
+	// 비밀번호 찾기 인증번호 발송
+	@Override
+	public boolean sendAuthCode(String loginId, String name, HttpSession session) {
+
+		try {
+			User param = new User();
+			param.setLoginId(loginId);
+			param.setName(name);
+
+			User dto = userMapper.findByLoginIdAndName(param);
+			if (dto == null) return false;
+
+			// 6자리 인증번호
+			String authCode = String.valueOf(100000 + new Random().nextInt(900000));
+
+			session.setAttribute("authCode", authCode);
+			session.setAttribute("authCodeLoginId", loginId);
+
+			mailService.sendAuthCodeMail(dto.getEmail(), authCode);
+			return true;
+
+		} catch (Exception e) {
+			log.info("sendAuthCode : ", e);
+			return false;
+		}
+	}
+
+
+	// 인증번호 검증
+	@Override
+	public boolean verifyAuthCode(String loginId, String authCode, HttpSession session) {
+
+		String savedCode = (String) session.getAttribute("authCode");
+		String savedLoginId = (String) session.getAttribute("authCodeLoginId");
+
+		if (savedCode == null || savedLoginId == null) return false;
+		if (!savedLoginId.equals(loginId)) return false;
+		if (!savedCode.equals(authCode)) return false;
+
+		session.setAttribute("authCodeVerified", true);
+		return true;
+	}
+
+
+	// 비밀번호 변경
+	@Override
+	public int resetPassword(String loginId, String newPassword, HttpSession session) {
+
+		Boolean verified = (Boolean) session.getAttribute("authCodeVerified");
+		String savedLoginId = (String) session.getAttribute("authCodeLoginId");
+
+		if (verified == null || !verified) return 0;
+		if (savedLoginId == null || !savedLoginId.equals(loginId)) return 0;
+
+		int result = 0;
+
+		try {
+			User dto = userMapper.findByLoginId(loginId);
+			if (dto == null) return 0;
+
+			dto.setPassword(newPassword);
+			result = userMapper.updatePassword(dto);
+
+			// 세션 정리
+			session.removeAttribute("authCode");
+			session.removeAttribute("authCodeLoginId");
+			session.removeAttribute("authCodeVerified");
+
+		} catch (Exception e) {
+			log.info("resetPassword : ", e);
+		}
+
+		return result;
 	}
 }
 

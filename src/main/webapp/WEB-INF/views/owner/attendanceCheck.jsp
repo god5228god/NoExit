@@ -41,10 +41,10 @@
 										</div>
 										<div class="col-5">
 											<input type="hidden" name="userIds" value="${c.userId}">
-											<select name="attendStatusIds" class="form-select" required>
-												<option value="">선택</option>
-												<option value="1">출석</option>
-												<option value="2">노쇼</option>
+											<select name="attendStatusIds" class="form-select">
+												<option value="" ${empty c.attendStatusId ? 'selected' : ''}>미정</option>
+												<option value="1" ${c.attendStatusId eq 1 ? 'selected' : ''}>출석</option>
+												<option value="2" ${c.attendStatusId eq 2 ? 'selected' : ''}>노쇼</option>
 											</select>
 										</div>
 									</div>

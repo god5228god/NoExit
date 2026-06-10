@@ -62,6 +62,13 @@
 														   href="${pageContext.request.contextPath}/owner/attendance/check?reservationId=${r.reservationId}">다시 입력</a>
 													</div>
 												</c:when>
+												<c:when test="${partialList.contains(r.reservationId)}">
+													<div class="col-2"><span class="status-wait">출석 미완료</span></div>
+													<div class="col-2">
+														<a class="btn btn-sm btn-outline-warning"
+														   href="${pageContext.request.contextPath}/owner/attendance/check?reservationId=${r.reservationId}">이어서 입력</a>
+													</div>
+												</c:when>
 												<c:otherwise>
 													<div class="col-2"><span class="status-wait">대기</span></div>
 													<div class="col-2">

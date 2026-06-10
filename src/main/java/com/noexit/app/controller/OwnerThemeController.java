@@ -28,7 +28,8 @@ public class OwnerThemeController {
     @GetMapping("/manage")
     public String themeManage(HttpSession session, Model model) {
         String redirect = AuthUtil.checkOwner(session);
-        if (redirect != null) return redirect;
+        if (redirect != null) 
+        	return redirect;
 
         User loginUser = (User) session.getAttribute("loginUser");
         model.addAttribute("themeList", themeService.selectListByOwnerUserId(loginUser.getUserId()));
@@ -36,11 +37,12 @@ public class OwnerThemeController {
     }
 
     @GetMapping("/write")
-    public String writeForm(@RequestParam("mode") String mode,
-                            @RequestParam(name = "roomId", required = false) Long roomId,
+    public String writeForm(@RequestParam("mode") String mode
+                            ,@RequestParam(name = "roomId", required = false) Long roomId,
                             HttpSession session, Model model) {
         String redirect = AuthUtil.checkOwner(session);
-        if (redirect != null) return redirect;
+        if (redirect != null) 
+        	return redirect;
 
         User loginUser = (User) session.getAttribute("loginUser");
         model.addAttribute("cafeList", cafeService.selectByUserId(loginUser.getUserId()));
@@ -55,11 +57,11 @@ public class OwnerThemeController {
     }
 
     @PostMapping("/write")
-    public String write(@RequestParam("mode") String mode,
-                        ThemeDTO dto, HttpSession session, Model model) {
+    public String write(@RequestParam("mode") String mode
+                        , ThemeDTO dto, HttpSession session, Model model) {
         String redirect = AuthUtil.checkOwner(session);
-        if (redirect != null) return redirect;
-
+        if (redirect != null) 
+        	return redirect;
         try {
             if ("update".equals(mode)) 
             	themeService.themeUpdate(dto);

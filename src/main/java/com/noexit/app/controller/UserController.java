@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.noexit.app.model.User;
 import com.noexit.app.service.MailService;
@@ -42,19 +43,18 @@ public class UserController {
 	}
 	
 	@PostMapping("/findId")
-	public void findId(String name ,String email ,HttpServletResponse response) throws IOException {
+	public void findId(User user, HttpServletResponse response) throws IOException {
 
-		 System.out.println("1. 컨트롤러 진입");
-	    User user = service.findByNameAndEmail(name, email);
+	    User dto = service.findByNameAndEmail(user);
 
 	    response.setContentType("text/plain;charset=UTF-8");
 
-	    if(user == null) {
+	    if (dto == null) {
 	        response.getWriter().print("NOT_FOUND");
 	        return;
 	    }
 
-	    mailService.sendUserIdMail(user.getEmail(), user.getLoginId());
+	    mailService.sendUserIdMail(dto.getEmail(), dto.getLoginId());
 
 	    response.getWriter().print("SUCCESS");
 	}
@@ -65,6 +65,50 @@ public class UserController {
 	@GetMapping("/findPw")
 	public String findPwForm() {
 		return "user/findPw";
+	}
+
+	// 비밀번호 찾기 인증번호 발송
+	@PostMapping("/findPwAuth")
+	public void findPwAuth(@RequestParam(name = "name") String name
+	                     , @RequestParam(name = "userId") String loginId
+	                     , HttpSession session, HttpServletResponse response) throws IOException {
+
+		boolean ok = service.sendAuthCode(loginId, name, session);
+
+		response.setContentType("text/plain;charset=UTF-8");
+		response.getWriter().print(ok ? "SUCCESS" : "NOT_FOUND");
+	}
+
+	// 인증번호 검증
+	@PostMapping("/verifyCode")
+	public void verifyCode(@RequestParam(name = "userId") String loginId
+	                     , @RequestParam(name = "authCode") String authCode
+	                     , HttpSession session, HttpServletResponse response) throws IOException {
+
+		boolean ok = service.verifyAuthCode(loginId, authCode, session);
+
+		response.setContentType("application/json;charset=UTF-8");
+		if (ok) {
+			response.getWriter().print("{\"status\":\"success\"}");
+		} else {
+			response.getWriter().print("{\"status\":\"fail\",\"message\":\"인증번호가 올바르지 않습니다.\"}");
+		}
+	}
+
+	// 비밀번호 변경
+	@PostMapping("/resetPw")
+	public void resetPw(@RequestParam(name = "userId") String loginId
+	                  , @RequestParam(name = "newPw") String newPw
+	                  , HttpSession session, HttpServletResponse response) throws IOException {
+
+		int result = service.resetPassword(loginId, newPw, session);
+
+		response.setContentType("application/json;charset=UTF-8");
+		if (result > 0) {
+			response.getWriter().print("{\"status\":\"success\"}");
+		} else {
+			response.getWriter().print("{\"status\":\"fail\",\"message\":\"비밀번호 변경에 실패했습니다.\"}");
+		}
 	}
 
 	// 회원가입 폼

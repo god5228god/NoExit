@@ -97,7 +97,18 @@
   	   WHERE RESERVATION_ID = #{reservationId}
 	</select>
 
+	<!-- 파티원 1명당 출석 상태 INSERT -->
+	<insert id="insertAttendDetailByUser" parameterType="com.noexit.app.model.AttendItemDTO">
+		INSERT INTO ATTENDANCE_DETAIL (DETAIL_ID, ATTENDANCE_ID, USER_ID, ATTEND_STATUS_ID)
+		VALUES (ATTENDANCE_DETAIL_SEQ.NEXTVAL, #{attendanceId}, #{userId}, #{attendStatusId})
+	</insert>
 
-	
+	<!-- 노쇼 시 매너온도 차감 -->
+	<update id="callInsertNoshow" parameterType="com.noexit.app.model.Manner" statementType="CALLABLE">
+		{ CALL SP_INSERT_NOSHOW(
+			#{userId,  mode=IN,  jdbcType=NUMERIC},
+			#{newTemp, mode=OUT, jdbcType=NUMERIC}
+		) }
+	</update>
 
 </mapper>
