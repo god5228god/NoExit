@@ -146,6 +146,9 @@
 		INSERT INTO PARTY (PARTY_ID,USER_ID,PARTY_NAME,GENDER_ID,MESSAGE,CREATED_AT)
 		VALUES(#{partyId},#{userId},#{partyName},#{genderId},#{partyComment},SYSDATE)
 		
+		INSERT INTO PARTY_ROOM
+		VALUES (PARTY_ROOM_SEQ.NEXTVAL,#{slotId},#{partyId},SYSDATE) 
+		
 	</insert>
 
 	<update id="partyUpdate" parameterType="com.noexit.app.model.PartyDTO">
@@ -187,7 +190,7 @@
 	<insert id="partyCommentInsert" parameterType="com.noexit.app.model.PartyCommentDTO">
 	
 		INSERT INTO PARTY_MESSAGE(MESSAGE_ID,PARTY_ID,CONTENT,USER_ID,CREATED_AT)
-		VALUES(PARTY_MESSAGE_SEQ.NEXTVAL,#{partyId},#{commentId},#{userId},SYSDATE)
+		VALUES(PARTY_MESSAGE_SEQ.NEXTVAL,#{partyId},#{partyComment},#{userId},SYSDATE)
 		
 	</insert>	
 	
@@ -198,9 +201,23 @@
 			
 	</insert>
 	
+	<select id="getCommentById" parameterType="Long" resultType="com.noexit.app.model.PartyCommentDTO">
+		
+		SELECT A.USER_ID AS userId
+		FROM PARTY_MESSAGE A
+		WHERE NOT EXISTS
+		(
+		    SELECT 1
+		    FROM MESSAGE_DELETE B
+		    WHERE A.MESSAGE_ID = B.MESSAGE_ID
+		)
+		AND A.MESSAGE_ID = #{commentId}
+		
+	</select>
+	
 	<select id="getPartyCrewList" parameterType="long" resultType="com.noexit.app.model.PartyCrewDTO">
 	
-		SELECT MEMBER_ID AS crewId,USER_ID AS userId
+		SELECT MEMBER_ID AS crewId,USER_ID AS userId, MEMBER_ID as memberId
 		, NICKNAME AS nickName, AGE AS age, GENDER AS gender
 		, TEMP AS temp, READY AS ready, POSITION AS position
 		,APPLY_ID AS applyId
@@ -208,6 +225,18 @@
 		WHERE PARTY_ID = #{partyId}
 		ORDER BY JOINDT
 		
+	</select>
+		
+	<select id="getPartyCrewById"  parameterType="Long" resultType="com.noexit.app.model.PartyCrewDTO">
+		
+		SELECT PARTY_ID, USER_ID, POSITION
+		FROM VW_PARTY_ACTIVE_MEMBER A
+		WHERE MEMBER_ID = #{crewId} AND NOT EXISTS 
+		(
+		    SELECT 1
+		    FROM PARTY_KICK B
+		    WHERE A.MEMBER_ID = B.MEMBER_ID
+		)	
 	</select>
 		
 	<update id="partyReady" parameterType="long">
@@ -259,7 +288,15 @@
 		
 	</select>
 	
-	<insert id="aprvApply" parameterType="long">
+	<select id="getPartyApplyById" parameterType="Long" resultType="com.noexit.app.model.PartyApplyDTO">
+		
+		SELECT APPLY_ID, PARTY_ID, USER_ID
+		FROM PARTY_APPLY
+		WHERE APPLY_ID = #{applyId}
+		
+	</select>
+	
+	<insert id="aprvApply" parameterType="Long">
 		
 		INSERT INTO PARTY_MEMBER(MEMBER_ID,APPLY_ID,READY_AT,JOINED_AT)
 		VALUES(PARTY_MEMBER_SEQ.NEXTVAL,#{applyId},NULL,SYSDATE)

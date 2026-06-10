@@ -10,6 +10,7 @@ public class PartyCommentDTO
 	private long commentId;
 	private String nickName;
 	private String partyComment;
+	private long partyId;
 	private long userId;
 	private boolean delete;
 	private String createdAt;

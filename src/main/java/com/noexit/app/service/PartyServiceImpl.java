@@ -176,15 +176,52 @@ public class PartyServiceImpl implements PartyService
 	@Override
 	public int partyCommentInsert(PartyCommentDTO dto)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try
+		{
+			result = mapper.partyCommentInsert(dto);
+		}
+		catch (Exception e)
+		{
+			log.info("partyCommentInsert : ",e);
+		}
+		
+		return result;
 	}
 
 	@Override
+	public PartyCommentDTO getCommentById(long commentId)
+	{
+		PartyCommentDTO result = null;
+		
+		try
+		{
+			result = mapper.getCommentById(commentId);
+		} 
+		catch (Exception e)
+		{
+			log.info("hasComment : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
 	public int partyCommentDelete(long commentId)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try
+		{
+			result = mapper.partyCommentDelete(commentId);
+		}
+		catch (Exception e)
+		{
+			log.info("partyCommentDelete : ",e);
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -226,6 +263,23 @@ public class PartyServiceImpl implements PartyService
 	}
 
 	@Override
+	public PartyCrewDTO getPartyCrewById(long crewId)
+	{
+		PartyCrewDTO result = null;
+		
+		try
+		{
+			result = mapper.getPartyCrewById(crewId);
+		}
+		catch (Exception e)
+		{
+			log.info("getPartyCrewById : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
 	public List<PartyApplyDTO> getPartyApplyList(long partyId)
 	{
 		List<PartyApplyDTO> list = null;
@@ -243,17 +297,54 @@ public class PartyServiceImpl implements PartyService
 	}
 
 	@Override
+	public PartyApplyDTO getPartyApplyById(long applyId)
+	{
+		PartyApplyDTO result = null;
+		
+		try
+		{
+			result = mapper.getPartyApplyById(applyId);
+		}
+		catch (Exception e)
+		{
+			log.info("getPartyApplyById : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
 	public int aprvApply(long applyId)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try
+		{
+			result = mapper.aprvApply(applyId);
+		} 
+		catch (Exception e)
+		{
+			log.info("aprvApply : ",e);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public int rejectApply(long applyId)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try
+		{
+			result = mapper.rejectApply(applyId);
+		} 
+		catch (Exception e)
+		{
+			log.info("rejectApply : ",e);
+		}
+		
+		return result;
 	}
 
 }

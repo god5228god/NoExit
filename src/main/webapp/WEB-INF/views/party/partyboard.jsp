@@ -308,11 +308,11 @@
 					clearInterval(interval);
 		            if (e.status === 401)
 		            {
-		                location.href = "/user/login";
+		                location.href = "${path}/user/login";
 		            }
 		            else if (e.status === 403 || e.status === 404)
 		            {
-		                location.href = "/party/list";
+		                location.href = "${path}/party/list";
 		            }
 		            else
 		            {
@@ -336,19 +336,25 @@
 		// 댓글 삭제
 		$(".comment-list").on("click",".comment-delete",function()
 		{
-			alert(this.getAttribute("data-comment-id"));
+			// alert(this.getAttribute("data-comment-id"));
+			this.disabled = true;
+			deleteComment(this.getAttribute("data-comment-id"),this);
 		});
 
 		// 파티 승인
 		$(".party-apply-list").on("click",".aprv-apply",function()
 		{
-			alert(this.getAttribute("data-apply-id"));
+			// alert(this.getAttribute("data-apply-id"));
+			this.disabled = true;
+			approveApply(this.getAttribute("data-apply-id"),this);
 		});
 
 		// 파티 거절
 		$(".party-apply-list").on("click",".reject-apply",function()
 		{
-			alert(this.getAttribute("data-apply-id"));
+			//alert(this.getAttribute("data-apply-id"));
+			this.disabled = true;
+			rejectApply(this.getAttribute("data-apply-id"),this);
 		});
 
 		// 파티 탈퇴;
@@ -360,11 +366,14 @@
 		// 파티 강퇴
 		$(".party-crew-list").on("click",".btn-kick",function()
 		{
-			alert(this.getAttribute("data-apply-id"));
+			//alert(this.getAttribute("data-apply-id"));
+			this.disabled = true;
+			crewKick(this.getAttribute("data-crew-id"),this);
 		});
 
 		partyName = document.querySelector("#partyName");
 		cafeName = document.querySelector("#cafeName");
+		themeName = document.querySelector("#themeName");
 		themeDate = document.querySelector("#themeDate");
 		themeTime = document.querySelector("#themeTime");
 		themePlayers = document.querySelector("#themePlayers");
@@ -378,6 +387,7 @@
 
 	let partyName;
 	let cafeName;
+	let themeName;
 	let themeDate;
 	let themeTime;
 	let themePlayers;
@@ -390,6 +400,7 @@
 	{
 		partyName.innerText= data.partyName;
 		cafeName.innerText = data.cafeName;
+		themeName.innerText = data.themeName;
 		themeDate.innerText = data.themeDate;
 		themeTime.innerText = data.themeTime;
 		themePlayers.innerText = data.minPlayers + "명 ~ " + data.maxPlayers + "명";
@@ -443,7 +454,7 @@
 			// 방장이면
 			if(position=="HOST")
 			{
-				html += "<button class='ne-btn-deact btn-kick' data-apply-id='" + item.crewId + "'>강퇴</button>";
+				html += "<button class='ne-btn-deact btn-kick' data-crew-id='" + item.crewId + "'>강퇴</button>";
 			}
 			// 자기 자신이면
 			else if(item.userId == userId)
@@ -533,7 +544,8 @@
 
 		return html;
 	}
-
+	
+	// 삭제 댓글 목록 함수
 	function commentsRemove(list)
 	{
 		list.forEach(function(item)
@@ -542,6 +554,7 @@
 		});
 	}
 
+	// 개별 댓글 삭제 함수
 	function removeComment(item)
 	{
 		let commentItem = document.querySelector(".comment[data-comment-id='" + item.commentId + "']");
@@ -558,26 +571,104 @@
 		}
 	}
 
+	// 댓글 작성 함수
 	function commentWrite()
 	{
-		let comment = document.querySelector("[name='partyComment']");
+		let commentInput = document.querySelector("[name='partyComment']");
+		let comment = commentInput.value.trim();
 
-		if(!comment.value.trim())
+		if(!comment)
 		{
 			alert("메시지가 없습니다.");
-			comment.focus();
+			commentInput.focus();
 			return;
 		}
 
-		alert("댓글 작성");
-		comment.value = "";
+		// alert("댓글 작성");
+		// comment.value = "";
 
 		// ajax 댓글 작성
+		
+		let param = new URLSearchParams(
+		{
+			partyId: partyId,
+			partyComment: comment
+			
+		}).toString();
+		
+		$.ajax(
+		{
+			"type":"POST"
+			, "url":"${path}/party/comment/insert"
+			, "data":param
+			, "dataType":"json"
+			, "success":function(data)
+			{
+				commentInput.value = "";
+				
+				if(!data.status)
+				{
+					alert("댓글 작성 실패");
+				}
+			}
+			, "error":function(e)
+			{
+			  	if (e.status === 401)
+	            {
+	                location.href = "${path}/user/login";
+	            }
+	            else if (e.status === 403 || e.status === 404)
+	            {
+	                location.href = "${path}/party/list";
+	            }
+	            else
+	            {
+	                console.log(e.responseText);
+	            }
+			}
+		});
 	}
 
-	function deleteComment(commentId)
+	// 댓글 삭제 함수
+	function deleteComment(commentId,btn)
 	{
-		// ajax 삭제 요청
+		if(!confirm("삭제하시겠습니까?"))
+		{
+			btn.disabled = false;
+			return;
+		}
+		
+		$.ajax(
+		{
+			"type":"POST"
+			, "url":"${path}/party/comment/delete/" + commentId
+			, "dataType":"json"
+			, "success":function(data)
+			{
+				if(!data.status)
+				{
+					alert("삭제 실패");
+					btn.disabled = false;
+				}
+			}
+			, "error":function(e)
+			{
+			  	if (e.status === 401)
+	            {
+	                location.href = "${path}/user/login";
+	            }
+	            else if (e.status === 403 || e.status === 404)
+	            {
+	                location.href = "${path}/party/list";
+	            }
+	            else
+	            {
+	            	alert("서버 오류");
+	                console.log(e.responseText);
+	                btn.disabled = false;
+	            }
+			}
+		});
 	}
 
 	function onReady()
@@ -586,16 +677,89 @@
 		// ajax 레디 요청
 	}
 
-	function approveApply(applyId)
+	function approveApply(applyId,btn)
 	{
-		alert("승인");
+		if(!confirm("승인 하시겠습니까?"))
+		{
+			btn.disabled = false;
+			return;
+		}
+		
+		//alert("승인");
 		// ajax 승인 요청
+		
+		$.ajax(
+		{
+			"type":"POST"
+			, "url":"${path}/party/aprvapply/" + applyId
+			, "dataType":"json"
+			, "success":function(data)
+			{
+				if(!data.status)
+				{
+					alert("승인 실패");
+					btn.disabled = false;
+				}				
+			}
+			, "error":function(e)
+			{
+				if (e.status === 401)
+	            {
+	                location.href = "${path}/user/login";
+	            }
+	            else if (e.status === 403 || e.status === 404)
+	            {
+	                location.href = "${path}/party/list";
+	            }
+	            else
+	            {
+	            	alert("서버 오류");
+	                console.log(e.responseText);
+	                btn.disabled = false;
+	            }
+			}
+		});
 	}
 
-	function rejectApply(applyId)
+	function rejectApply(applyId,btn)
 	{
-		alert("거절");
-		// ajax 거절 요청
+		if(!confirm("거절 하시겠습니까?"))
+		{
+			btn.disabled = false;
+			return;
+		}
+		
+		$.ajax(
+		{
+			"type":"POST"
+			, "url":"${path}/party/rejectapply/" + applyId
+			, "dataType":"json"
+			, "success":function(data)
+			{
+				if(!data.status)
+				{
+					alert("거절 실패");
+					btn.disabled = false;
+				}				
+			}
+			, "error":function(e)
+			{
+				if (e.status === 401)
+	            {
+	                location.href = "${path}/user/login";
+	            }
+	            else if (e.status === 403 || e.status === 404)
+	            {
+	                location.href = "${path}/party/list";
+	            }
+	            else
+	            {
+	            	alert("서버 오류");
+	                console.log(e.responseText);
+	                btn.disabled = false;
+	            }
+			}
+		});
 	}
 
 	function reservation()
@@ -616,7 +780,53 @@
 		// confirm 만 물어보고 바로 delete 처리
 		// 이후 마이 페이지로
 	}
-
+	
+	function crewKick(crewId, btn)
+	{
+		if(!confirm("탈퇴 시키겠습니까?"))
+		{
+			btn.disabled = false;
+			return;
+		}
+		
+		$.ajax(
+		{
+			"type":"POST"
+			, "url":"${path}/party/kick/" + crewId
+			, "dataType":"json"
+			, "success":function(data)
+			{
+				if(!data.status)
+				{
+					alert("탈퇴 실패");
+					btn.disabled = false;
+				}				
+			}
+			, "error":function(e)
+			{
+				if (e.status === 401)
+	            {
+	                location.href = "${path}/user/login";
+	            }
+	            else if (e.status === 403 || e.status === 404)
+	            {
+	                location.href = "${path}/party/list";
+	            }
+	            else
+	            {
+	            	alert("서버 오류");
+	                console.log(e.responseText);
+	                btn.disabled = false;
+	            }
+			}
+		});
+	}
+	
+	function crewOut()
+	{
+		
+	}
+	
 </script>
 
 </head>

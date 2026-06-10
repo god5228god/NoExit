@@ -26,8 +26,10 @@ public interface PartyService
 	파티 해산
 	
 	파티 댓글 조회
+	파티 삭제 댓글 조회
 	파티 댓글 작성
 	파티 댓글 삭제
+	파티 댓글 존재 확인
 	
 	파티원 조회
 	파티 레디
@@ -55,14 +57,17 @@ public interface PartyService
 	List<PartyCommentDeleteDTO> getCommentDeleteList(Map<String, Object> map);
 	int partyCommentInsert(PartyCommentDTO dto);
 	int partyCommentDelete(long commentId);
+	PartyCommentDTO getCommentById(long commentId);
 	
 	List<PartyCrewDTO> getPartyCrewList(long partyId);
 	int partyReady(long partyId);
 	int partyOut(long applyId);
 	int partyKick(long memberId);
+	PartyCrewDTO getPartyCrewById(long crewId);
 	
 	List<PartyApplyDTO> getPartyApplyList(long partyId);
 	int aprvApply(long applyId);
 	int rejectApply(long applyId);
+	PartyApplyDTO getPartyApplyById(long applyId);
 	
 }

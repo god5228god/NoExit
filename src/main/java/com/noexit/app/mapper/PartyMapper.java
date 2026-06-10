@@ -31,13 +31,16 @@ public interface PartyMapper
 	List<PartyCommentDeleteDTO> getCommentDeleteList(Map<String, Object> map); 
 	int partyCommentInsert(PartyCommentDTO dto);
 	int partyCommentDelete(long commentId);
+	PartyCommentDTO getCommentById(long commentId);
 	
 	List<PartyCrewDTO> getPartyCrewList(long partyId);
 	int partyReady(long partyId);
 	int partyOut(long applyId);
 	int partyKick(long applyId);
+	PartyCrewDTO getPartyCrewById(long crewId);
 	
 	List<PartyApplyDTO> getPartyApplyList(long partyId);
 	int aprvApply(long applyId);
 	int rejectApply(long applyId);
+	PartyApplyDTO getPartyApplyById(long applyId);
 }
