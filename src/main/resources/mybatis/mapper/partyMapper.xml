@@ -144,7 +144,7 @@
 		</selectKey>
 	
 		INSERT INTO PARTY (PARTY_ID,USER_ID,PARTY_NAME,GENDER_ID,MESSAGE,CREATED_AT)
-		VALUES(#{partyId},#{userId},#{partyName},#{genderCondition},#{partyComment},SYSDATE)
+		VALUES(#{partyId},#{userId},#{partyName},#{genderId},#{partyComment},SYSDATE)
 		
 	</insert>
 
