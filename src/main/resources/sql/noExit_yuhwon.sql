@@ -467,6 +467,110 @@ FROM CAFE C
     ON C.CAFE_ID = VAM.CAFE_ID
 ;
     
+    
+-- 파티원 아이디별 예약된 시간대 조회 뷰
+CREATE OR REPLACE VIEW VW_MEMBER_BOOKED_TIME
+AS
+-- 파티장의 예약 내역
+SELECT UA.USER_ID 
+, P.PARTY_ID, PR.RES_OPEN_ID
+, RV.RESERVATION_ID, RO.ROOM_ID
+, RO.OPEN_AT AS START_AT
+, RO.OPEN_AT + R.DURATION /1440 AS END_AT
+FROM USER_ACCOUNT UA
+    JOIN PARTY P
+    ON UA.USER_ID = P.USER_ID
+    JOIN PARTY_ROOM PR
+    ON P.PARTY_ID = PR.PARTY_ID
+    JOIN RESERVATION RV
+    ON P.PARTY_ID = RV.PARTY_ID
+    JOIN RES_OPEN RO
+    ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
+    JOIN ROOM R
+    ON RO.ROOM_ID =R.ROOM_ID
+WHERE RV.RESERVATION_ID NOT IN(SELECT RESERVATION_ID
+                                FROM RESERVATION_CANCEL
+) AND P.PARTY_ID NOT IN(SELECT PARTY_ID
+                        FROM PARTY_DROP
+) AND RO.RES_OPEN_ID NOT IN (SELECT RES_OPEN_ID
+                            FROM RES_DROP
+) AND R.ROOM_ID NOT IN (SELECT ROOM_ID
+                        FROM ROOM_DROP
+) AND UA.USER_ID NOT IN (SELECT USER_ID
+                        FROM USER_DROP
+) AND R.CAFE_ID NOT IN(SELECT CAFE_ID
+                        FROM CAFE_DROP
+)
+UNION
+-- 파티원의 예약 내역
+SELECT  UA.USER_ID, P.PARTY_ID, PR.RES_OPEN_ID
+, RV.RESERVATION_ID, RO.ROOM_ID
+, RO.OPEN_AT AS START_AT
+, RO.OPEN_AT + R.DURATION /1440 AS END_AT
+FROM USER_ACCOUNT UA
+    JOIN PARTY_APPLY PA
+    ON UA.USER_ID = PA.USER_ID
+    JOIN PARTY_MEMBER PM
+    ON PA.APPLY_ID = PM.APPLY_ID
+    JOIN PARTY P
+    ON PA.PARTY_ID = P.PARTY_ID
+    JOIN PARTY_ROOM PR
+    ON P.PARTY_ID = PR.PARTY_ID
+    JOIN RES_OPEN RO
+    ON RO.RES_OPEN_ID = PR.RES_OPEN_ID
+    JOIN ROOM R
+    ON RO.ROOM_ID = R.ROOM_ID
+    JOIN RESERVATION RV 
+    ON RV.PARTY_ID = PR.PARTY_ID
+WHERE RV.RESERVATION_ID NOT IN(SELECT RESERVATION_ID
+                                FROM RESERVATION_CANCEL
+) AND P.PARTY_ID NOT IN(SELECT PARTY_ID
+                        FROM PARTY_DROP
+) AND RO.RES_OPEN_ID NOT IN (SELECT RES_OPEN_ID
+                            FROM RES_DROP
+) AND R.ROOM_ID NOT IN (SELECT ROOM_ID
+                        FROM ROOM_DROP
+) AND UA.USER_ID NOT IN (SELECT USER_ID
+                        FROM USER_DROP
+) AND R.CAFE_ID NOT IN(SELECT CAFE_ID
+                        FROM CAFE_DROP
+) AND PM.MEMBER_ID  NOT IN (SELECT MEMBER_ID
+                            FROM PARTY_KICK
+)
+;
+
+
+--* VW_MEMBER_BOOKED_TIME 리팩토링
+-- LEFT JOIN, NOT EXISTS, IS NULL 활용
+-- NOT IN 은 직관적인지만 서브쿼리를 매번 실행하며, null위험이 있음
+-- LEFT JOIN + IS NULL은 대용량에서 가장 효율적이며 실무에서 선호됨
+-- NOT EXISTS는 Null에 안전하며 조건에 맞으면 조기 종료함
+
+
+
+
+
+
+
+
+SELECT PA.USER_ID AS MEMBER, PR.RES_OPEN_ID, RO.OPEN_AT 
+FROM PARTY_MEMBER PM
+    JOIN PARTY_APPLY PA
+    ON PM.APPLY_ID=PA.APPLY_ID
+    JOIN PARTY P
+    ON PA.PARTY_ID = P.PARTY_ID
+    JOIN PARTY_ROOM PR
+    ON PR.PARTY_ID = P.PARTY_ID
+    JOIN RES_OPEN RO
+    ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
+WHERE PM.MEMBER_ID NOT IN
+        (   SELECT MEMBER_ID
+            FROM PARTY_KICK
+        );
+
+SELECT *
+FROM VW_RES_OPEN_BOOKED
+WHERE OPEN_AT > SYSDATE;
 
 
 
@@ -822,9 +926,156 @@ END;
 -- 파티아이디로 RES_OPEN_ID가 예약 가능한 상태인지 체크
 -- 여러 사람이 동시에 예약 시도시 처리할 방법(묶어두기)
 -- 
-
 --RESERVATION INSERT(P_PARTY_ID, P_USER_ID)
+CREATE OR REPLACE PROCEDURE PRC_RESERVATION
+( P_USER_ID USER_ACCOUNT.USER_ID%TYPE
+, P_PARTY_ID   PARTY.PARTY_ID%TYPE
+)
+IS
 
+    V_HAS_ID    NUMBER;
+    V_PARTY     NUMBER;
+    V_HAS_RES   NUMBER;
+    V_LEADER    NUMBER;
+    V_RES_OPEN      NUMBER;  
+    V_ROOM          NUMBER;  
+    V_MEMBER_CNT    NUMBER;   
+    V_MIN           NUMBER;   
+    V_MAX           NUMBER;  
+    V_NOT_READY     NUMBER;  
+    V_OVERLAP       NUMBER;
+    
+    ERR_INVALID_USER    EXCEPTION;
+    ERR_INVALID_PARTY   EXCEPTION;
+    RR_INVALID_RIGHT   EXCEPTION;  
+    ERR_INVALID_CNT     EXCEPTION;  
+    ERR_NOT_READY       EXCEPTION;  
+    ERR_OVERLAP         EXCEPTION;  
+    ERR_DUPLICATE       EXCEPTION;  
+    
+BEGIN
+
+    -- 파라미터 체크
+    IF P_USER_ID IS NULL THEN
+        RAISE ERR_INVALID_USER;
+    END IF;
+
+    IF P_PARTY_ID IS NULL THEN
+        RAISE ERR_INVALID_PARTY; 
+    END IF;
+
+    -- 사용자 아이디가 유효한지 검사
+    SELECT COUNT(*) INTO V_HAS_ID
+    FROM USER_INFO
+    WHERE USER_ID = P_USER_ID;
+    
+    IF (V_HAS_ID<1) THEN
+        RAISE ERR_INVALID_USER;
+    END IF;
+    
+    -- 파티 아이디 존재 여부 확인
+    SELECT COUNT(*)  INTO V_PARTY
+    FROM PARTY
+    WHERE PARTY_ID NOT IN  (
+                            SELECT PARTY_ID
+                            FROM PARTY_DROP
+                            ) 
+        AND PARTY_ID=P_PARTY_ID;
+    
+   IF (V_PARTY<1) THEN
+        RAISE ERR_INVALID_PARTY;
+    END IF;
+    
+     -- 입력한 유저아이디가 입력한 파티아이디의 파티장인지 확인
+    SELECT COUNT(*) INTO V_LEADER
+    FROM PARTY
+    WHERE PARTY_ID = P_PARTY_ID
+        AND USER_ID = P_USER_ID;
+        
+    IF (V_LEADER < 1) THEN
+        RAISE ERR_INVAILD_USER
+    END IF;
+    
+    -- 파티아이디로 예약오픈아이디를 찾아서 예약이 가능한 상태인지 확인
+    
+    SELECT RES_OPEN_ID, ROOM_ID INTO V_RES_OPEN, V_ROOM
+    FROM PARTY P
+        JOIN PARTY_ROOM PR
+        ON P.PARTY_ID = PR.PARTY_ID
+    WHERE P.PARTY_ID = P_PARTY_ID;
+    
+    
+    SELECT COUNT(*) INTO V_HAS_RES
+    FROM VW_RES_OPEN_UNBOOKED
+    WHERE RES_OPEN_ID = V_RES_OPEN;
+    
+      IF (V_HAS_RES<1) THEN
+        RAISE ERR_INVALID_PARTY;
+    END IF;
+
+    -- 파티 인원 수와 테마 최소인원 최대인원 수 확인
+    SELECT FN_MEMBER_COUNT(P_PARTY_ID) INTO V_MEMBER_CNT
+    FROM DUAL;
+    
+    SELECT MIN_PLAYERS, MAX_PLAYERS INTO V_MIN, V_MAX
+    FROM ROOM
+    WHERE ROOM_ID = V_ROOM;
+    
+    IF(V_MEMBER_CNT < V_MIN OR V_MEMBER_CNT > V_MAX) THEN
+        RAISE ERR_INVALID_CNT
+    END IF;
+    
+   -- 파티아이디의 모든 멤버가 레디 상태인지 확인
+   SELECT COUNT(*) INTO V_NOT_READY
+   FROM VW_PARTY_ACTIVE_MEMBER
+    WHERE PARTY_ID = P_PARTY_ID
+        AND READY != 'READY';
+    
+    IF (V_NOT_READY > 0) THEN
+        RAISE ERR_NOT_READY;
+    END IF;
+    
+    -- 새 예약 시간 구하기
+   SELECT RO.OPEN_AT, RO.OPEN_AT+R.DURATION / 1440 
+   INTO V_NEW_START, V_NEW_END
+   FROM RES_OPEN RO
+    JOIN ROOM R
+    ON RO.ROOM_ID = R.ROOM_ID;
+    
+    -- 파티 구성원 중 시간 겹치는 예약 있는지 확인
+    SELECT COUNT(*) INTO V_OVERLAP
+    FROM VW_MEMBER_BOOKED_TIME
+    WHERE USER_ID IN(
+        SELECT USER_ID
+        FROM PARTY
+        WHERE USER_ID = P_USER_ID
+        UNION
+        SELECT PA.USER_ID
+        FROM PARTY_APPLY PA
+            JOIN PARTY_MEMBER PM
+            ON PA.APPLY_ID = PM.APPLY_ID
+        WHERE PM.MEMBER_ID NOT IN (SELECT MEMBER_ID
+                                   FROM PARTY_KICK
+            ) AND PA.PARTY_ID = P_PARTY_ID
+        )
+    AND V_NEW_START < END_AT
+    AND V_NEW_END > START_AT
+    
+    -- 새시작 6:00 새끝 7:00
+    -- 원시작 5:00 원끝 6:10
+    -- 원시작 6:50 원끝 8:00
+    
+    IF (V_OVERLAP > 0) THEN
+        RAISE ERR_OVERLAP;
+    END IF;
+    
+    -- EH
+    
+    
+
+
+END;
+/
 
 
 
