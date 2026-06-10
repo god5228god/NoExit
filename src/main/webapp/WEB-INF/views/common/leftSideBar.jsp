@@ -30,9 +30,15 @@
 	function openEvalModal(btn) {
 		
 		// 폼에 요청할 데이터 가져오기
+		const detailId = btn.getAttribute('data-detail-id');
+    	const targetId = btn.getAttribute('data-target-id');
 		const targetNick = btn.getAttribute('data-target-nick');
 		const cafeName = btn.getAttribute('data-cafe-name');
 		const roomName = btn.getAttribute('data-room-name');
+		
+		// 히든 button에 id 값 설정
+		document.getElementById('hiddenDetailId').value = detailId;
+	    document.getElementById('hiddenTargetId').value = targetId;
 		
 		document.getElementById('md-mutual-target').innerText = targetNick;
 		document.getElementById('md-mutual-cafe').innerText = cafeName;
@@ -47,13 +53,16 @@
 	
 	function submitEvaluation() {
 		
-		
 		// form 데이터 가져오기		
 		const form = document.getElementById('evaluationForm');
 		const formData = new FormData(form);
 		
-		// ※ 실제 서비스 시 평가 대상자(targetUserNo) 등도 같이 보낼 수 있도록 구조화합니다.
+
+		// json 형태로 컨트롤러로 넘길 데이터
 		const evaluationData = {
+			detailId: document.getElementById('hiddenDetailId').value,
+		    targetId: document.getElementById('hiddenTargetId').value,
+		    writerId: ${USER.userId},
 			q1Answer: formData.get('answer1'),
 			q2Answer: formData.get('answer2')
 		};
@@ -73,20 +82,23 @@
 			// 예외 처리
 			if(!response.ok) throw new Error("서버 처리 실패");
 			
-			return response.text(); // 컨트롤러에서 return String 예정
+			return response.text(); // 컨트롤러에서 return String
 		})
 		.then(result => {
 			
-			// DB INSERT 성공 후 처리
-			alert("상호 평가가 정상적으로 등록되었습니다.");
-			
-			// 모달 창 닫기
-			let evalModalEl = document.getElementById('evaluationModal');
-			let evalModal = bootstrap.Modal.getInstance(evalModalEl);
-			evalModal.hide();
-			
-			// 상호 평가 후 페이지 새로고침
-			location.reload();
+			if(result === "success"){
+				
+				// DB INSERT 성공 후 처리
+				alert("상호 평가가 정상적으로 등록되었습니다.");
+				
+				// 모달 창 닫기
+				let evalModalEl = document.getElementById('evaluationModal');
+				let evalModal = bootstrap.Modal.getInstance(evalModalEl);
+				evalModal.hide();
+				
+				// 상호 평가 후 페이지 새로고침
+				location.reload();
+			}
 		})
 		.catch(error => {
 			console.error("평가 등록 에러:", error);
@@ -116,56 +128,41 @@
 	
 	<!-- 상호평가 섹션 -->
 	<div class="ne-sc m-0">
-		<div class="ne-sc-title">현재 미진행 상호평가</div>
-		
-		<!-- 상호평가 데이터 바인딩 영역 -->
-		<%-- <c:choose>
-			<c:when test="${record.isEscaped == 1}">
-				<span class="ne-st ne-st-amber">성공</span>
-			</c:when>
-			<c:otherwise>
-				<span class="ne-st ne-st-red">실패</span>
-			</c:otherwise>
-		</c:choose>
-		 --%>
+		<div class="ne-sc-title mb-2">현재 미진행 상호평가</div>
 		
 		<div class="d-flex flex-column gap-3 mt-2">
-			<div class="d-flex justify-content-between align-items-center">
-				<div>
-					<c:choose>
-						<c:when test="${not empty mutualList}">
-							<c:forEach var="mutual" items="${mutualList}">
-								<span class="fw-bold d-block" style="font-size: 14px;">${mutual.targetNickName }</span>
-								<span class="text-muted text-xs">${mutual.cafeName }</span>
-								<div>
-									<span class="text-muted text-xxs">${mutual.roomName }</span>
-									
-								</div>
-								<div>
+			<c:choose>
+				<c:when test="${not empty mutualList}">
+					<c:forEach var="mutual" items="${mutualList}">
+						<div class="d-flex justify-content-between align-items-center p-2 border-bottom">
+							<div>
+								<span class="fw-bold d-block" style="font-size: 14px;">${mutual.targetNickName}</span>
+								<span class="text-muted text-xs d-block">${mutual.cafeName}</span>
+								<span class="text-muted text-xxs d-block">${mutual.roomName}</span>
+							</div>
+							<div>
 								<button class="btn btn-sm btn-outline-primary" style="font-size: 12px; padding: 4px 10px;"
 									onclick="openEvalModal(this);" 
-							        data-target-nick="${mutual.targetNickName}"
-							        data-cafe-name="${mutual.cafeName}"
-							        data-room-name="${mutual.roomName }"
-							       >
-								 	평가하기
-        						</button>
-								</div>
-							</c:forEach>
-						</c:when>
-						
-						<c:otherwise>
-							 <span class="fw-bold d-block" style="font-size: 14px;">평가할 유저가 없습니다</span>
-						</c:otherwise>
-					</c:choose>	
-				</div>
-
-			        		
-			</div>
-		</div><!-- 상호평가 데이터 바인딩 영역 --> 
-		
-		
-	</div>
+									data-detail-id="${mutual.detailId}"
+									data-target-id="${mutual.targetId}"
+									data-target-nick="${mutual.targetNickName}"
+									data-cafe-name="${mutual.cafeName}"
+									data-room-name="${mutual.roomName}">
+									평가하기
+								</button>
+							</div>
+						</div>
+					</c:forEach>
+				</c:when>
+				
+				<c:otherwise>
+					<div class="text-center py-3 text-muted">
+						<span class="fw-bold d-block" style="font-size: 14px;">평가할 유저가 없습니다</span>
+					</div>
+				</c:otherwise>
+			</c:choose>	
+		</div>
+	</div><!-- 상호 평가 섹션 -->
 	
 		
 	<!-- 상호 평가 모달 (DB INSERT 후 TEST) -->
@@ -185,7 +182,9 @@
 						<span>매장 / 테마: </span><strong  id="md-mutual-cafe"></strong> - <strong  id="md-mutual-theme"></strong>
 					</div>
 	
-					<form id="evaluationForm">
+					<form id="evaluationForm" >
+						<input type="hidden" id="hiddenDetailId" name="detailId">
+    					<input type="hidden" id="hiddenTargetId" name="targetId">
 							<div class="mb-3">
 								<p class="fw-bold mb-2">1. ${questionList[0]}</p>
 								<div class="d-flex gap-4">

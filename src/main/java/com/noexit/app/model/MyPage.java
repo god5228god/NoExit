@@ -13,6 +13,8 @@ public class MyPage {
 	// private String nickName;                 → 세션으로 가져오기
 	
 	// 상호평가 바인딩 영역--------------------------------------
+	private Long detailId;						// 출석체크
+	private Long targetId;
 	private String cafeName;					// + 개인기록
 	private String roomName;
 	private String targetNickName;				// 상호평가 대상 닉네임

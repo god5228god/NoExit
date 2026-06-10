@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noexit.app.mapper.EvaluationMapper">
+	
+	<insert id="insertEvaluation" parameterType="com.noexit.app.model.Evaluation">
+        INSERT INTO MUTUAL_EVALUATION (EVAL_ID, DETAIL_ID, TARGET_ID, QUESTION_ID, ANSWER_ID, CREATED_AT)
+        VALUES (MUTUAL_EVALUATION_SEQ.NEXTVAL, #{detailId}, #{targetId}, #{questionId}, #{answerId}, SYSDATE)
+    </insert>
+
+	<select id="getEvaluationCount" parameterType="long" resultType="int">
+	    SELECT COUNT(*) 
+	    FROM MUTUAL_EVALUATION ME
+	    WHERE ME.DETAIL_ID IN (
+	        SELECT AD.DETAIL_ID 
+	        FROM ATTENDANCE_DETAIL AD
+	        WHERE AD.ATTENDANCE_ID = (
+	            SELECT ATTENDANCE_ID 
+	            FROM ATTENDANCE_DETAIL 
+	            WHERE DETAIL_ID = #{detailId}
+	        )
+	    )
+	</select>
+
+
+	<insert id="insertMannerHistory" parameterType="long">
+	    INSERT INTO MANNER_HISTORY(MANNER_HISTORY_ID, USER_ID, REASON_ID, SCORE, CREATED_AT)
+	    VALUES(MANNER_HISTORY_SEQ.NEXTVAL, 
+	        (SELECT USER_ID FROM ATTENDANCE_DETAIL WHERE DETAIL_ID = #{detailId}), 
+	        2, 
+	        0.2, 
+	        SYSDATE
+	    )
+	</insert>
+
+</mapper>
