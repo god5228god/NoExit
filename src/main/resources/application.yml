@@ -5,6 +5,8 @@ server:
       charset: UTF-8
       force: true
       enabled: true
+    session:
+      timeout: 1h					
   
 spring:
   mvc:
@@ -33,3 +35,4 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+

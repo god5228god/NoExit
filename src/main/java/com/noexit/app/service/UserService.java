@@ -10,4 +10,5 @@ public interface UserService {
 	public User login(User user);
 	public String findRole(Long userId);
 	public User selectByLoginId(String loginId);
+	public User findByNameAndEmail(String name, String email);
 }

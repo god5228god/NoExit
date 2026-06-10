@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.noexit.app.model.User;
-
+import com.noexit.app.service.MailService;
 import com.noexit.app.service.UserService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	private final UserService service;
+	private final MailService mailService;
 
 	 // 아이디 중복확인 (Ajax)
 	 @PostMapping("/id-check")
@@ -39,6 +40,26 @@ public class UserController {
 	public String findIdForm() {
 		return "user/findId";
 	}
+	
+	@PostMapping("/findId")
+	public void findId(String name ,String email ,HttpServletResponse response) throws IOException {
+
+		 System.out.println("1. 컨트롤러 진입");
+	    User user = service.findByNameAndEmail(name, email);
+
+	    response.setContentType("text/plain;charset=UTF-8");
+
+	    if(user == null) {
+	        response.getWriter().print("NOT_FOUND");
+	        return;
+	    }
+
+	    mailService.sendUserIdMail(user.getEmail(), user.getLoginId());
+
+	    response.getWriter().print("SUCCESS");
+	}
+	
+	
 
 	// 비밀번호 찾기 폼
 	@GetMapping("/findPw")

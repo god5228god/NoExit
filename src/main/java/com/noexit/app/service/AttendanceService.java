@@ -13,4 +13,5 @@ public interface AttendanceService {
 	
 	public List<AttendCrew> selectCrewByReservationId(Long reservationId);
 	public void attendAll(List<AttendanceListDTO> list, Long staffUserId) throws Exception;
+	public boolean isCheckable(Long reservationId);
 }

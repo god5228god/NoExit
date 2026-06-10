@@ -60,12 +60,29 @@ public class UserServiceImpl implements UserService {
 	public String findRole(Long userId) {
 
 		try {
-			if (userMapper.countCafeByUserId(userId) > 0)        return "OWNER";
-			if (managerService.countActiveByUserId(userId) > 0)  return "MANAGER";
+			if (userMapper.countCafeByUserId(userId) > 0)       
+				return "OWNER";
+			if (managerService.countActiveByUserId(userId) > 0)  return 
+					"MANAGER";
 		} catch (Exception e) {
 			log.info("findRole : ", e);
 		}
 
 		return "USER";
 	}
+	
+	@Override
+	public User findByNameAndEmail(String name, String email) {
+
+	    User dto = null;
+
+	    try {
+	        dto = userMapper.findByNameAndEmail(name, email);
+	    } catch (Exception e) {
+	        log.info("findByNameAndEmail : ", e);
+	    }
+
+	    return dto;
+	}
 }
+

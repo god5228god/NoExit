@@ -1,6 +1,7 @@
 package com.noexit.app.controller;
 
 import com.noexit.app.common.AuthUtil;
+import com.noexit.app.model.AttendItemDTO;
 import com.noexit.app.model.AttendanceListDTO;
 import com.noexit.app.model.User;
 import com.noexit.app.service.AttendanceService;
@@ -10,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,53 +63,8 @@ public class OwnerAttendanceController {
         model.addAttribute("crewList", attendanceService.selectCrewByReservationId(reservationId));
         return "owner/attendanceCheck";
     }
+    
 
-    @PostMapping("/saveDraft")
-    public String saveDraft(@RequestParam(name = "reservationId") Long reservationId,
-                            @RequestParam(name = "userIds") Long[] userIds,
-                            @RequestParam(name = "attendStatusIds") Long[] attendStatusIds,
-                            HttpSession session) {
-        String redirect = AuthUtil.checkStaff(session);
-        if (redirect != null) return redirect;
 
-        List<AttendanceListDTO> draftList = (List<AttendanceListDTO>) session.getAttribute("attendDraft");
-        if (draftList == null) draftList = new ArrayList<>();
 
-        List<AttendanceListDTO> kept = new ArrayList<>();
-        for (AttendanceListDTO dto : draftList) {
-            if (!dto.getReservationId().equals(reservationId)) kept.add(dto);
-        }
-        draftList = kept;
-
-        for (int i = 0; i < userIds.length; i++) {
-            AttendanceListDTO dto = new AttendanceListDTO();
-            dto.setReservationId(reservationId);
-            dto.setUserId(userIds[i]);
-            dto.setAttendStatusId(attendStatusIds[i]);
-            draftList.add(dto);
-        }
-        session.setAttribute("attendDraft", draftList);
-        return "redirect:/owner/attendance";
-    }
-
-    @PostMapping("/finalize")
-    public String finalize(HttpSession session) {
-        String redirect = AuthUtil.checkStaff(session);
-        if (redirect != null) return redirect;
-
-        User loginUser = (User) session.getAttribute("loginUser");
-
-        List<AttendanceListDTO> list = (List<AttendanceListDTO>) session.getAttribute("attendDraft");
-        if (list == null || list.isEmpty()) {
-            return "redirect:/owner/attendance";
-        }
-
-        try {
-            attendanceService.attendAll(list, loginUser.getUserId());
-        } catch (Exception e) {
-            log.info("finalize : ", e);
-        }
-        session.removeAttribute("attendDraft");
-        return "redirect:/owner/attendance";
-    }
 }

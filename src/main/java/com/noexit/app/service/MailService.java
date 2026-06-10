@@ -71,7 +71,32 @@ public class MailService {
 		return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
 	}
 	
-	
+	@Async
+	public void sendUserIdMail(String email, String userId)
+	{
+	    try
+	    {
+	        MimeMessage message = mailSender.createMimeMessage();
+
+	        MimeMessageHelper helper =
+	                new MimeMessageHelper(message, false, "UTF-8");
+
+	        helper.setFrom(fromEmail, "NoExit");
+	        helper.setTo(email);
+
+	        helper.setSubject("[NoExit] 아이디 찾기 결과");
+
+	        helper.setText(
+	                "<h3>회원님의 아이디입니다.</h3>"
+	                + "<p><b>" + userId + "</b></p>", true);
+
+	        mailSender.send(message);
+	    }
+	    catch (Exception e)
+	    {
+	        log.error("sendUserIdMail", e);
+	    }
+	}
 	
 	
 }

@@ -19,7 +19,6 @@ import com.noexit.app.model.ThemeReviewDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,13 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ThemeServiceImpl implements ThemeService {
 
 	private final ThemeMapper themeMapper;
-	private final ServletContext servletContext;
 
 	private String uploadPath;
 
 	@PostConstruct
 	public void init() {
-		uploadPath = servletContext.getRealPath("/uploads/theme");
+		uploadPath =  new File("uploads/theme").getAbsolutePath();
 
 		File file = new File(uploadPath);
 		if (!file.exists()) {

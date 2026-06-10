@@ -30,8 +30,9 @@
 		  JOIN CAFE C ON VRA.CAFE_ID = C.CAFE_ID
 		  JOIN USER_ACCOUNT UA ON VRA.LEADER_ID = UA.USER_ID
 		 WHERE C.USER_ID = #{ownerUserId}
+		 AND VRA.CANCEL_ID IS NULL
 		   <![CDATA[
-		   AND VRA.OPEN_AT < SYSDATE
+		 AND VRA.OPEN_AT <= SYSDATE + 1/24
 		   ]]>
 		 ORDER BY VRA.OPEN_AT DESC
 	</select>
@@ -47,8 +48,9 @@
 		  JOIN V_ACTIVE_MANAGER VAM ON VAM.CAFE_ID = VRA.CAFE_ID
 		  JOIN USER_ACCOUNT UA ON VRA.LEADER_ID = UA.USER_ID
 		 WHERE VAM.USER_ID = #{managerUserId}
+		 AND VRA.CANCEL_ID IS NULL
 		   <![CDATA[
-		   AND VRA.OPEN_AT < SYSDATE
+		   AND VRA.OPEN_AT <= SYSDATE + 1/24
 		   ]]>
 		 ORDER BY VRA.OPEN_AT DESC
 	</select>
@@ -75,6 +77,27 @@
 		       )
 		  )
 		 ORDER BY DECODE(POSITION, 'HOST', 0, 1), USER_ID
+		 
 	</select>
+	
+	<!-- 출석체크 진입 가능 여부 : 취소 아님 + 시작 1시간 전 이후면 1, 아니면 0 -->
+	<select id="selectCheckable" parameterType="Long" resultType="int">
+		SELECT CASE
+		       WHEN VRA.CANCEL_ID IS NULL
+		       <![CDATA[
+		        AND VRA.OPEN_AT - 1/24 <= SYSDATE THEN 1
+		       ]]>
+		       ELSE 0 END
+		  FROM VW_RESERVATION_ALL VRA
+		 WHERE VRA.RESERVATION_ID = #{reservationId}
+	</select>	
+	
+	<select id="selectAttendanceExists" parameterType="Long" resultType="int">
+  	   SELECT COUNT(*) FROM ATTENDANCE
+  	   WHERE RESERVATION_ID = #{reservationId}
+	</select>
+
+
+	
 
 </mapper>

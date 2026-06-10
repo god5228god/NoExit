@@ -13,5 +13,7 @@ public interface UserMapper {
 	public User selectByLoginId(User user);
 	public User findByLoginId(String loginId);
 	public int countCafeByUserId(Long userId);
+	public User findByNameAndEmail(String name, String email);
+	
 
 }

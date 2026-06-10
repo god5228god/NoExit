@@ -46,4 +46,14 @@
 </select>
 
 
+<select id="findByNameAndEmail"
+        parameterType="map" resultType="com.noexit.app.model.User">
+     SELECT * 
+     FROM USER_INFO
+     WHERE NAME = #{name}
+     AND EMAIL = #{email}
+
+</select>
+
+
 </mapper>

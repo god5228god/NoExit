@@ -50,41 +50,24 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Override
 	public List<AttendCrew> selectCrewByReservationId(Long reservationId) {
-
-		List<AttendCrew> list = null;
-
-		try {
-			list = mapper.selectCrewByReservationId(reservationId);
-		} catch (Exception e) {
-			log.info("selectCrewByReservationId : ", e);
-		}
-
-		return list;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	@Transactional
 	public void attendAll(List<AttendanceListDTO> list, Long staffUserId) throws Exception {
-
-		try {
-			AttendanceListDTO head = null;
-			for (AttendanceListDTO dto : list) {
-				if (head == null || !head.getReservationId().equals(dto.getReservationId())) {
-					head = new AttendanceListDTO();
-					head.setReservationId(dto.getReservationId());
-					head.setUserId(staffUserId);
-					mapper.insertAttendance(head);
-				}
-				AttendanceListDTO det = new AttendanceListDTO();
-				det.setAttendanceId(head.getAttendanceId());
-				det.setLeaderId(dto.getUserId());
-				det.setAttendStatusId(dto.getAttendStatusId());
-				mapper.insertAttendDetail(det);
-			}
-		} catch (Exception e) {
-			log.info("attendAll : ", e);
-			throw e;
-		}
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public boolean isCheckable(Long reservationId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	
+	
 
 }
