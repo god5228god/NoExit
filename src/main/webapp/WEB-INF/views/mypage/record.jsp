@@ -145,13 +145,13 @@
 						<%-- 클릭 이벤트 연결, 모달로 보낼 데이터 추가 --%>
 						<div class="ne-card ne-card-accent p-4 mb-3 clickable-card" 
 							 onclick="openRecordDetail(this)"
-							 data-theme-title="${record.themeTitle}"
-							 data-play-date="${record.playDate} | ${record.branchName}"
+							 data-theme-title="${record.roomName}"
+							 data-play-date="${record.playDate}"
 							 data-play-time="${record.playTime}"
 							 data-hint-count="${record.hintCount}"
-							 data-player-count="${record.playerCount}"
+							 data-player-count="${record.peopleCount}"
 							 data-is-escaped="${record.isEscaped}"
-							 data-memo="${record.memo}">
+							 data-memo="${record.recordComment}">
 							 
 							<div class="record-item-body justify-content-between">
 							
@@ -160,7 +160,7 @@
 									<div class="ne-room-img" style="width: 80px; height: 80px; flex-shrink: 0; border-radius: var(--ne-radius-md);">
 									</div>
 									<div>
-										<h4 class="m-0 mb-1 fw-bold" style="font-size: 18px;">${record.themeTitle}</h4>
+										<h4 class="m-0 mb-1 fw-bold" style="font-size: 18px;">${record.roomName}</h4>
 										<p class="m-0 text-secondary small">${record.playDate}</p>
 									</div>
 								</div>

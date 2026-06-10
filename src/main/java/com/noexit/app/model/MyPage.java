@@ -29,7 +29,7 @@ public class MyPage {
 	private int playTime;						// 소요시간
 	private int hintCount;						// 힌트 사용 갯수
 	private int peopleCount;					// 플레이 인원 수
-	private String comment;						// 기록 메모
+	private String recordComment;						// 기록 메모
 	private int isEscaped;						// 탈출 여부
 	private String createdAt;					// 등록 일자
 	

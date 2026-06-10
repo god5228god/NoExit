@@ -10,4 +10,6 @@ import com.noexit.app.model.MyPage;
 public interface MypageMapper {
 	
 	public List<MyPage> getUserRecord(Long userId);
+	public List<MyPage> getMutualList(Long userId);	
+	public List<String> getQuestionList();	
 }

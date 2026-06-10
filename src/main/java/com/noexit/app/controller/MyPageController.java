@@ -38,10 +38,15 @@ public class MyPageController {
 		
 		
 		List<MyPage> recordList = service.getUserRecord(loginUser.getUserId());
+		List<MyPage> mutualList = service.getMutualList(loginUser.getUserId());
+		List<String> questionList = service.getQuestionList();
+		
 		
 		// 로그인 유저 정보 넘기기
 		model.addAttribute("USER", loginUser);
 		model.addAttribute("recordList", recordList);
+		model.addAttribute("mutualList", mutualList);
+		model.addAttribute("questionList", questionList);
 		
 		// 마이페이지로 리턴
 		return "/mypage/record";

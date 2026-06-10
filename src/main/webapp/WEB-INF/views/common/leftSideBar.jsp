@@ -27,7 +27,18 @@
 <script type="text/javascript">
 
 	// 상호평가 모달 오픈 함수
-	function openEvalModal() {
+	function openEvalModal(btn) {
+		
+		// 폼에 요청할 데이터 가져오기
+		const targetNick = btn.getAttribute('data-target-nick');
+		const cafeName = btn.getAttribute('data-cafe-name');
+		const roomName = btn.getAttribute('data-room-name');
+		
+		document.getElementById('md-mutual-target').innerText = targetNick;
+		document.getElementById('md-mutual-cafe').innerText = cafeName;
+		document.getElementById('md-mutual-theme').innerText = roomName;
+		
+		
 	    let evalModal = new bootstrap.Modal(document.getElementById('evaluationModal'));
 	    evalModal.show();
 	}
@@ -35,7 +46,8 @@
 	
 	
 	function submitEvaluation() {
-			
+		
+		
 		// form 데이터 가져오기		
 		const form = document.getElementById('evaluationForm');
 		const formData = new FormData(form);
@@ -105,22 +117,54 @@
 	<!-- 상호평가 섹션 -->
 	<div class="ne-sc m-0">
 		<div class="ne-sc-title">현재 미진행 상호평가</div>
+		
+		<!-- 상호평가 데이터 바인딩 영역 -->
+		<%-- <c:choose>
+			<c:when test="${record.isEscaped == 1}">
+				<span class="ne-st ne-st-amber">성공</span>
+			</c:when>
+			<c:otherwise>
+				<span class="ne-st ne-st-red">실패</span>
+			</c:otherwise>
+		</c:choose>
+		 --%>
+		
 		<div class="d-flex flex-column gap-3 mt-2">
 			<div class="d-flex justify-content-between align-items-center">
 				<div>
-					<span class="fw-bold d-block" style="font-size: 14px;">파티원 닉네임 바인딩</span>
-					<span class="text-muted text-xs">매장이름 바인딩</span>
-					<div>
-						<span class="text-muted text-xxs">테마 바인딩</span>
-					</div>
-					
+					<c:choose>
+						<c:when test="${not empty mutualList}">
+							<c:forEach var="mutual" items="${mutualList}">
+								<span class="fw-bold d-block" style="font-size: 14px;">${mutual.targetNickName }</span>
+								<span class="text-muted text-xs">${mutual.cafeName }</span>
+								<div>
+									<span class="text-muted text-xxs">${mutual.roomName }</span>
+									
+								</div>
+								<div>
+								<button class="btn btn-sm btn-outline-primary" style="font-size: 12px; padding: 4px 10px;"
+									onclick="openEvalModal(this);" 
+							        data-target-nick="${mutual.targetNickName}"
+							        data-cafe-name="${mutual.cafeName}"
+							        data-room-name="${mutual.roomName }"
+							       >
+								 	평가하기
+        						</button>
+								</div>
+							</c:forEach>
+						</c:when>
+						
+						<c:otherwise>
+							 <span class="fw-bold d-block" style="font-size: 14px;">평가할 유저가 없습니다</span>
+						</c:otherwise>
+					</c:choose>	
 				</div>
-				<button class="btn btn-sm btn-outline-primary" onclick="openEvalModal();"style="font-size: 12px; padding: 4px 10px;">
-					 평가하기
-        		</button>
-        		
+
+			        		
 			</div>
-		</div>
+		</div><!-- 상호평가 데이터 바인딩 영역 --> 
+		
+		
 	</div>
 	
 		
@@ -136,36 +180,36 @@
 				<!-- 모달 -->
 				<div class="modal-body" style="font-size: 13px;">
 					<div class="mb-3">
-						<span>평가 대상 파티원: </span><strong>파티원 닉네임 바인딩</strong>
+						<span>평가 대상 파티원: </span><strong id="md-mutual-target"></strong>
 						<br>
-						<span>매장 / 테마: </span><strong>매장바인딩 - 테마바인딩</strong>
+						<span>매장 / 테마: </span><strong  id="md-mutual-cafe"></strong> - <strong  id="md-mutual-theme"></strong>
 					</div>
 	
 					<form id="evaluationForm">
-						<div class="mb-3">
-							<p class="fw-bold mb-2">1. 평가항목 바인딩</p>
-							<div class="d-flex gap-4">
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="answer1" id="a1good" value="1" checked>
-									<label class="form-check-label" for="a1good">평가요소 바인딩</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="answer1" id="a1bad" value="2">
-									<label class="form-check-label" for="a1bad">평가요소 바인딩</label>
+							<div class="mb-3">
+								<p class="fw-bold mb-2">1. ${questionList[0]}</p>
+								<div class="d-flex gap-4">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="answer1" id="a1good" value="1" checked>
+										<label class="form-check-label" for="a1good">네</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="answer1" id="a1bad" value="2">
+										<label class="form-check-label" for="a1bad">아니요</label>
+									</div>
 								</div>
 							</div>
-						</div>
 	
 						<div class="mb-3">
-							<p class="fw-bold mb-2">2. 평가항목 바인딩</p>
+							<p class="fw-bold mb-2">2. ${questionList[1]}</p>
 							<div class="d-flex gap-4">
 								<div class="form-check">
 									<input class="form-check-input" type="radio" name="answer2" id="a2good" value="1" checked>
-									<label class="form-check-label" for="a2good">평가요소 바인딩</label>
+									<label class="form-check-label" for="a2good">네</label>
 								</div>
 								<div class="form-check">
 									<input class="form-check-input" type="radio" name="answer2" id="a2bad" value="2">
-									<label class="form-check-label" for="a2bad">평가요소 바인딩</label>
+									<label class="form-check-label" for="a2bad">아니요</label>
 								</div>
 							</div>
 						</div>
