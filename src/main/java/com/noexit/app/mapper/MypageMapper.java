@@ -1,6 +1,7 @@
 package com.noexit.app.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,5 +15,6 @@ public interface MypageMapper {
 	public List<String> getQuestionList();	
 	public double getUserManner(Long userId);
 	public List<MyPage> getRoomImg(Long userId);
-	public List<MyPage> getUnrecordedList(Long userId);
+	List<MyPage> getUnrecordedList(long userId);
+	int insertRecord(MyPage myPage);
 }

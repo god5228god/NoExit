@@ -83,7 +83,8 @@
 	    JOIN PARTY P ON RS.PARTY_ID = P.PARTY_ID
 	    JOIN PARTY_ROOM PR ON P.PARTY_ID = PR.PARTY_ID
 	    JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
-	    JOIN ROOM C ON RO.ROOM_ID = C.ROOM_ID  WHERE AD.USER_ID = #{userId}
+	    JOIN ROOM C ON RO.ROOM_ID = C.ROOM_ID  
+	    WHERE AD.USER_ID = #{userId}
 	    ORDER BY RO.OPEN_AT DESC
 	</select>
 
@@ -93,25 +94,43 @@
 	아직 기록을 남기지 않은 
 	카페 이름, 테마이름, 플레이 일시 
 	-->
-	<select id="getUnrecordedList" parameterType="Long" resultType="com.noexit.app.model.MyPage">
-	    SELECT 
-	        CA.CAFE_NAME AS cafeName, C.ROOM_NAME AS roomName,
-	        RO.OPEN_AT AS playDate,
-	        RC.RECORD_ID AS recordId     
-	    FROM RECORD RC
-	    JOIN ATTENDANCE_DETAIL AD ON RC.DETAIL_ID = AD.DETAIL_ID
-	    JOIN ATTENDANCE AT ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID
-	    JOIN RESERVATION RS ON AT.RESERVATION_ID = RS.RESERVATION_ID
-	    JOIN PARTY P ON RS.PARTY_ID = P.PARTY_ID
-	    JOIN PARTY_ROOM PR ON P.PARTY_ID = PR.PARTY_ID
-	    JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
-	    JOIN ROOM C ON RO.ROOM_ID = C.ROOM_ID
-	    JOIN CAFE CA ON C.CAFE_ID = CA.CAFE_ID  WHERE AD.USER_ID = #{userId}
-	    AND AD.IS_ATTENDED = 1                
-	    AND RC.IS_ESCAPED IS NULL             
-	    ORDER BY RO.OPEN_AT DESC
-	</select>
+<select id="getUnrecordedList" resultType="com.noexit.app.model.MyPage">
+    SELECT 
+        CA.CAFE_NAME AS cafeName, 
+        C.ROOM_NAME AS roomName, 
+        RO.OPEN_AT AS playDate, 
+        AD.DETAIL_ID AS detailId 
+    FROM ATTENDANCE_DETAIL AD 
+    JOIN ATTENDANCE AT ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID 
+    JOIN RESERVATION RS ON AT.RESERVATION_ID = RS.RESERVATION_ID 
+    JOIN PARTY P ON RS.PARTY_ID = P.PARTY_ID 
+    JOIN PARTY_ROOM PR ON P.PARTY_ID = PR.PARTY_ID 
+    JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID 
+    JOIN ROOM C ON RO.ROOM_ID = C.ROOM_ID 
+    JOIN CAFE CA ON C.CAFE_ID = CA.CAFE_ID 
+    LEFT JOIN RECORD RC ON AD.DETAIL_ID = RC.DETAIL_ID 
+    WHERE AD.USER_ID = #{userId} 
+    AND AD.ATTEND_STATUS_ID = 1 
+    AND RC.DETAIL_ID IS NULL 
+    ORDER BY RO.OPEN_AT DESC
+</select>
 	
+	
+	
+	<insert id="insertRecord" parameterType="com.noexit.app.model.MyPage">
+	    INSERT INTO RECORD (RECORD_ID, DETAIL_ID, PLAY_TIME, HINT_COUNT, PLAYER_COUNT
+	    					, RECORD_COMMENT, IS_ESCAPED)
+	    VALUES (RECORD_SEQ.NEXTVAL, #{detailId}, #{playTime}, #{hintCount}, #{peopleCount}, #{recordComment}, #{isEscaped})
+	</insert>
+
+
+
+
+
+
+
+
+
 
 
 

@@ -49,9 +49,9 @@ public class MyPageController {
 	         
 	         long userId = user.getUserId();
 	         
-	         //model.addAttribute("myPartyList", partyService.getMyPartyList(userId));
-	         //model.addAttribute("myPartyApplyList", partyService.getMyPartyApplyList(userId));
-	         //model.addAttribute("myPartyKickList", partyService.getMyPartyKickList(userId));
+	         model.addAttribute("myPartyList", partyService.getMyPartyList(userId));
+	         model.addAttribute("myPartyApplyList", partyService.getMyPartyApplyList(userId));
+	         model.addAttribute("myPartyKickList", partyService.getMyPartyKickList(userId));
 	         
 	         return "mypage/myparty";
 	      }
@@ -135,7 +135,8 @@ public class MyPageController {
 	}
 	
 	@GetMapping("/mypage/record/write")
-	public ResponseEntity<List<MyPage>> getUnrecordedList(HttpSession session)
+	@ResponseBody				// json 객체 반환할때 써야함
+	public List<MyPage> getUnrecordedList(HttpSession session)
 	{
 		User loginUser = (User) session.getAttribute("loginUser");
 		
@@ -144,12 +145,22 @@ public class MyPageController {
 		
 		
 		// JSON 객체로 반환
-		return ResponseEntity.ok(unrecordedList);
+		return unrecordedList;			//ResponseBody 써서 가능
 		
 	}
 	
 	
-	
+	@PostMapping("/mypage/record/write")
+	@ResponseBody
+	public String writeRecord(@RequestBody MyPage myPage) {
+		
+	    int result = service.insertRecord(myPage);
+	    
+	    if(result > 0)
+	    	return "success";
+	    else
+	    	return "fail";
+	}
 	
 	
 	

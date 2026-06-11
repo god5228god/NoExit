@@ -10,7 +10,6 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dist/css/common.css">
 
 <style type="text/css">
-
 	.main-body {
 		display: flex;                		
 		width: 100%;
@@ -50,15 +49,13 @@
 	.ne-sc-title {
 		display: flex;
 		justify-content: space-between;
-		
 	}
-	
-	
 </style>
+
 <script type="text/javascript">
 
+	// 등록된 개인 기록 상세 보기 모달 띄우기
 	function openRecordDetail(cardElement) {
-		
 		// 클릭된 카드 태그에 숨겨져 있는 data- 속성 정보들 추출
 		const themeTitle = cardElement.getAttribute('data-theme-title');
 		const playDate = cardElement.getAttribute('data-play-date');
@@ -76,7 +73,7 @@
 		document.getElementById('md-record-players').innerText = playerCount + "명";
 		document.getElementById('md-record-memo').innerText = recordComment ? recordComment : "등록된 메모가 없습니다.";
 		
-		//  Escaped 여부에 따른 상태 뱃지 랜더링
+		// Escaped 여부에 따른 상태 뱃지 렌더링
 		const statusBadge = document.getElementById('md-record-status');
 		
 		if(isEscaped === "1") {
@@ -92,45 +89,117 @@
 		myModal.show();
 	}
 	
-	
-	
+	// 2. 기록 추가 버튼 클릭 시 미등록 리스트 비동기 조회 후 모달 오픈
 	function insertRecordModal() {
-		
-		alert("ㅎㅇ");
-		
-		
+		fetch(`${pageContext.request.contextPath}/mypage/record/write`)
+		.then(response => {
+			if (!response.ok) {
+				throw new Error("네트워크 응답 표준 에러 발생");
+			}
+			return response.json(); 
+		})
+		.then(list => {
+			const selectEl = document.getElementById('unrecordedSelect');
+			
+			selectEl.innerHTML = '<option value="" selected disabled>기록을 등록할 플레이를 선택하세요.</option>';
+			
+			if (!list || list.length === 0) {
+				alert("기록을 추가할 미등록 플레이 내역이 없습니다.");
+				return;
+			}
+			
+			list.forEach(item => {
+				const option = document.createElement('option');
+				option.value = item.detailId; 
+				option.innerText = `[\${item.cafeName}] \${item.roomName} (\${item.playDate})`;
+				selectEl.appendChild(option);
+			});
+			
+			let insertModal = new bootstrap.Modal(document.getElementById('insertRecordModal'));
+			insertModal.show();
+		})
+		.catch(error => {
+			console.error("AJAX 통신 중 치명적 에러 발생:", error);
+			alert("내역을 불러오는 도중 오류가 발생했습니다. 브라우저 콘솔(F12)을 확인해 주세요.");
+		});
 	}
 	
-	
-	
-	
-	
-	
-	
-	
+	// 3. 모달 내에서 [기록 추가 완료] 버튼 클릭 시 데이터 서버 전송
+	function submitRecordInsert() {
+		const selectEl = document.getElementById('unrecordedSelect');
+		if(!selectEl.value) {
+			alert("기록할 플레이 내역을 선택해 주세요.");
+			selectEl.focus();
+			return;
+		}
+		
+		const playTimeEl = document.getElementById('insPlayTime');
+		const rawPlayTime = playTimeEl.value.trim();
+		if(!rawPlayTime || isNaN(rawPlayTime)) {
+			alert("소요 시간을 숫자(분) 형식으로 정확히 입력해 주세요. (예: 52)");
+			playTimeEl.focus();
+			return;
+		}
+
+		const form = document.getElementById('recordInsertForm');
+		const formData = new FormData(form);
+		
+		const recordData = {
+			detailId: parseInt(formData.get('detailId'), 10),
+			isEscaped: parseInt(formData.get('isEscaped'), 10),
+			playTime: parseInt(rawPlayTime, 10),
+			hintCount: parseInt(formData.get('hintCount'), 10),
+			peopleCount: parseInt(formData.get('peopleCount'), 10),
+			recordComment: formData.get('recordComment')
+		};
+		
+		fetch(`${pageContext.request.contextPath}/mypage/record/write`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(recordData)
+		})
+		.then(response => {
+			if(!response.ok) throw new Error("서버 처리 실패");
+			return response.text();
+		})
+		.then(result => {
+			if(result === "success") {
+				alert("새로운 플레이 기록이 정상적으로 등록되었습니다.");
+				
+				let insertModalEl = document.getElementById('insertRecordModal');
+				let insertModal = bootstrap.Modal.getInstance(insertModalEl);
+				insertModal.hide();
+				
+				location.reload();
+			} else {
+				alert("기록 등록에 실패했습니다. 입력값을 확인해주세요.");
+			}
+		})
+		.catch(error => {
+			console.error("기록 등록 에러:", error);
+			alert("기록 등록 중 오류가 발생했습니다.");
+		});
+	}
 </script>
 </head>
 <body>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<!-- 헤더 높이만큼 본문 밀기( padding-top ) , 메인 바디 영역-->
 <div class="main-body ne-body-offset">
 	
-	<!-- 왼쪽 사이드 바 영역 -->
 	<%@ include file="/WEB-INF/views/common/leftSideBar.jsp" %>
 
-	<!-- 메인 구성 영역 (개인기록, 매칭기록, 예약내역이 이 구역 안에서만 바뀜) -->
 	<div class="main-content">
 	
-		<!-- 섹션 카드 -->
 		<div class="ne-sc">
 			<div class="ne-sc-title" style="font-size: 24px;">
 				<span>개인 기록</span>
 			 	<span class="btn btn-outline-primary" onclick="insertRecordModal()">기록 추가</span>
 			 </div>
 			
-			<!-- 더미 기록 카드 -->
 			<div class="ne-card ne-card-accent p-4 mb-3 clickable-card" onclick="openRecordDetail(this)"
 				 data-theme-title="비밀의 숲"
 				 data-play-date="2024.05.17 (금) 14:00"
@@ -151,25 +220,18 @@
 						</div>
 					</div>
 					
-					<!-- 우측 정보 박스 (성공 여부) -->
 					<div class="d-flex align-items-center gap-3">
 						<div>
 							<span class="ne-st ne-st-amber">성공</span>
 						</div>
 					</div>
 				</div>
-			</div><!-- 더미 기록 카드 -->
+			</div>
 			
-			
-			
-			
-			<!-- 기록 카드 -->
 			<c:choose>
-				<%-- DB에서 조회해온 리스트가 들어가있을 때 리스트 출력 --%>
 				<c:when test="${not empty recordList}">
 					<c:forEach var="record" items="${recordList}">
 						
-						<%-- 클릭 이벤트 연결, 모달로 보낼 데이터 추가 --%>
 						<div class="ne-card ne-card-accent p-4 mb-3 clickable-card" 
 							 onclick="openRecordDetail(this)"
 							 data-theme-title="${record.roomName}"
@@ -182,7 +244,6 @@
 							 
 							<div class="record-item-body justify-content-between">
 							
-								<%-- 테마 이미지, 테마명, 플레이 일시 --%>
 								<div class="d-flex align-items-center gap-3">
 									<div class="ne-room-img" style="width: 80px; height: 80px; flex-shrink: 0; border-radius: var(--ne-radius-md);">
 									</div>
@@ -192,30 +253,24 @@
 									</div>
 								</div>
 								
-								
-								<%-- 탈출여부 동적 바인딩 영역 --%>
 								<div class="d-flex align-items-center gap-3">
 									<c:choose>
-										<%-- 출석체크만 된 최초 상태 --%>
+										<%-- 出席チェックのみされた記録入力前の状態 --%>
 										<c:when test="${empty record.isEscaped}">
 											<div>
-												<%-- 클릭 시 모달창이 열리면서 '입력 모드'로 작동하게 설정할 버튼 --%>
-												<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold">기록하기</button>
+												<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold" onclick="insertRecordModal()">기록하기</button>
 											</div>
 										</c:when>
 										
-										<%-- 유저가 탈출 성공/실패 기록을 입력해 둔 상태 --%>
+										<%-- 記録入力完了状態 --%>
 										<c:otherwise>
 											<div>
-											
-											<c:choose>
-												<%-- 리뷰가 비어있을 때 리뷰입력 버튼 랜더링 --%>
-												<c:when test="${empty review.reviewId}">
-													<button type="button" class="btn-sm btn-outline-primary px-3 fw-semibold" >리뷰 입력</button>
-												</c:when>
-											</c:choose>
+												<c:choose>
+													<c:when test="${empty review.reviewId}">
+														<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold me-2">리뷰 입력</button>
+													</c:when>
+												</c:choose>
 																			
-												<%-- 성공 or 실패 뱃지 출력 --%>
 												<c:choose>
 													<c:when test="${record.isEscaped == 1}">
 														<span class="ne-st ne-st-amber">성공</span>
@@ -234,43 +289,33 @@
 					</c:forEach>
 				</c:when>
 				
-				
-				
-				<%-- DB에 기록 데이터 없을 때 출력--%>
 				<c:otherwise>
 					<div class="text-center py-5 text-secondary">
 						현재 플레이 기록이 존재하지 않습니다.
 					</div>
 				</c:otherwise>
 			</c:choose>
-
 			
-		</div><!-- 섹션 -->
+		</div>
 		
-	</div><!-- 메인 레코드 영역 -->
+	</div>
 
-<!-- 우측 사이드 바 import -->
 <%@ include file="/WEB-INF/views/common/rightSideBar.jsp" %>
 
-</div><!-- 메인 바디 영역 -->
+</div>
 
 
-<!-- 개인 기록 모달 영역 -->
 <div class="modal fade" id="recordDetailModal" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered"> 
 		<div class="modal-content">
 		
-			<%-- 모달 헤더 --%>
 			<div class="modal-header">
 				<h5 class="modal-title" id="md-record-theme">테마 제목</h5>
 				<span id="md-record-status" class="ms-3"></span>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 			
-			<%-- 모달 본문 --%>
 			<div class="modal-body p-4" style="font-size: 14px;">
-				
-				<%-- 최종 기록 정보 레이아웃 --%>
 				<div class="ne-price-box mb-4">
 					<div class="ne-price-row">
 						<span class="ne-text-muted">최종 소요 시간</span>
@@ -286,27 +331,23 @@
 					</div>
 				</div>
 				
-				
-				<%-- 플레이 일시 영역 --%>
 				<div class="mb-3">
 					<label class="form-label ne-text-muted">플레이 일시</label>
 					<div id="md-record-date" class="p-2 border-bottom text-dark fw-semibold"></div>
 				</div>
 				
-				<%-- 기록 메모 영역 --%>
 				<div>
 					<label class="form-label ne-text-muted">기록 메모</label>
 					<div id="md-record-memo" class="ne-notice ne-notice-warning p-3 text-dark" style="min-height: 80px; white-space: pre-wrap;"></div>
 				</div>
 			</div>
 			
-			<%-- 모달 푸터: 닫기 버튼 --%>
 			<div class="modal-footer py-2">
 				<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">닫기</button>
 			</div>
 		</div>
 	</div>
-</div><!-- 개인 기록 모달 영역 -->
+</div>
 
 
 <div class="modal fade ne-record-insert-modal" id="insertRecordModal" tabindex="-1">
@@ -322,21 +363,14 @@
 				<form id="recordInsertForm">
 					
 					<div class="ne-insert-select-box mb-4">
-						<label for="unrecordedSelect" class="ne-insert-label mb-2 d-block">📄 기록할 플레이 내역 선택</label>
+						<label for="unrecordedSelect" class="ne-insert-label mb-2 d-block">기록할 플레이 내역 선택</label>
 						<select class="form-select form-select-sm" id="unrecordedSelect" name="detailId" required>
 							<option value="" selected disabled>-- 미등록 내역을 선택해 주세요 --</option>
-							<c:if test="${not empty unrecordedList}">
-								<c:forEach var="unrecorded" items="${unrecordedList}">
-									<option value="${unrecorded.detailId}">
-										[${unrecorded.cafeName}] ${unrecorded.roomName} (${unrecorded.playDate})
-									</option>
-								</c:forEach>
-							</c:if>
-							</select>
+						</select>
 					</div>
 					
 					<div class="mb-4">
-						<label class="ne-insert-label mb-2 d-block">✨ 탈출 성공 여부</label>
+						<label class="ne-insert-label mb-2 d-block">탈출 성공 여부</label>
 						<div class="ne-status-toggle-group">
 							<input type="radio" class="ne-status-toggle-btn" name="isEscaped" id="statusEscape" value="1" checked>
 							<label class="ne-status-label" for="statusEscape">탈출 성공</label>
@@ -348,18 +382,18 @@
 					
 					<div class="ne-input-grid mb-4">
 						<div>
-							<label for="insPlayTime" class="ne-insert-label mb-1">⏱️ 소요 시간</label>
-							<input type="text" class="form-control form-control-sm text-center" id="insPlayTime" name="playTime" placeholder="예: 52:18" required>
+							<label for="insPlayTime" class="ne-insert-label mb-1">소요 시간</label>
+							<input type="text" class="form-control form-control-sm text-center" id="insPlayTime" name="playTime" placeholder="분 단위, 예:58" required>
 						</div>
 						<div>
-							<label for="insHintCount" class="ne-insert-label mb-1">💡 힌트 사용</label>
+							<label for="insHintCount" class="ne-insert-label mb-1">힌트 사용</label>
 							<div class="input-group input-group-sm">
 								<input type="number" class="form-control text-center" id="insHintCount" name="hintCount" min="0" value="0" required>
 								<span class="input-group-text">개</span>
 							</div>
 						</div>
 						<div>
-							<label for="insPlayerCount" class="ne-insert-label mb-1">👥 플레이 인원</label>
+							<label for="insPlayerCount" class="ne-insert-label mb-1">플레이 인원</label>
 							<div class="input-group input-group-sm">
 								<input type="number" class="form-control text-center" id="insPlayerCount" name="peopleCount" min="1" value="2" required>
 								<span class="input-group-text">명</span>
@@ -368,7 +402,7 @@
 					</div>
 					
 					<div class="mb-2">
-						<label for="insRecordComment" class="ne-insert-label mb-1">📝 기록 메모</label>
+						<label for="insRecordComment" class="ne-insert-label mb-1">기록 메모</label>
 						<textarea class="form-control" id="insRecordComment" name="recordComment" rows="3" 
 								  style="font-size: 13px; resize: none;" placeholder="인테리어나 플레이 소감을 자유롭게 기록해 보세요!"></textarea>
 					</div>
@@ -385,9 +419,6 @@
 	</div>
 </div>
 
-
-
-<!-- 푸터 import -->
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 
 </body>

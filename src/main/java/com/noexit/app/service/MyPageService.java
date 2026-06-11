@@ -1,6 +1,7 @@
 package com.noexit.app.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.noexit.app.model.MyPage;
 
@@ -12,6 +13,7 @@ public interface MyPageService {
 	public double getUserManner(Long userId);
 	
 	public List<MyPage> getRoomImg(Long userId);
-	public List<MyPage> getUnrecordedList(Long userId);
+	List<MyPage> getUnrecordedList(long userId);
+	public int insertRecord(MyPage myPage);
 	
 }
