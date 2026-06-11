@@ -47,6 +47,12 @@
 		box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 	}
 	
+	.ne-sc-title {
+		display: flex;
+		justify-content: space-between;
+		
+	}
+	
 	
 </style>
 <script type="text/javascript">
@@ -85,6 +91,23 @@
 		let myModal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
 		myModal.show();
 	}
+	
+	
+	
+	function insertRecordModal() {
+		
+		alert("ㅎㅇ");
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 </script>
 </head>
 <body>
@@ -102,7 +125,10 @@
 	
 		<!-- 섹션 카드 -->
 		<div class="ne-sc">
-			<div class="ne-sc-title" style="font-size: 24px;">개인 기록</div>
+			<div class="ne-sc-title" style="font-size: 24px;">
+				<span>개인 기록</span>
+			 	<span class="btn btn-outline-primary" onclick="insertRecordModal()">기록 추가</span>
+			 </div>
 			
 			<!-- 더미 기록 카드 -->
 			<div class="ne-card ne-card-accent p-4 mb-3 clickable-card" onclick="openRecordDetail(this)"
@@ -117,6 +143,7 @@
 				<div class="record-item-body justify-content-between">
 					<div class="d-flex align-items-center gap-3">
 						<div class="ne-room-img" style="width: 80px; height: 80px; flex-shrink: 0; border-radius: var(--ne-radius-md);">
+							<img src="/dist/images/miku.jpg" style="width: 100%; height: 100%; object-fit : contain">
 						</div>
 						<div>
 							<h4 class="m-0 mb-1 fw-bold" style="font-size: 18px;">비밀의 숲</h4>
@@ -280,6 +307,84 @@
 		</div>
 	</div>
 </div><!-- 개인 기록 모달 영역 -->
+
+
+<div class="modal fade ne-record-insert-modal" id="insertRecordModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" style="max-width: 460px;"> 
+		<div class="modal-content">
+		
+			<div class="modal-header">
+				<h5 class="modal-title">새로운 플레이 기록 등록</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			
+			<div class="modal-body p-4" style="font-size: 14px;">
+				<form id="recordInsertForm">
+					
+					<div class="ne-insert-select-box mb-4">
+						<label for="unrecordedSelect" class="ne-insert-label mb-2 d-block">📄 기록할 플레이 내역 선택</label>
+						<select class="form-select form-select-sm" id="unrecordedSelect" name="detailId" required>
+							<option value="" selected disabled>-- 미등록 내역을 선택해 주세요 --</option>
+							<c:if test="${not empty unrecordedList}">
+								<c:forEach var="unrecorded" items="${unrecordedList}">
+									<option value="${unrecorded.detailId}">
+										[${unrecorded.cafeName}] ${unrecorded.roomName} (${unrecorded.playDate})
+									</option>
+								</c:forEach>
+							</c:if>
+							</select>
+					</div>
+					
+					<div class="mb-4">
+						<label class="ne-insert-label mb-2 d-block">✨ 탈출 성공 여부</label>
+						<div class="ne-status-toggle-group">
+							<input type="radio" class="ne-status-toggle-btn" name="isEscaped" id="statusEscape" value="1" checked>
+							<label class="ne-status-label" for="statusEscape">탈출 성공</label>
+							
+							<input type="radio" class="ne-status-toggle-btn" name="isEscaped" id="statusFail" value="0">
+							<label class="ne-status-label" for="statusFail">탈출 실패</label>
+						</div>
+					</div>
+					
+					<div class="ne-input-grid mb-4">
+						<div>
+							<label for="insPlayTime" class="ne-insert-label mb-1">⏱️ 소요 시간</label>
+							<input type="text" class="form-control form-control-sm text-center" id="insPlayTime" name="playTime" placeholder="예: 52:18" required>
+						</div>
+						<div>
+							<label for="insHintCount" class="ne-insert-label mb-1">💡 힌트 사용</label>
+							<div class="input-group input-group-sm">
+								<input type="number" class="form-control text-center" id="insHintCount" name="hintCount" min="0" value="0" required>
+								<span class="input-group-text">개</span>
+							</div>
+						</div>
+						<div>
+							<label for="insPlayerCount" class="ne-insert-label mb-1">👥 플레이 인원</label>
+							<div class="input-group input-group-sm">
+								<input type="number" class="form-control text-center" id="insPlayerCount" name="peopleCount" min="1" value="2" required>
+								<span class="input-group-text">명</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="mb-2">
+						<label for="insRecordComment" class="ne-insert-label mb-1">📝 기록 메모</label>
+						<textarea class="form-control" id="insRecordComment" name="recordComment" rows="3" 
+								  style="font-size: 13px; resize: none;" placeholder="인테리어나 플레이 소감을 자유롭게 기록해 보세요!"></textarea>
+					</div>
+
+				</form>
+			</div>
+			
+			<div class="modal-footer py-2">
+				<button type="button" class="btn btn-sm btn-secondary px-3" data-bs-dismiss="modal">취소</button>
+				<button type="button" class="btn btn-sm btn-primary px-3 fw-semibold" onclick="submitRecordInsert()">기록 추가 완료</button>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
 
 
 <!-- 푸터 import -->

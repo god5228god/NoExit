@@ -9,4 +9,9 @@ public interface MyPageService {
 	public List<MyPage> getUserRecord(Long userId);
 	public List<MyPage> getMutualList(Long userId);
 	public List<String> getQuestionList();
+	public double getUserManner(Long userId);
+	
+	public List<MyPage> getRoomImg(Long userId);
+	public List<MyPage> getUnrecordedList(Long userId);
+	
 }

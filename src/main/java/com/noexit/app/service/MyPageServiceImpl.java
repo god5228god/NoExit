@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MyPageServiceImpl implements MyPageService{
 	
 	private final MypageMapper mapper;
+	
 
 	@Override
 	public List<MyPage> getUserRecord(Long userId)
@@ -34,7 +35,8 @@ public class MyPageServiceImpl implements MyPageService{
 
 
 	@Override
-	public List<String> getQuestionList() {
+	public List<String> getQuestionList() 
+	{
 
 		
 		return mapper.getQuestionList();
@@ -42,6 +44,25 @@ public class MyPageServiceImpl implements MyPageService{
 	
 	
 	
+	@Override
+	public double getUserManner(Long userId)
+	{
+		
+		return mapper.getUserManner(userId);
+		
+	}
+	
+	@Override
+	public List<MyPage> getRoomImg(Long userId) 
+	{
+		return mapper.getRoomImg(userId);
+	}
+	
+	@Override
+	public List<MyPage> getUnrecordedList(Long userId)
+	{
+		return mapper.getUnrecordedList(userId);
+	}
 	
 	
 	

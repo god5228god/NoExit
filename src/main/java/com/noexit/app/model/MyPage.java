@@ -10,6 +10,7 @@ import lombok.Setter;
 public class MyPage {
 
 	// 닉네임 바인딩 영역 ---------------------------------------
+	
 	// private String nickName;                 → 세션으로 가져오기
 	
 	// 상호평가 바인딩 영역--------------------------------------
@@ -27,6 +28,7 @@ public class MyPage {
 	
 	
 	// 개인기록 바인딩 영역---------------------------------------
+	private Long recordId;						// 기록 
 	private String playDate;					// 플레이 일시
 	private int playTime;						// 소요시간
 	private int hintCount;						// 힌트 사용 갯수
@@ -42,7 +44,9 @@ public class MyPage {
 	private String reservedRoom;				// 예약테마
 	
 	// 매너온도 바인딩 영역 --------------------------------------
-	private int manner;							// 매너온도
+	private double manner;							// 매너온도
+	
+	private String roomImg;
 	
 	
 }
