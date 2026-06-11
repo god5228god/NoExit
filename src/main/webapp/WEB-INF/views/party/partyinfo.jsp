@@ -167,8 +167,8 @@
 						<div class="theme-info">
 							<span class="ne-tag ne-tag-sm">${dto.cafeName }</span>
 							<span class="ne-tag ne-tag-sm">${dto.themeName }</span>
-							<span class="ne-tag ne-tag-sm">${dto.themeDate }</span>
-							<span class="ne-tag ne-tag-sm">${dto.themeTime }</span>
+							<span class="ne-tag ne-tag-sm">${dto.resDate }</span>
+							<span class="ne-tag ne-tag-sm">${dto.resTime }</span>
 							<span class="ne-tag ne-tag-sm">${dto.minPlayers }명 ~ ${dto.maxPlayers }명</span>
 							<span class="ne-tag ne-tag-sm ne-tag-primary"><fmt:formatNumber value="${dto.price }" pattern="#,###"/>원</span>
 						</div>

@@ -15,8 +15,8 @@ public class PartyDTO
 	private String cafeName;
 	private String themeName;
 	private String themeImg;
-	private String themeDate;
-	private String themeTime;
+	private String resDate;
+	private String resTime;
 	private double avgAge;
 	private double avgTemp;
 	private int memberCount;
