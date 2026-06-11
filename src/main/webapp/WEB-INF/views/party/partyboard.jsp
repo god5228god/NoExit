@@ -270,7 +270,7 @@
 	let status = '${status}';
 
 	// AJAX 딜레이
-	let delay = 5000;
+	let delay = 1000;
 
 	$(function()
 	{
@@ -376,8 +376,8 @@
 		partyName = document.querySelector("#partyName");
 		cafeName = document.querySelector("#cafeName");
 		themeName = document.querySelector("#themeName");
-		themeDate = document.querySelector("#themeDate");
-		themeTime = document.querySelector("#themeTime");
+		resDate = document.querySelector("#resDate");
+		resTime = document.querySelector("#resTime");
 		themePlayers = document.querySelector("#themePlayers");
 		themeStatus = document.querySelector("#themeStatus");
 		genderName = document.querySelector("#genderName");
@@ -390,8 +390,8 @@
 	let partyName;
 	let cafeName;
 	let themeName;
-	let themeDate;
-	let themeTime;
+	let resDate;
+	let resTime;
 	let themePlayers;
 	let themeStatus;
 	let genderName;
@@ -403,8 +403,8 @@
 		partyName.innerText= data.partyName;
 		cafeName.innerText = data.cafeName;
 		themeName.innerText = data.themeName;
-		themeDate.innerText = data.themeDate;
-		themeTime.innerText = data.themeTime;
+		resDate.innerText = data.resDate;
+		resTime.innerText = data.resTime;
 		themePlayers.innerText = data.minPlayers + "명 ~ " + data.maxPlayers + "명";
 		themeStatus.innerText = data.slotStatus == 1 ? "예약 가능" : "예약 불가" ;
 		genderName.innerText = data.genderName;
@@ -673,10 +673,46 @@
 		});
 	}
 
-	function onReady()
+	function onReady(btn)
 	{
-		alert("레디");
+		//alert("레디");
 		// ajax 레디 요청
+		
+		btn.disabled = true;
+		
+		$.ajax(
+		{
+			"type":"POST"
+			,"url":"${path}/party/ready/" + partyId
+			,"dataType":"json"
+			,"success":function(data)
+			{
+				if(!data.status)
+				{
+					alert("레디 실패");	
+				}
+				
+				btn.disabled = false;
+			}
+			,"error":function(e)
+			{
+				if (e.status === 401)
+	            {
+	                location.href = "${path}/user/login";
+	            }
+	            else if (e.status === 403 || e.status === 404)
+	            {
+	                location.href = "${path}/party/list";
+	            }
+	            else
+	            {
+	            	alert("서버 오류");
+	                console.log(e.responseText);
+	                btn.disabled = false;
+	            }
+			}
+		});
+		
 	}
 
 	function approveApply(applyId,btn)
@@ -772,15 +808,21 @@
 
 	function partyUpdate()
 	{
-		alert("파티 수정");
+		alert("구현 중");
 		// 파티 수정 페이지 이동
+		//window.location.href="${path}/party/update/" + partyId;
 	}
 
 	function partyDelete()
 	{
-		alert("파티 해산");
+		//alert("파티 해산");
 		// confirm 만 물어보고 바로 delete 처리
 		// 이후 마이 페이지로
+		
+		if(confirm("파티를 해산 하시겠습니까?"))
+		{
+			window.location.href="${path}/party/delete/" + partyId;
+		}
 	}
 	
 	function crewKick(crewId, btn)
@@ -894,8 +936,8 @@
 						<div class="theme-info">
 							<span id="cafeName">카페명</span>
 							<span id="themeName">테마명</span>
-							<span id="themeDate">날짜</span>
-							<span id="themeTime">시간</span>
+							<span id="resDate">날짜</span>
+							<span id="resTime">시간</span>
 							<span id="themePlayers">인원수</span>
 							<span id="themeStatus">예약 가능/예약 불가</span>
 						</div>
@@ -943,7 +985,7 @@
 
 						<c:if test="${position == 'CREW' }">
 							<div class="crew-action">
-								<button type="button" class="btn btn-primary" onclick="onReady()">레디</button>
+								<button type="button" class="btn btn-primary" onclick="onReady(this)">레디</button>
 							</div>
 						</c:if>
 

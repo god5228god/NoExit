@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.noexit.app.model.MyPartyDTO;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
 import com.noexit.app.model.PartyCommentDeleteDTO;
@@ -34,7 +35,7 @@ public interface PartyMapper
 	PartyCommentDTO getCommentById(long commentId);
 	
 	List<PartyCrewDTO> getPartyCrewList(long partyId);
-	int partyReady(long partyId);
+	int partyReady(long applyId);
 	int partyOut(long applyId);
 	int partyKick(long applyId);
 	PartyCrewDTO getPartyCrewById(long crewId);
@@ -43,4 +44,8 @@ public interface PartyMapper
 	int aprvApply(long applyId);
 	int rejectApply(long applyId);
 	PartyApplyDTO getPartyApplyById(long applyId);
+	
+	List<MyPartyDTO> getMyPartyApplyList(long userId);
+	List<MyPartyDTO> getMyPartyList(long userId);
+	List<MyPartyDTO> getMyPartyKickList(long userId);
 }

@@ -2,10 +2,12 @@ package com.noexit.app.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.noexit.app.mapper.PartyMapper;
+import com.noexit.app.model.MyPartyDTO;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
 import com.noexit.app.model.PartyCommentDeleteDTO;
@@ -135,8 +137,18 @@ public class PartyServiceImpl implements PartyService
 	@Override
 	public int partyDelete(long partyId)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try
+		{
+			result = mapper.partyDelete(partyId);
+		} 
+		catch (Exception e)
+		{
+			log.info("partyDelete : ",e);
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -242,10 +254,34 @@ public class PartyServiceImpl implements PartyService
 	}
 
 	@Override
-	public int partyReady(long partyId)
+	public int partyReady(Map<String, Long> map)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try
+		{
+			long partyId = map.get("partyId");
+			long userId = map.get("userId");
+			
+			log.error("partyId : " + partyId + " / userId : " + userId);
+			
+			List<PartyCrewDTO> crewList = mapper.getPartyCrewList(partyId);
+			
+			Optional<PartyCrewDTO> crewOp = crewList.stream().filter(c->c.getUserId() == userId).findFirst();
+			
+			if(!crewOp.isEmpty())
+			{
+				result = mapper.partyReady(crewOp.get().getApplyId());
+			}
+			
+			//result = mapper.partyReady(applyId);
+		} 
+		catch (Exception e)
+		{
+			log.info("partyReady : ",e);
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -363,6 +399,60 @@ public class PartyServiceImpl implements PartyService
 		{
 			log.info("rejectApply : ",e);
 		}
+		
+		return result;
+	}
+	
+	
+	@Override
+	public List<MyPartyDTO> getMyPartyApplyList(long userId)
+	{
+		List<MyPartyDTO> result = null;
+		
+		try
+		{
+			result = mapper.getMyPartyApplyList(userId);
+		}
+		catch (Exception e)
+		{
+			log.info("getMyPartyApplyList : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public List<MyPartyDTO> getMyPartyList(long userId)
+	{
+		List<MyPartyDTO> result = null;
+
+		try
+		{
+			result = mapper.getMyPartyList(userId);
+		}
+		catch (Exception e)
+		{
+			log.info("getMyPartyList : ",e);
+		}
+	
+		
+		return result;
+	}
+	
+	@Override
+	public List<MyPartyDTO> getMyPartyKickList(long userId)
+	{
+		List<MyPartyDTO> result = null;
+		
+		try
+		{
+			result = mapper.getMyPartyKickList(userId);
+		}
+		catch (Exception e)
+		{
+			log.info("getMyPartyKickList : ",e);
+		}
+	
 		
 		return result;
 	}

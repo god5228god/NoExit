@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -33,13 +32,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 @Controller
 @RequestMapping("/party/*")
+@RequiredArgsConstructor
 public class Party
 {
 	private final PartyService service;
-
+	
 	/*
 	 * 파티 개설 폼으로 이동
 	 */
@@ -77,7 +76,7 @@ public class Party
 			if (dto == null || dto.getStatus() != 1)
 			{
 				reModel.addAttribute("errorMsg", "유효하지 않은 슬롯입니다");
-				return "redirect:err/error";
+				return "redirect:/err/error";
 			}
 
 			model.addAttribute("dto", dto);
@@ -91,7 +90,7 @@ public class Party
 		}
 
 		reModel.addAttribute("errorMsg", "서버 오류로 인해 파티 생성에 실패했습니다. 잠시후 다시 시도해 주세요.");
-		return "redirect:err/error";
+		return "redirect:/err/error";
 	}
 
 	/*
@@ -142,10 +141,10 @@ public class Party
 				return "redirect:/err/error";
 			}
 			
-			if(service.partyInsert(dto) > 0)
-			{
-				return "redirect:/party/board/" + dto.getPartyId();
-			}
+			service.partyInsert(dto);
+			
+			return "redirect:/party/board/" + dto.getPartyId();
+			
 		} 
 		catch (Exception e)
 		{
@@ -319,7 +318,7 @@ public class Party
 			PartyDTO party = service.getPartyById(partyId);
 			
 			// 존재하는 파티인지 검사 / 파티 상태가 hidden 인지 검사
-			if(party == null || party.getPartyStatus().equals("hidden"))
+			if(party == null || party.getPartyStatus().equals("close"))
 			{
 				reModel.addAttribute("errorMsg", "유효하지 않은 파티입니다.");
 				return "redirect:/err/error";
@@ -431,12 +430,57 @@ public class Party
 		reModel.addAttribute("errorMsg", "서버 오류로 파티 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.");
 		return "redirect:/err/error";
 	}
-
+	
+	@GetMapping("apply/cancel/{applyId}")
+	public String partyApplyDelete(@PathVariable(name="applyId") long applyId
+			, HttpSession session, RedirectAttributes reModel)
+	{
+		try
+		{
+			User user = (User)session.getAttribute("loginUser");
+			// 로그인 검사
+			if(user == null){return "redirect:/user/login";}
+			
+			PartyApplyDTO apply = service.getPartyApplyById(applyId);
+			// 파티 신청 유효성 검사
+			if(apply == null)
+			{
+				reModel.addAttribute("errorMsg","존재하지 않는 신청입니다.");
+				return "redirect:/err/error";
+			}
+			// 작성자와 취소자 일치 검사
+			if(user.getUserId() != apply.getUserId())
+			{
+				reModel.addAttribute("errorMsg","신청자 본인이 아닙니다.");
+				return "redirect:/err/error";
+			}
+			// delete 액션
+			if(service.rejectApply(applyId) > 0)
+			{
+				return "redirect:/mypage/myparty";
+			}
+			else
+			{
+				reModel.addAttribute("errorMsg","신청 취소에 실패했습니다.");
+				return "redirect:/err/error";
+			}
+		} 
+		catch (Exception e)
+		{
+			log.info("partyApplyDelete : ", e);
+		}
+		
+		reModel.addAttribute("errorMsg","서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+		return "redirect:/err/error";
+	
+	}
+	
 	/*
 	 * 파티 정보 수정 폼 이동
 	 */
 	@GetMapping("update/{partyid}")
-	public String partyUpdate(@PathVariable(name = "partyid") long partyId, Model model)
+	public String partyUpdate(@PathVariable(name = "partyid") long partyId
+			, Model model, HttpSession session, RedirectAttributes reModel)
 	{
 		/*
 		 * 유효성 검사 목록
@@ -454,8 +498,40 @@ public class Party
 		 * 
 		 * 카페명 테마명 날짜 시간 최소 인원 수 최대 인원 수 가격 파티명 성별 조건 파티코멘트
 		 */
-
-		return "party/partywrite";
+		
+		try
+		{
+			User user = (User)session.getAttribute("loginUser");
+			// 로그인 체크
+			if(user == null)
+				return "redirect:/user/login";
+			
+			PartyDTO party = service.getPartyById(partyId);
+			// 파티 존재 및 상태 검사
+			if(party == null || "close".equals(party.getPartyStatus()) || "confirm".equals(party.getPartyStatus()))
+			{
+				reModel.addAttribute("errorMsg", "유효하지 않은 파티입니다.");
+				return "redirect:/err/error";
+			}
+			
+			if(user.getUserId() != party.getUserId())
+			{
+				reModel.addAttribute("errorMsg", "파티장만 수정할 수 있습니다");
+				return "redirect:/err/error";
+			}
+			
+			model.addAttribute("mode", "update");
+			model.addAttribute("party", party);
+			
+			return "party/partywrite";
+		} 
+		catch (Exception e)
+		{
+			log.info("partyUpdate : ",e);
+		}
+		
+		reModel.addAttribute("errorMsg", "서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+		return "redirect:/err/error";
 	}
 
 	/*
@@ -483,7 +559,7 @@ public class Party
 			
 			PartyDTO party = service.getPartyById(partyId);
 			// 파티 존재 / 상태 검사
-			if(party == null || "cofirm".equals(party.getPartyStatus()) || "close".equals(party.getPartyStatus()))
+			if(party == null || "confirm".equals(party.getPartyStatus()) || "close".equals(party.getPartyStatus()))
 			{
 				reModel.addAttribute("errorMsg","유효하지 않은 파티입니다.");
 				return "redirect:/err/error";
@@ -641,8 +717,10 @@ public class Party
 	/*
 	 * 레디 액션 처리 AJAX 처리
 	 */
-	@PostMapping("ready/{partyid}")
-	public String setReady()
+	@ResponseBody
+	@PostMapping("ready/{partyId}")
+	public Map<String, Object> setReady(@PathVariable(name="partyId") long partyId
+			,HttpSession session, RedirectAttributes reModel)
 	{
 		/*
 		 * 유효성 검사 목록
@@ -653,7 +731,49 @@ public class Party
 		 * 파티원 인가?
 		 */
 
-		return "";
+		try
+		{
+			User user = (User)session.getAttribute("loginUser");
+			// 로그인 검사
+			if(user == null) {throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);}
+			
+			System.out.println("userId : " + user.getUserId() + " / partyId : " + partyId );
+			
+			PartyDTO party = service.getPartyById(partyId);
+			// 파티 검사
+			if(party == null || "close".equals(party.getPartyStatus()) || "confirm".equals(party.getPartyStatus())) {throw new ResponseStatusException(HttpStatus.NOT_FOUND);}
+			
+			List<PartyCrewDTO> crewList = service.getPartyCrewList(partyId);
+			// 파티원 검사
+			if(crewList.stream().filter(c->"CREW".equals(c.getPosition())).noneMatch(c->c.getUserId() == user.getUserId()))
+			{
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+			}
+			
+			Map<String, Long> map = new HashMap<>();
+			map.put("userId", user.getUserId());
+			map.put("partyId", partyId);
+			
+			Map<String, Object> result = new HashMap<>();
+			
+			if(service.partyReady(map) > 0)	
+				result.put("status", true);
+			else 
+				result.put("status", false);
+			return result;
+		}
+		catch (ResponseStatusException e)
+		{
+			log.info("setReady : ",e);
+			throw e;
+		}
+		catch (Exception e)
+		{
+			log.info("setReady : ",e);
+		}
+		
+		// 바꿔야함
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 	}
 
 	/*
@@ -771,7 +891,8 @@ public class Party
 			if(user.getUserId() != apply.getUserId()) {throw new ResponseStatusException(HttpStatus.FORBIDDEN);}
 			
 			// 파티 탈퇴 처리
-			if(service.partyOut(applyId) > 0){map.put("status", true);}
+			service.partyOut(applyId);
+			map.put("status", true);
 			
 			return map;
 		}

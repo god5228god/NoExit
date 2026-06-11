@@ -3,6 +3,7 @@ package com.noexit.app.service;
 import java.util.List;
 import java.util.Map;
 
+import com.noexit.app.model.MyPartyDTO;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
 import com.noexit.app.model.PartyCommentDeleteDTO;
@@ -60,7 +61,7 @@ public interface PartyService
 	PartyCommentDTO getCommentById(long commentId);
 	
 	List<PartyCrewDTO> getPartyCrewList(long partyId);
-	int partyReady(long partyId);
+	int partyReady(Map<String, Long> map);
 	int partyOut(long applyId);
 	int partyKick(long crewId);
 	PartyCrewDTO getPartyCrewById(long crewId);
@@ -70,4 +71,7 @@ public interface PartyService
 	int rejectApply(long applyId);
 	PartyApplyDTO getPartyApplyById(long applyId);
 	
+	List<MyPartyDTO> getMyPartyApplyList(long userId);
+	List<MyPartyDTO> getMyPartyList(long userId);
+	List<MyPartyDTO> getMyPartyKickList(long userId);
 }

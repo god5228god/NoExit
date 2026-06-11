@@ -146,12 +146,12 @@
 							<input type="text" class="form-control" name="partyName" value="" maxlength="20" placeholder="파티명을 입력하세요">
 
 							<label class="gender-check">
-								<input type="checkbox" name="genderCondition" value="1">
+								<input type="checkbox" name="genderId" value="1"}>
 								동성만 모집
 							</label>
 
 							<label class="form-label">코멘트 <span class="form-required">*</span></label>
-							<input type="text" class="form-control" name="partyComment" maxlength="30" placeholder="파티원에게 전할 내용을 입력하세요">
+							<input type="text" class="form-control" value="" name="partyComment" maxlength="30" placeholder="파티원에게 전할 내용을 입력하세요">
 
 							<input type="hidden" value="${dto.slotId }" name="slotId">
 						</form>

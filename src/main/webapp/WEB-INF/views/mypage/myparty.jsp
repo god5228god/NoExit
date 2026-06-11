@@ -10,86 +10,144 @@
 
 <style type="text/css">
 
-.container
-{
+/* ── 레이아웃 ──────────────────────────────────── */
+.container {
 	display: flex;
 	flex-direction: column;
-	gap:10px;
+	gap: 1.25rem;
+	padding: 1.5rem 0;
 }
 
-.header
-{
-	text-align: center;
-	margin-top: 10px;
-}
+.header { text-align: center; }
+.header .title { font-weight: 800; font-size: 1.4rem; }
 
-.header > .title
-{
-	font-weight: bold;
-}
-
-.body
-{
+/* 2×2 그리드 — 위: 활성 / 아래: 비활성 */
+.body {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	gap: 10px;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.25rem;
 }
 
-.body > div
-{
-	height: 600px;
-	
-	border: 1px solid black;
-	border-radius: 5px;
-	padding: 10px;
-	
+/* 각 패널 (ne-sc 위에 고정 높이만 부여) */
+.body > div {
+	height: 420px;
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
+	gap: .5rem;
+}
+.panel-title {
+	display: flex;
+	align-items: center;
+	gap: .4rem;
+	font-weight: 700;
+	font-size: .92rem;
+	color: var(--ne-text);
+	padding-bottom: .5rem;
+	margin-bottom: .25rem;
+	border-bottom: 2px solid var(--ne-primary);
 }
 
-.body > div > span:first-child 
-{
-	font-weight: bold;
-	font-size: 15px;	
-}
-
+/* ── 리스트 ────────────────────────────────────── */
 .apply-list,
 .current-party-list,
-.end-party-list
-{
+.end-party-list,
+.kick-party-list {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
+	gap: .5rem;
+	overflow-y: auto;
+	flex: 1;
 }
 
 .apply-item,
 .current-item,
-.end-item
-{
+.end-item,
+.kick-item {
 	display: flex;
 	justify-content: space-between;
-	border: 1px solid black;
-	border-radius: 5px;
-	padding: 5px;
+	align-items: center;
+	gap: .5rem;
+	padding: .65rem .85rem;
+	background: #ffffff;
+	border: 1px solid var(--ne-border);
+	border-radius: var(--ne-radius-sm);
 }
 
-.action-btn
-{
-	border: 1px solid black;
-	border-radius: 5px;
-	width: 50px;
-	background: #f5f5f5;
-}
+/* 비활성(종료·강퇴) 항목은 살짝 차분하게 */
+.end-item,
+.kick-item { background: var(--ne-bg); }
 
-.action-btn:hover 
-{
-	background: orange;
-	font-weight: bold;	
+.apply-info,
+.current-info,
+.end-info,
+.kick-info {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .3rem .55rem;
+	font-size: .84rem;
+	min-width: 0;
+}
+.apply-info span:first-child,
+.current-info span:first-child,
+.end-info span:first-child,
+.kick-info span:first-child {
+	font-weight: 700;
+	color: var(--ne-text);
+}
+.apply-info span,
+.current-info span,
+.end-info span,
+.kick-info span { color: var(--ne-text-2); }
+
+/* ── 액션 버튼 ─────────────────────────────────── */
+.action-btn {
+	flex-shrink: 0;
+	border: 1.5px solid var(--ne-border-dark);
+	border-radius: var(--ne-radius-sm);
+	padding: .3rem .7rem;
+	font-size: .8rem;
+	font-weight: 600;
+	color: var(--ne-text-2);
+	background: #ffffff;
+	cursor: pointer;
+	transition: all .13s;
+}
+.action-btn:hover {
+	border-color: var(--ne-primary);
+	background: var(--ne-primary-light);
+	color: var(--ne-primary-dark);
+}
+/* 취소 등 부정 액션 */
+.action-btn.danger {
+	border-color: #fca5a5;
+	color: var(--ne-red);
+}
+.action-btn.danger:hover {
+	background: var(--ne-red-bg);
+	color: var(--ne-red);
 }
 
 </style>
 
+<c:set var="path" value="${pageContext.request.contextPath }" />
+
+<script type="text/javascript">
+	
+	function applyCancel(btn)
+	{
+		if(confirm("신청 취소하시겠습니까?"))
+		{
+			window.location.href = "${path}/party/apply/cancel/" + btn.value;		
+		}
+	}
+	
+	function onBoard(btn)
+	{
+		window.location.href = "${path}/party/board/" + btn.value;
+	}
+	
+</script>
 
 </head>
 <body>
@@ -98,94 +156,107 @@
 	<main class="ne-main-content ne-body-offset">
 		<div class="ne-container">
 			<div class="container">
-				
+
 				<div class="header">
 					<span class="title">파티 정보</span>
 				</div>
-				
+
 				<div class="body">
-					
-					<div class="party-apply">
-						<span>파티 신청 현황</span>
-						<hr>
-						
+
+					<!-- 위 줄: 활성 -->
+					<div class="party-apply ne-sc">
+						<div class="panel-title">파티 신청 현황</div>
+
 						<div class="apply-list">
-							
+
+							<c:forEach var="apply" items="${myPartyApplyList }">
+						
 							<div class="apply-item">
-								
 								<div class="apply-info">
-									
-									<span>주열룸</span>
-									<span>그레이</span>
-									<span>06-03</span>
-									<span>18:00</span>
-									
+									<span>${apply.partyName }</span>
+									<span>${apply.themeName }</span>
+									<span>${apply.resDate }</span>
+									<span>${apply.resTime }</span>
 								</div>
-								
 								<div class="apply-status">
-									
-									<button type="button" class="action-btn">취소</button>
-									
+									<button type="button" class="action-btn danger" value="${apply.applyId }" onclick="applyCancel(this)">취소</button>
 								</div>
-								
-							</div>
+							</div> 
 							
+							</c:forEach>
 						</div>
-						
 					</div>
-					
-					<div class="current-party">
-						<span>현재 파티</span>
-						<hr>
-						
+
+					<div class="current-party ne-sc">
+						<div class="panel-title">현재 파티</div>
+
 						<div class="current-party-list">
-							
-							<div class="current-item">
-								
-								<div class="current-info">
-									<span>주열룸</span>
-									<span>그레이</span>
-									<span>06-03</span>
-									<span>18:00</span>
-								</div>
-								
-								<div class="current-btn">
-									<button type="button" class="action-btn">보드</button>
-								</div>
-								
-							</div>
-							
+							<c:forEach var="party" items="${myPartyList }">
+								<c:if test="${party.partyStatus != 'close' }">
+									<div class="current-item">
+										<div class="current-info">
+											<span>${party.partyName }</span>
+											<span>${party.themeName }</span>
+											<span>${party.resDate }</span>
+											<span>${party.resTime }</span>
+										</div>
+										<div class="current-btn">
+											<button type="button" class="action-btn" value="${party.partyId }" onclick="onBoard(this)">보드</button>
+										</div>
+									</div>
+								</c:if>
+							</c:forEach>
 						</div>
-						
 					</div>
-					
-					<div class="end-party">
-						<span>종료된 파티</span>
-						<hr>
-						
+
+					<!-- 아래 줄: 비활성 -->
+					<div class="end-party ne-sc">
+						<div class="panel-title">
+							종료된 파티
+							<span class="ne-st ne-st-sm ne-st-gray">완료</span>
+						</div>
+
 						<div class="end-party-list">
-						
-							<div class="end-item">
-								
-								<div class="end-info">
-									<span>주열룸</span>
-									<span>그레이</span>
-									<span>06-03</span>
-									<span>18:00</span>
-								</div>
-								
-								<div class="end-btn">
-									<button type="button" class="action-btn">보드</button>
-								</div>
-							
-							</div>
-						
+							<c:forEach var="party" items="${myPartyList }">
+								<c:if test="${party.partyStatus == 'close' }">
+									<div class="end-item">
+										<div class="end-info">
+											<span>${party.partyName }</span>
+											<span>${party.themeName }</span>
+											<span>${party.resDate }</span>
+											<span>${party.resTime }</span>
+										</div>
+									</div>
+								</c:if>
+							</c:forEach>
 						</div>
-						
 					</div>
-					
+
+					<div class="kick-party ne-sc">
+						<div class="panel-title">
+							강퇴된 파티
+							<span class="ne-st ne-st-sm ne-st-red">강퇴</span>
+						</div>
+						<div class="kick-party-list">
+							<c:forEach var="party" items="${myPartyKickList }">
+								<div class="kick-item">
+									<div class="kick-info">
+										<span>${party.partyName }</span>
+										<span>${party.themeName }</span>
+										<span>${party.resDate }</span>
+										<span>${party.resTime }</span>
+									</div>
+									<div class="kick-info">
+										<span>${party.kickDate }</span>
+										<span>${party.kickTime }</span>
+									</div>
+								</div>
+							</c:forEach>
+						</div>
+					</div>
+
 				</div>
-				
+
 			</div>
 		</div>
 	</main>
