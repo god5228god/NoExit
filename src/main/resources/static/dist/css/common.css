@@ -578,6 +578,9 @@ small, .small   { font-size: .875rem; }  /* 14px */
 .ne-card-accent {
   border-left: 3px solid var(--ne-primary);
 }
+.ne-card-top {
+  border-top: 3px solid var(--ne-primary);
+}
 
 /* 섹션 카드 (폼·필터 등) */
 .ne-sc {
@@ -710,6 +713,18 @@ small, .small   { font-size: .875rem; }  /* 14px */
   border-color: var(--ne-red);
   color: var(--ne-red);
 }
+ 
+.ne-tag-blue {
+  background: var(--ne-blue-bg);
+  border-color: var(--ne-blue);
+  color: var(--ne-blue);
+}
+.ne-tag-green {
+  background: var(--ne-green-bg);
+  border-color: var(--ne-green);
+  color: var(--ne-green);
+}
+ 
  
 /* 매너온도 칩 */
 .ne-mannero {

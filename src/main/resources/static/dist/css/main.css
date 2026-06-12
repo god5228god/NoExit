@@ -1,7 +1,10 @@
 .ne-container.mainWrap{
 	padding: 40px 60px;
 	box-sizing: border-box;
-	margin: 30px auto;
+	margin: 0px auto;
+	border-radius: inherit;
+	border: none;
+	box-shadow: none;
 }
 
 .slider{
@@ -44,40 +47,88 @@
 }
 
 
-.themeBox{
+
+.themeBox, .partyBox{
 	box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
 	border-radius: 8px;
-	padding-bottom: 20px;
+	padding-bottom: 10px;
 	cursor: pointer;
 }
+.themeBox{
+	width: 200px;
+}
 
+.partyBox{
+	width: 350px;
+	height: 170px;
+	padding: 20px 15px;
+}
 
 .themeBox img{
 	border-radius: 8px 8px 0  0;
+	width: 200px;
+	height: 230px;
+	object-fit:cover;
+	
 }
 
 
 .badgeWrap{
 	padding: 10px 0 0 10px ;
 }
+.partyBadge{
+	margin-bottom: 5px;
+	text-align: right;
+}
 
-.themeTitle{
+.themeTitle, .partyTitle{
 	font-size: 18px;
 	font-weight: bold;
 	padding: 10px 0 0 10px;
 	
 }
-.themeTitle span{
+.sm{
 	font-size: 14px;
 	color: #666;
 	font-weight: normal;
 	display: block;
 }
 
+.party .subject{
+	width: 265px;
+	white-space: nowrap;      
+  	overflow: hidden;         
+  	text-overflow: ellipsis;  
+  	font-size: 20px;
+  	font-weight: bold;
+  	color: #333;
+}
 
 
 
+.detail{
+	text-align: right;
+	color: #444;
+	font-size: 16px;
+	font-weight: bold;
+}
+.detail span, .review span{
+	color: var(--bs-primary);
+}
 
+.review{
+	text-align: right;
+	padding-right: 15px;
+	font-weight: bold;
+	color: #444;
+	font-size: 18px;
+}
+
+.name{
+	font-size: 16px;
+	font-weight: bold;
+	color: #666;
+}
 
 
 
