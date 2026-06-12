@@ -239,7 +239,7 @@
 				<c:when test="${not empty recordList}">
 					<c:forEach var="record" items="${recordList}">
 						
-						<div class="ne-card ne-card-accent p-4 mb-3 clickable-card" 
+						<div class="ne-card ne-card-accent p-4 mb-3 t" 
 							 onclick="openRecordDetail(this)"
 							 data-theme-title="${record.roomName}"
 							 data-play-date="${record.playDate}"
@@ -273,7 +273,10 @@
 											<div>
 												<c:choose>
 													<c:when test="${empty review.reviewId}">
-														<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold me-2" onclick="insertReviewModal()">리뷰 입력</button>
+														<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold me-2" 
+														onclick="updateRecordModal(event, this.closest('.clickable-card')))"
+														
+														>수정하기</button>
 													</c:when>
 												</c:choose>
 																			
@@ -322,34 +325,81 @@
 			</div>
 			
 			<div class="modal-body p-4" style="font-size: 14px;">
-				<div class="ne-price-box mb-4">
-					<div class="ne-price-row">
-						<span class="ne-text-muted">최종 소요 시간</span>
-						<strong id="md-record-time" class="text-dark"></strong>
+				<input type="hidden" id="md-record-detailId" value="">
+				
+				<div id="md-view-form">
+					<div class="ne-price-box mb-4">
+						<div class="ne-price-row">
+							<span class="ne-text-muted">최종 소요 시간</span>
+							<strong id="md-record-time" class="text-dark"></strong>
+						</div>
+						<div class="ne-price-row">
+							<span class="ne-text-muted">사용 힌트 개수</span>
+							<strong id="md-record-hint" class="text-dark"></strong>
+						</div>
+						<div class="ne-price-row total">
+							<span>함께한 인원</span>
+							<span id="md-record-players" class="ne-price-total-amount"></span>
+						</div>
 					</div>
-					<div class="ne-price-row">
-						<span class="ne-text-muted">사용 힌트 개수</span>
-						<strong id="md-record-hint" class="text-dark"></strong>
+					<div class="mb-3">
+						<label class="form-label ne-text-muted">플레이 일시</label>
+						<div id="md-record-date" class="p-2 border-bottom text-dark fw-semibold"></div>
 					</div>
-					<div class="ne-price-row total">
-						<span>함께한 인원</span>
-						<span id="md-record-players" class="ne-price-total-amount"></span>
+					<div>
+						<label class="form-label ne-text-muted">기록 메모</label>
+						<div id="md-record-memo" class="ne-notice ne-notice-warning p-3 text-dark" style="min-height: 80px; white-space: pre-wrap;"></div>
 					</div>
 				</div>
-				
-				<div class="mb-3">
-					<label class="form-label ne-text-muted">플레이 일시</label>
-					<div id="md-record-date" class="p-2 border-bottom text-dark fw-semibold"></div>
-				</div>
-				
-				<div>
-					<label class="form-label ne-text-muted">기록 메모</label>
-					<div id="md-record-memo" class="ne-notice ne-notice-warning p-3 text-dark" style="min-height: 80px; white-space: pre-wrap;"></div>
+
+				<div id="md-edit-form" class="d-none">
+					<div class="mb-4">
+						<label class="ne-insert-label mb-2 d-block fw-semibold text-secondary">탈출 성공 여부</label>
+						<div class="ne-status-toggle-group">
+							<input type="radio" class="ne-status-toggle-btn" name="mdIsEscaped" id="mdEditEscape" value="1">
+							<label class="ne-status-label" for="mdEditEscape">탈출 성공</label>
+							
+							<input type="radio" class="ne-status-toggle-btn" name="mdIsEscaped" id="mdEditFail" value="0">
+							<label class="ne-status-label" for="mdEditFail">탈출 실패</label>
+						</div>
+					</div>
+					
+					<div class="ne-input-grid mb-4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+						<div>
+							<label for="mdEditPlayTime" class="ne-insert-label mb-1 d-block text-secondary">소요 시간</label>
+							<input type="text" class="form-control form-control-sm text-center" id="mdEditPlayTime" placeholder="예: 52">
+						</div>
+						<div>
+							<label for="mdEditHintCount" class="ne-insert-label mb-1 d-block text-secondary">힌트 사용</label>
+							<div class="input-group input-group-sm">
+								<input type="number" class="form-control text-center" id="mdEditHintCount" min="0">
+								<span class="input-group-text">개</span>
+							</div>
+						</div>
+						<div>
+							<label for="mdEditPlayerCount" class="ne-insert-label mb-1 d-block text-secondary">플레이 인원</label>
+							<div class="input-group input-group-sm">
+								<input type="number" class="form-control text-center" id="mdEditPlayerCount" min="1">
+								<span class="input-group-text">명</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="mb-2">
+						<label for="mdEditRecordComment" class="ne-insert-label mb-1 d-block text-secondary">기록 메모</label>
+						<textarea class="form-control" id="mdEditRecordComment" rows="3" style="font-size: 13px; resize: none;" placeholder="플레이 소감을 수정해 보세요!"></textarea>
+					</div>
 				</div>
 			</div>
 			
-			<div class="modal-footer py-2">
+			<div class="modal-footer py-2" id="md-view-footer">
+				<button type="button" class="btn btn-sm btn-outline-primary px-3" onclick="switchRecordMode(true)">수정하기</button>
 				<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">닫기</button>
+			</div>
+
+			<div class="modal-footer py-2 d-none" id="md-edit-footer">
+				<button type="button" class="btn btn-sm btn-secondary px-3" onclick="switchRecordMode(false)">취소</button>
+				<button type="button" class="btn btn-sm btn-primary px-3 fw-semibold" onclick="submitRecordUpdate()">수정 완료</button>
 			</div>
 		</div>
 	</div>

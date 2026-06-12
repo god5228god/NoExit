@@ -66,9 +66,6 @@ public class MyPageController {
 	
 	
 	
-	
-	
-	
 	@GetMapping("/mypage/record")
 	public String mypage(HttpSession session, Model model)
 	{
