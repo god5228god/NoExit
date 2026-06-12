@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.noexit.app.model.MyPage;
+import com.noexit.app.model.User;
 
 public interface MyPageService {
 	
-	public List<MyPage> getUserRecord(Long userId);
+	List<MyPage> getUserRecord(Map<String, Object> map);
 	public List<MyPage> getMutualList(Long userId);
 	public List<String> getQuestionList();
 	public double getUserManner(Long userId);
@@ -15,5 +16,6 @@ public interface MyPageService {
 	public List<MyPage> getRoomImg(Long userId);
 	List<MyPage> getUnrecordedList(long userId);
 	public int insertRecord(MyPage myPage);
+	public int getUserRecordCount(Long userId);
 	
 }
