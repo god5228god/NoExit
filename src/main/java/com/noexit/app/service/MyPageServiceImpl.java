@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.noexit.app.mapper.MypageMapper;
 import com.noexit.app.model.MyPage;
+import com.noexit.app.model.User;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +22,9 @@ public class MyPageServiceImpl implements MyPageService{
 	
 
 	@Override
-	public List<MyPage> getUserRecord(Long userId)
+	public List<MyPage> getUserRecord(Map<String, Object> map)
 	{
-		return mapper.getUserRecord(userId);
+		return mapper.getUserRecord(map);
 	}
 
 	
@@ -70,6 +71,13 @@ public class MyPageServiceImpl implements MyPageService{
 	public int insertRecord(MyPage myPage) {
         return mapper.insertRecord(myPage);
     }
+
+
+	@Override
+	public int getUserRecordCount(Long userId) {
+		return mapper.getUserRecordCount(userId);
+	}
+	
 	
 	
 }

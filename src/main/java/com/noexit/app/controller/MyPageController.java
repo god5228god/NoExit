@@ -1,6 +1,7 @@
 package com.noexit.app.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -65,7 +67,10 @@ public class MyPageController {
 	
 	
 	@GetMapping("/mypage/record")
-	public String mypage(HttpSession session, Model model)
+	public String mypage(
+			@RequestParam(value = "page", defaultValue = "1") int page
+			,HttpSession session
+			,Model model)
 	{
 		// 세션 검증 
 		User loginUser = (User) session.getAttribute("loginUser");
@@ -76,8 +81,44 @@ public class MyPageController {
 			return "redirect:/user/login";
 		}
 		
-		List<MyPage> recordList = service.getUserRecord(loginUser.getUserId());
-		List<MyPage> mutualList = service.getMutualList(loginUser.getUserId());
+		long userId = loginUser.getUserId();
+		
+		
+		// 페이징 처리 영역 -------------------------------------
+		
+		int pageSize = 3;		// 페이지 당 카드 바인딩 갯수
+		
+		
+		int startRow = (page-1) * pageSize + 1;	// 페이지당 요소의 시작 번호
+		int endRow = page * pageSize;			// 페이지당 요소의 끝   번호
+		
+		// Map에 데이터 적재
+		Map<String, Object> pageMap = new HashMap<>();
+		pageMap.put("userId", loginUser.getUserId());
+		pageMap.put("startRow", startRow);
+		pageMap.put("endRow", endRow);
+		
+		
+		// 3개 잘린 데이터 리스트
+		List<MyPage> recordList = service.getUserRecord(pageMap);
+		
+		
+		// 전체 기록 갯수
+		int totalCount = service.getUserRecordCount(userId);
+		
+		// 전체 페이지 수(ceil로 올림 처리)
+		int totalPage = (int) Math.ceil ((double)totalCount / pageSize);
+		if(totalPage == 0)
+			totalPage = 1;
+		
+		
+		// 이전 / 다음 버튼 활성화 조건
+		boolean hasPrev = (page > 1);
+		boolean hasNext = (page < totalPage);
+		//-------------------------------------------------------
+		
+		
+		List<MyPage> mutualList = service.getMutualList(userId);
 		List<String> questionList = service.getQuestionList();
 		double userManner = service.getUserManner(loginUser.getUserId());
 		List<MyPage> roomImgList = service.getRoomImg(loginUser.getUserId());
@@ -91,6 +132,16 @@ public class MyPageController {
 		model.addAttribute("questionList",questionList);
 		model.addAttribute("userManner" ,userManner);
 		model.addAttribute("roomImgList" ,roomImgList);		// 이미지 insert 후 바인딩 예정
+		
+		
+		// 페이징 처리 정보 넘기기
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("hasPrev", hasPrev);
+		model.addAttribute("hasNext", hasNext);
+		model.addAttribute("currentPage", page);
+		
+		
 		
 		// 마이페이지로 리턴
 		return "/mypage/record";

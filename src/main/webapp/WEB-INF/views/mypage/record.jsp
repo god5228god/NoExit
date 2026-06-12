@@ -17,11 +17,14 @@
 		padding-left: 2rem;
 		padding-right: 2rem;
 		gap: 1.5rem;
+		align-items: stretch;
 	}
 
 	.main-content {
 		flex-grow: 1;
 		min-width: 0;
+		display: flex;
+    	flex-direction: column;
 	}
 	
 	.right-sidebar {
@@ -50,12 +53,20 @@
 		display: flex;
 		justify-content: space-between;
 	}
+	
+	.pagination-wrapper {
+    margin-top: auto;
+    padding-top: 2rem;
 </style>
 
 <script type="text/javascript">
 
 	// 등록된 개인 기록 상세 보기 모달 띄우기
 	function openRecordDetail(cardElement) {
+		
+		// 상세 보기때는 Mode를 false로 초기화
+		switchRecordMode(false);
+		
 		// 클릭된 카드 태그에 숨겨져 있는 data- 속성 정보들 추출
 		const themeTitle = cardElement.getAttribute('data-theme-title');
 		const playDate = cardElement.getAttribute('data-play-date');
@@ -172,7 +183,7 @@
 				let insertModal = bootstrap.Modal.getInstance(insertModalEl);
 				insertModal.hide();
 				
-				location.reload();
+				location.href = "${pageContext.request.contextPath}/mypage/record?page=1";
 			} else {
 				alert("기록 등록에 실패했습니다. 입력값을 확인해주세요.");
 			}
@@ -183,9 +194,110 @@
 		});
 	}
 	
-	function insertReviewModal() {
-		alert("호출확인");
+	// 1. [수정하기] 버튼 누르면 바로 수정 폼 모달 열기
+	function updateRecordModal(event, cardElement) {
+		// 부모 카드가 같이 클릭되어 상세 모달이 열리는 현상(버블링) 차단
+		if(event) event.stopPropagation();
+		
+		// 카드에 숨겨진 기존 데이터들 싹 추출하기
+		const detailId = cardElement.getAttribute('data-detail-id') || "0"; 
+		const themeTitle = cardElement.getAttribute('data-theme-title');
+		const playDate = cardElement.getAttribute('data-play-date');
+		const playTime = cardElement.getAttribute('data-play-time');
+		const hintCount = cardElement.getAttribute('data-hint-count');
+		const playerCount = cardElement.getAttribute('data-player-count');
+		const isEscaped = cardElement.getAttribute('data-is-escaped');
+		const recordComment = cardElement.getAttribute('data-memo');
+		
+		// 모달의 input, textarea 태그들에 기존 값 대입하기
+		document.getElementById('md-record-detailId').value = detailId;
+		document.getElementById('md-record-theme').innerText = themeTitle;
+		document.getElementById('md-record-date').innerText = playDate;
+		
+		document.getElementById('mdEditPlayTime').value = playTime;
+		document.getElementById('mdEditHintCount').value = hintCount;
+		document.getElementById('mdEditPlayerCount').value = playerCount;
+		document.getElementById('mdEditRecordComment').value = recordComment ? recordComment : "";
+		
+		// 성공/실패 라디오 버튼 체크
+		if(isEscaped === "1") {
+			document.getElementById('mdEditEscape').checked = true;
+		} else {
+			document.getElementById('mdEditFail').checked = true;
+		}
+		
+		// 모달이 열릴 때 무조건 '수정 폼(true)'이 보이도록 설정
+		switchRecordMode(true);
+		
+		// 모달 띄우기
+		let myModal = new bootstrap.Modal(document.getElementById('recordDetailModal'));
+		myModal.show();
 	}
+	
+	// 2. 모달 안의 UI를 조회 모드(false) / 수정 모드(true)로 스위칭하는 함수
+	function switchRecordMode(isEditMode) {
+		if(isEditMode) {
+			document.getElementById('md-view-form').classList.add('d-none');
+			document.getElementById('md-edit-form').classList.remove('d-none');
+			document.getElementById('md-view-footer').classList.add('d-none');
+			document.getElementById('md-edit-footer').classList.remove('d-none');
+		} else {
+			document.getElementById('md-view-form').classList.remove('d-none');
+			document.getElementById('md-edit-form').classList.add('d-none');
+			document.getElementById('md-view-footer').classList.remove('d-none');
+			document.getElementById('md-edit-footer').classList.add('d-none');
+		}
+	}
+
+	// 3. 수정 완료 버튼 누르면 서버(컨트롤러)로 비동기 전송할 함수
+	function submitRecordUpdate() {
+		const playTimeEl = document.getElementById('mdEditPlayTime');
+		const rawPlayTime = playTimeEl.value.trim();
+		
+		// 유효성 검사 (분 단위 숫자만)
+		if(!rawPlayTime || isNaN(rawPlayTime)) {
+			alert("소요 시간을 숫자(분) 형식으로 정확히 입력해 주세요. (예: 52)");
+			playTimeEl.focus();
+			return;
+		}
+
+		// 서버로 보낼 JSON 데이터 묶기
+		const updateData = {
+			detailId: parseInt(document.getElementById('md-record-detailId').value, 10),
+			isEscaped: parseInt(document.querySelector('input[name="mdIsEscaped"]:checked').value, 10),
+			playTime: parseInt(rawPlayTime, 10),
+			hintCount: parseInt(document.getElementById('mdEditHintCount').value, 10),
+			peopleCount: parseInt(document.getElementById('mdEditPlayerCount').value, 10),
+			recordComment: document.getElementById('mdEditRecordComment').value
+		};
+
+		// Fetch를 이용한 비동기 통신
+		fetch(`${pageContext.request.contextPath}/mypage/record/update`, {
+			method: 'POST', // 프로젝트 컨벤션에 맞춰 PUT 대신 POST 사용
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(updateData)
+		})
+		.then(response => {
+			if(!response.ok) throw new Error("서버 처리 실패");
+			return response.text();
+		})
+		.then(result => {
+			if(result === "success") {
+				alert("플레이 기록이 성공적으로 수정되었습니다.");
+				location.reload(); // 화면 새로고침하여 반영
+			} else {
+				alert("기록 수정에 실패했습니다. 입력값을 확인해주세요.");
+			}
+		})
+		.catch(error => {
+			console.error("기록 수정 에러:", error);
+			alert("기록 수정 중 오류가 발생했습니다.");
+		});
+	}
+	
+	
 	
 	
 	
@@ -207,6 +319,9 @@
 			 	<span class="btn btn-outline-primary" onclick="insertRecordModal()">기록 추가</span>
 			 </div>
 			
+			
+			<!-- 더미 기록 카드 데이터 -->
+			 
 			<div class="ne-card ne-card-accent p-4 mb-3 clickable-card" onclick="openRecordDetail(this)"
 				 data-theme-title="비밀의 숲"
 				 data-play-date="2024.05.17 (금) 14:00"
@@ -239,7 +354,7 @@
 				<c:when test="${not empty recordList}">
 					<c:forEach var="record" items="${recordList}">
 						
-						<div class="ne-card ne-card-accent p-4 mb-3 t" 
+						<div class="ne-card ne-card-accent .clickable-card p-4 mb-3 " 
 							 onclick="openRecordDetail(this)"
 							 data-theme-title="${record.roomName}"
 							 data-play-date="${record.playDate}"
@@ -274,7 +389,7 @@
 												<c:choose>
 													<c:when test="${empty review.reviewId}">
 														<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold me-2" 
-														onclick="updateRecordModal(event, this.closest('.clickable-card')))"
+														onclick="updateRecordModal(event, this.closest('.clickable-card'))"
 														
 														>수정하기</button>
 													</c:when>
@@ -304,9 +419,46 @@
 					</div>
 				</c:otherwise>
 			</c:choose>
+			<!-- 여기 -->
+
 			
+			<!-- 여기 -->
 		</div>
-		
+		<div class="d-flex justify-content-center align-items-center gap-3 mt-4">
+				
+				<c:choose>
+					<c:when test="${hasPrev}">
+						<a href="${pageContext.request.contextPath}/mypage/record?page=${currentPage - 1}" 
+						   class="btn btn-sm btn-outline-secondary px-3 fw-semibold">
+							&lt; 이전
+						</a>
+					</c:when>
+					<c:otherwise>
+						<button type="button" class="btn btn-sm btn-outline-secondary px-3 fw-semibold" disabled>
+							&lt; 이전
+						</button>
+					</c:otherwise>
+				</c:choose>
+
+				<span class="text-secondary small fw-medium">
+					<strong class="text-dark">${currentPage}</strong> / ${totalPage}
+				</span>
+
+				<c:choose>
+					<c:when test="${hasNext}">
+						<a href="${pageContext.request.contextPath}/mypage/record?page=${currentPage + 1}" 
+						   class="btn btn-sm btn-outline-secondary px-3 fw-semibold">
+							다음 &gt;
+						</a>
+					</c:when>
+					<c:otherwise>
+						<button type="button" class="btn btn-sm btn-outline-secondary px-3 fw-semibold" disabled>
+							다음 &gt;
+						</button>
+					</c:otherwise>
+				</c:choose>
+				
+			</div>
 	</div>
 
 <%@ include file="/WEB-INF/views/common/rightSideBar.jsp" %>
