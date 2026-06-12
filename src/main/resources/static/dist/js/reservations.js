@@ -34,7 +34,7 @@ $(function(){
 		const reservationId = $(this).data("reservation-id");
 		
 		$.ajax({
-			  url: "/reservations/cancel"
+			  url: "/mypage/reservations/cancel"
 			, type: "POST"
 			, data: {reservationId: reservationId}
 			, success: function(res){
