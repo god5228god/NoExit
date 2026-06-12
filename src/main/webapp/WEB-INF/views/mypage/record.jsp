@@ -89,7 +89,7 @@
 		myModal.show();
 	}
 	
-	// 2. 기록 추가 버튼 클릭 시 미등록 리스트 비동기 조회 후 모달 오픈
+	// 기록 추가 버튼 클릭 시 미등록 리스트 비동기 조회 후 모달 오픈
 	function insertRecordModal() {
 		fetch(`${pageContext.request.contextPath}/mypage/record/write`)
 		.then(response => {
@@ -182,6 +182,13 @@
 			alert("기록 등록 중 오류가 발생했습니다.");
 		});
 	}
+	
+	function insertReviewModal() {
+		alert("호출확인");
+	}
+	
+	
+	
 </script>
 </head>
 <body>
@@ -255,19 +262,18 @@
 								
 								<div class="d-flex align-items-center gap-3">
 									<c:choose>
-										<%-- 出席チェックのみされた記録入力前の状態 --%>
 										<c:when test="${empty record.isEscaped}">
 											<div>
 												<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold" onclick="insertRecordModal()">기록하기</button>
 											</div>
 										</c:when>
 										
-										<%-- 記録入力完了状態 --%>
+										
 										<c:otherwise>
 											<div>
 												<c:choose>
 													<c:when test="${empty review.reviewId}">
-														<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold me-2">리뷰 입력</button>
+														<button type="button" class="btn btn-sm btn-outline-primary px-3 fw-semibold me-2" onclick="insertReviewModal()">리뷰 입력</button>
 													</c:when>
 												</c:choose>
 																			

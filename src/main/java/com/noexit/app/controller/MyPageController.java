@@ -69,7 +69,7 @@ public class MyPageController {
 	
 	
 	
-	@GetMapping("/mypage/*")
+	@GetMapping("/mypage/record")
 	public String mypage(HttpSession session, Model model)
 	{
 		// 세션 검증 
