@@ -4,7 +4,6 @@ package com.noexit.app.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.noexit.app.model.Evaluation;
 import com.noexit.app.model.MyPage;
 import com.noexit.app.model.User;
-import com.noexit.app.service.AdminService;
 import com.noexit.app.service.EvaluationService;
 import com.noexit.app.service.MyPageService;
 import com.noexit.app.service.PartyService;
@@ -162,7 +160,7 @@ public class MyPageController {
 	    	return "fail";
 	}
 	
-	
+
 	
 	
 	
