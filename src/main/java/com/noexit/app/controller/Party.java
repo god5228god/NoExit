@@ -543,10 +543,13 @@ public class Party
 				return "redirect:/err/error";
 			}
 			
+			ThemeSlotDTO dto = service.getThemeSlotById(party.getSlotId());
+			
 			model.addAttribute("mode", "update");
 			model.addAttribute("party", party);
+			model.addAttribute("dto",dto);
 			
-			return "party/partywrite";
+			return "party/partyupdate";
 		} 
 		catch (Exception e)
 		{
