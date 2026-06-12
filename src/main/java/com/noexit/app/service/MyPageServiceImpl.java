@@ -1,6 +1,7 @@
 package com.noexit.app.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -59,13 +60,16 @@ public class MyPageServiceImpl implements MyPageService{
 	}
 	
 	@Override
-	public List<MyPage> getUnrecordedList(Long userId)
+	public List<MyPage> getUnrecordedList(long userId) 
 	{
 		return mapper.getUnrecordedList(userId);
 	}
 	
 	
-	
+	@Override
+	public int insertRecord(MyPage myPage) {
+        return mapper.insertRecord(myPage);
+    }
 	
 	
 }
