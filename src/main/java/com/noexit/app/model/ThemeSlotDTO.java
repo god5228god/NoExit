@@ -18,4 +18,5 @@ public class ThemeSlotDTO
 	private int maxPlayers;
 	private int price;
 	private int status;
+	private int adult;
 }

@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.noexit.app.model.Cafe;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
 import com.noexit.app.model.PartyCommentDeleteDTO;
 import com.noexit.app.model.PartyCrewDTO;
 import com.noexit.app.model.PartyDTO;
+import com.noexit.app.model.SearchFilterDTO;
+import com.noexit.app.model.ThemeDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 import com.noexit.app.model.User;
 import com.noexit.app.service.PartyService;
@@ -38,6 +41,42 @@ import lombok.extern.slf4j.Slf4j;
 public class Party
 {
 	private final PartyService service;
+	
+	@PostMapping("theme/{cafeId}")
+	@ResponseBody
+	public List<ThemeDTO> getThemeList(@PathVariable(name="cafeId") long cafeId)
+	{
+		List<ThemeDTO> result = null;
+		
+		try
+		{
+			result = service.getThemeList(cafeId);
+		} 
+		catch (Exception e)
+		{
+			log.info("getThemeList : ",e);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping("slot/{themeId}")
+	@ResponseBody
+	public List<ThemeSlotDTO> getSlotList(@PathVariable(name="themeId") long themeId)
+	{
+		List<ThemeSlotDTO> result = null;
+		
+		try
+		{
+			result = service.getSlotList(themeId);
+		} 
+		catch (Exception e)
+		{
+			log.info("getSlotList : ",e);
+		}
+		
+		return result;
+	}
 	
 	/*
 	 * 파티 개설 폼으로 이동
@@ -79,6 +118,15 @@ public class Party
 				return "redirect:/err/error";
 			}
 
+			if(dto.getAdult() > 0)
+			{
+				if(service.getUserAge(user.getUserId()) < 19)
+				{
+					reModel.addAttribute("errorMsg", "미성년자는 성인 테마 개설이 불가합니다.");
+					return "redirect:/err/error";
+				}
+			}
+			
 			model.addAttribute("dto", dto);
 			model.addAttribute("mode", "write");
 			
@@ -130,7 +178,16 @@ public class Party
 				reModel.addAttribute("errorMsg", "유효하지 않은 슬롯입니다.");
 				return "redirect:/err/error";
 			}
-
+			
+			if(slot.getAdult() > 0)
+			{
+				if(service.getUserAge(user.getUserId()) < 19)
+				{
+					reModel.addAttribute("errorMsg", "미성년자는 성인 테마 개설이 불가합니다.");
+					return "redirect:/err/error";
+				}
+			}
+			
 			// 파티장으로 설정
 			dto.setUserId(user.getUserId());
 
@@ -160,7 +217,8 @@ public class Party
 	 */
 	@GetMapping("list")
 	public String partyListPage(@RequestParam(name = "schType", defaultValue = "themeName") String schType,
-			@RequestParam(name = "kwd", defaultValue = "") String kwd, Model model)
+			@RequestParam(name = "kwd", defaultValue = "") String kwd, Model model
+			, SearchFilterDTO filter)
 	{
 		if (!kwd.isBlank())
 		{
@@ -168,10 +226,15 @@ public class Party
 			model.addAttribute("kwd", kwd);
 		}
 
-		/*
-		 * 여유 되면 필터도 넣어야 하는데 머가 되게 많네?
-		 */
-
+		if(filter.getMinDate() != null)
+			model.addAttribute("minDate", filter.getMinDate());
+		if(filter.getMaxDate() != null)
+			model.addAttribute("maxDate", filter.getMaxDate());
+		if(filter.getMinTime() != null)
+			model.addAttribute("minTime", filter.getMinTime());
+		if(filter.getMaxTime() != null)
+			model.addAttribute("maxTime", filter.getMaxTime());
+			
 		return "party/partylist";
 	}
 
@@ -184,7 +247,7 @@ public class Party
 	@PostMapping("list")
 	public List<PartyDTO> partyListData(@RequestParam(name = "schType", defaultValue = "themeName") String schType,
 			@RequestParam(name = "kwd", defaultValue = "") String kwd, @RequestParam(name = "lastId") long lastId,
-			Model model)
+			SearchFilterDTO filter)
 	{
 		/*
 		 * 유효성 검사 목록
@@ -209,10 +272,10 @@ public class Party
 				map.put("kwd", kwd);
 				map.put("schType", schType);
 			}
-	
+
 			List<PartyDTO> list = new ArrayList<>();
 	
-			list = service.getPartyList(map);
+			list = service.getPartyList(map,filter);
 			
 			return list;
 		} 
@@ -432,6 +495,18 @@ public class Party
 				}
 			}
 			
+			ThemeSlotDTO slot = service.getThemeSlotById(party.getSlotId());
+			
+			// 1 성인 / 0 전체
+			if(slot.getAdult() > 0)
+			{
+				if(service.getUserAge(userId) < 19)
+				{
+					reModel.addAttribute("errorMsg", "미성년자는 성인 테마 신청이 불가 합니다.");
+					return "redirect:/err/error";
+				}
+			}
+			
 			if(applyComment.length() >= 30)
 			{
 				reModel.addAttribute("errorMsg", "신청 메시지 길이 제한을 초과했습니다.");
@@ -543,11 +618,16 @@ public class Party
 				return "redirect:/err/error";
 			}
 			
+			List<Cafe> cafeList = service.getCafeList();
+			
+			//log.info("party : slodId : " +  party.getSlotId());
+			
 			ThemeSlotDTO dto = service.getThemeSlotById(party.getSlotId());
 			
 			model.addAttribute("mode", "update");
 			model.addAttribute("party", party);
 			model.addAttribute("dto",dto);
+			model.addAttribute("cafeList", cafeList);
 			
 			return "party/partyupdate";
 		} 
@@ -560,6 +640,80 @@ public class Party
 		return "redirect:/err/error";
 	}
 
+	@PostMapping("update/{partyid}")
+	public String partyUpdate(@PathVariable(name="partyid") long partyId
+			,@RequestParam(name="partyComment") String partyComment
+			,@RequestParam(name="partyName") String partyName
+			,@RequestParam(name="genderId", defaultValue = "0") int genderId
+			, RedirectAttributes reModel, HttpSession session)
+	{
+		try
+		{
+			/*
+			 * 유효성 검사 목록
+			 * 
+			 * 로그인한 사용자인가?
+			 * 파티장인가?
+			 * 존재하는 slotId 인가?
+			 * 예약되지 않은 slodId 인가?
+			 * 파티명 길이
+			 * 파티코멘트 길이
+			 */
+			
+			User user = (User) session.getAttribute("loginUser");
+			
+			// 로그인 체크
+			if(user == null){return "redirect:/user/login";}
+			
+			PartyDTO party = service.getPartyById(partyId);
+			
+			if(party == null || "close".equals(party.getPartyStatus()) || "confirm".equals(party.getPartyStatus()))
+			{
+				reModel.addAttribute("errorMsg", "유효하지 않은 파티입니다.");
+				return "redirect:/err/error";
+			}
+			
+			if(user.getUserId() != party.getUserId())
+			{
+				reModel.addAttribute("errorMsg", "파티장만 수정 가능합니다.");
+				return "redirect:/err/error";
+			}
+			
+			ThemeSlotDTO slot = service.getThemeSlotById(party.getSlotId());
+			
+			// 슬롯 유효성 체크
+			if (slot == null || slot.getStatus() != 1)
+			{
+				reModel.addAttribute("errorMsg", "유효하지 않은 슬롯입니다.");
+				return "redirect:/err/error";
+			}
+
+			// 길이 체크
+			if (partyComment.length() >= 30 || partyName.length() >= 20)
+			{
+				reModel.addAttribute("errorMsg", "파티 제약 조건을 위반했습니다.");
+				return "redirect:/err/error";
+			}
+			
+			party.setPartyName(partyName);
+			party.setPartyComment(partyComment);
+			party.setGenderId(genderId);
+			
+			service.partyUpdate(party);
+			
+			return "redirect:/party/board/" + party.getPartyId();
+			
+		} 
+		catch (Exception e)
+		{
+			log.info("partyUpdate : ",e);
+		}
+		
+		reModel.addAttribute("errorMsg", "서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+		return "redirect:/err/error";
+	}
+	
+	
 	/*
 	 * 파티 해산 메소드 해산 이후 파티 리스트로 이동
 	 */
@@ -763,7 +917,7 @@ public class Party
 			// 로그인 검사
 			if(user == null) {throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);}
 			
-			System.out.println("userId : " + user.getUserId() + " / partyId : " + partyId );
+			//System.out.println("userId : " + user.getUserId() + " / partyId : " + partyId );
 			
 			PartyDTO party = service.getPartyById(partyId);
 			// 파티 검사
@@ -997,6 +1151,17 @@ public class Party
 				{
 					// 바꿔야함
 					throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+				}
+			}
+			
+			ThemeSlotDTO slot = service.getThemeSlotById(party.getSlotId());
+			
+			// 1 성인 / 0 전체
+			if(slot.getAdult() > 0)
+			{
+				if(service.getUserAge(apply.getUserId()) < 19)
+				{
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 				}
 			}
 			

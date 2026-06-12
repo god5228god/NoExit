@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.noexit.app.mapper.ThemeMapper;
+import com.noexit.app.model.SearchFilterDTO;
 import com.noexit.app.model.ThemeDTO;
 import com.noexit.app.model.ThemeReviewDTO;
 import com.noexit.app.model.ThemeSlotDTO;
@@ -44,7 +45,8 @@ public class Theme
 	@GetMapping("list")
 	public String themeListPage(@RequestParam(name="schType", defaultValue = "cafeName") String schType
 						  , @RequestParam(name="kwd", defaultValue = "") String kwd
-						  , Model model)
+						  , Model model
+						  , SearchFilterDTO filter)
 	{
 		/*
 		 * 유효성 검사 목록
@@ -58,6 +60,19 @@ public class Theme
 			model.addAttribute("kwd", kwd);
 		}
 
+		if(filter.getMinPrice() != null)
+			model.addAttribute("minPrice", filter.getMinPrice());
+		if(filter.getMaxPrice() != null)
+			model.addAttribute("maxPrice", filter.getMaxPrice());
+		if(filter.getMinLevel() != null)
+			model.addAttribute("minLevel", filter.getMinLevel());
+		if(filter.getMaxLevel() != null)
+			model.addAttribute("maxLevel", filter.getMaxLevel());
+		if(filter.getMinHorror() != null)
+			model.addAttribute("minHorror", filter.getMinHorror());
+		if(filter.getMaxHorror() != null)
+			model.addAttribute("maxHorror", filter.getMaxHorror());
+		
 		return "theme/themelist";
 	}
 
@@ -74,7 +89,8 @@ public class Theme
 	@PostMapping("list")
 	public List<ThemeDTO> themeListData(@RequestParam(name="schType", defaultValue = "C.CAFE_NAME") String schType
 						  , @RequestParam(name="kwd", defaultValue = "") String kwd
-						  , @RequestParam(name="lastId", defaultValue = "0") long lastId)
+						  , @RequestParam(name="lastId", defaultValue = "0") long lastId
+						  , SearchFilterDTO filter)
 	{
 		/*
 		 * 유효성 검사 목록
@@ -110,7 +126,7 @@ public class Theme
 				map.put("schType", schType);
 			}
 			
-			List<ThemeDTO> list = themeService.getThemeList(map);
+			List<ThemeDTO> list = themeService.getThemeList(map,filter);
 			
 			return list;
 		} 

@@ -5,12 +5,14 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.noexit.app.model.Cafe;
 import com.noexit.app.model.MyPartyDTO;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
 import com.noexit.app.model.PartyCommentDeleteDTO;
 import com.noexit.app.model.PartyCrewDTO;
 import com.noexit.app.model.PartyDTO;
+import com.noexit.app.model.ThemeDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 
 @Mapper
@@ -45,8 +47,13 @@ public interface PartyMapper
 	int rejectApply(long applyId);
 	PartyApplyDTO getPartyApplyById(long applyId);
 	int isSameGender(Map<String, Object> map);
+	Integer getUserAge(long userId);
 	
 	List<MyPartyDTO> getMyPartyApplyList(long userId);
 	List<MyPartyDTO> getMyPartyList(long userId);
 	List<MyPartyDTO> getMyPartyKickList(long userId);
+	
+	List<Cafe> getCafeList();
+	List<ThemeDTO> getThemeList(long cafeId);
+	List<ThemeSlotDTO> getSlotList(long themeId);
 }

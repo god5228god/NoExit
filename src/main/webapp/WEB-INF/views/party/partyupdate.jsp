@@ -74,9 +74,11 @@
 
 <c:set var="path" value="${pageContext.request.contextPath }"></c:set>
 
+<script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+
 <script type="text/javascript">
 
-	/* function partyWrite()
+	 function partyWrite()
 	{
 		const f = document.writeForm;
 
@@ -98,7 +100,7 @@
 			return;
 		}
 
-		f.action = '${path}/party/write';
+		f.action = '${path}/party/update/' + ${party.partyId};
 		f.submit();
 	}
 
@@ -106,12 +108,82 @@
 	{
 		let mode = '${mode}';
 
-		if(mode == 'write')
+		if(mode == 'update')
 		{
-			window.location.href = '${path}/theme/info/${dto.themeId}'
+			window.location.href = '${path}/party/board/${party.partyId}'
 		}
-	} */
-
+	} 
+	
+	function getThemeList(cafeId)
+	{
+		$.ajax(
+		{
+			"type":"POST"
+			, "url":"${path}/party/theme/" + cafeId
+			, "dataType":"json"
+			, "success":function(data)
+			{
+				themeListInsert(data);
+			}
+			,"error":function(e)
+			{
+				alert("데이터 불러오기 실패");
+				console.log(e.responseText);
+			}
+		});
+	}
+	
+	function themeListInsert(data)
+	{
+		let themeList = document.querySelector("[name='themeName']");
+		// 초기화해야함
+		
+		data.forEach(function(item)
+		{
+			themeList.append(createTheme(item));
+		});
+	}
+	
+	function createTheme(item)
+	{
+		return "<option value=" + item.themeId + ">" + item.themeName + "</option>";
+	}
+	
+	function getSlotList(themeId)
+	{
+		$.ajax(
+		{
+			"type":"POST"
+			, "url":"${path}/party/slot/" + themeId
+			, "dataType":"json"
+			, "success":function(data)
+			{
+				slotListInsert(data);
+			}
+			, "error":function(e)
+			{
+				alert("데이터 불러오기 실패");
+				console.log(e.responseText);
+			}
+		});
+	}
+	
+	function slotListInsert(data)
+	{
+		let slotList = document.querySelector("[name='dateTime']");
+		// 초기화해야함
+		
+		data.forEach(function(item)
+		{
+			slotList.append(createSlot(item));	
+		});
+	}
+	
+	function createSlot(item)
+	{
+		return "<option value=" + item.soltId + ">" + item.resDate + "</option>";
+	}
+	
 </script>
 
 </head>
@@ -130,10 +202,33 @@
 
 					<!-- 테마 정보 -->
 					<div class="theme-info-wrap content-box-yellow">
-						<div class="info-row"><span>카페명</span><span>${dto.cafeName }</span></div>
-						<div class="info-row"><span>테마명</span><span>${dto.themeName }</span></div>
-						<div class="info-row"><span>날짜</span><span>${dto.resDate }</span></div>
-						<div class="info-row"><span>시간</span><span>${dto.resTime }</span></div>
+						<%-- <div class="info-row"><span>카페명</span><span>${dto.cafeName }</span></div> --%>
+						<div class="info-row"><span>카페명</span>
+							<select name="cafeName">
+								<c:forEach var="cafe" items="${cafeList }">
+									<option value="${cafe.cafeId }">${cafe.cafeName }</option>
+								</c:forEach>
+							</select>
+						</div>
+						
+						<div class="info-row"><span>테마명</span>
+							<select name="themeName">
+								<option value="themeCode">테마명1</option>
+								<option value="themeCode">테마명1</option>
+								<option value="themeCode">테마명1</option>
+								<option value="themeCode">테마명1</option>
+							</select>
+						</div>
+						
+						<div class="info-row"><span>일시</span>
+							<select name="dateTime">
+								<option value="slotId">날짜/시간</option>
+								<option value="slotId">날짜/시간</option>
+								<option value="slotId">날짜/시간</option>
+								<option value="slotId">날짜/시간</option>
+							</select>
+						</div>
+						
 						<div class="info-row"><span>인원수</span><span>${dto.minPlayers }명 ~ ${dto.maxPlayers }명</span></div>
 						<div class="info-row"><span>가격</span><span><fmt:formatNumber value="${dto.price }" pattern="#,###"/>원</span></div>
 					</div>
@@ -146,7 +241,7 @@
 							<input type="text" class="form-control" name="partyName" value="${party.partyName }" maxlength="20" placeholder="파티명을 입력하세요">
 
 							<label class="gender-check">
-								<input type="checkbox" name="genderId" value="1" ${party.genderId == 1 'checked' : '' }}>
+								<input type="checkbox" name="genderId" value="1" ${party.genderId == 1 ? 'checked' : '' }>
 								동성만 모집
 							</label>
 

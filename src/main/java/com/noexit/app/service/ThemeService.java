@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.noexit.app.model.Cafe;
+import com.noexit.app.model.SearchFilterDTO;
 import com.noexit.app.model.ThemeDTO;
 import com.noexit.app.model.ThemeReviewDTO;
 import com.noexit.app.model.ThemeSlotDTO;
@@ -40,7 +41,7 @@ public interface ThemeService
 	 */
 	
 	ThemeDTO getThemeInfoById(long themeId);
-	List<ThemeDTO> getThemeList(Map<String, Object> map);
+	List<ThemeDTO> getThemeList(Map<String, Object> map,SearchFilterDTO filter);
 	Map<String,List<ThemeSlotDTO>> getThemeSlot(long themeId);
 	List<ThemeReviewDTO> getThemeReview(long themeId);
 	ThemeReviewDTO getTotalReview(long themeId);

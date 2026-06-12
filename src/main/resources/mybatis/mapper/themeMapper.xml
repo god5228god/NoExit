@@ -94,6 +94,32 @@
  		]]>		 		
  	</sql>
  	
+ 	<sql id="where-filter">
+ 		<if test="minPrice != null">
+ 			AND A.PRICE &gt;= #{minPrice}
+ 		</if>
+ 		
+ 		<if test="maxPrice != null">
+ 			AND A.PRICE &lt;= #{maxPrice}
+ 		</if>
+ 		
+ 		<if test="minLevel != null">
+ 			AND A.DIFFICULTY &gt;= #{minLevel}
+ 		</if>
+	
+		<if test="maxLevel != null">
+			AND A.DIFFICULTY &lt;= #{maxLevel}
+		</if>	
+	 		
+	 	<if test="minHorror != null">
+	 		AND A.HORROR_GRADE &gt;= #{minHorror}
+	 	</if>
+	 		
+	 	<if test="maxHorror != null">
+	 		AND A.HORROR_GRADE &lt;= #{maxHorror}
+	 	</if>
+ 	</sql>
+ 	
  	
  	<!-- 테마 정보 가져오기 -->
  	<select id="getThemeInfoById" parameterType="long" resultType="com.noexit.app.model.ThemeDTO">
@@ -129,8 +155,11 @@
 	 		<if test="lastId != 0">
 	 			AND A.ROOM_ID &lt; #{lastId}
 	 		</if>
+	 		
+	 		<include refid="where-filter"></include>
+	 		
  		</where>
- 		ORDER BY A.ROOM_ID	DESC
+ 		ORDER BY A.ROOM_ID DESC
  		FETCH FIRST 4 ROWS ONLY
  	</select>
 

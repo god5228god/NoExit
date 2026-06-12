@@ -1,6 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -128,6 +128,47 @@
 	color: var(--ne-red);
 }
 
+.main-body {
+		display: flex;                		
+		width: 100%;
+		box-sizing: border-box;
+		padding-left: 2rem;
+		padding-right: 2rem;
+		gap: 1.5rem;
+	}
+
+	.main-content {
+		flex-grow: 1;
+		min-width: 0;
+	}
+	
+	.right-sidebar {
+		width: 340px;                    
+		flex-shrink: 0;                  
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.record-item-body {
+		display: flex;
+		gap: 1.5rem;
+		align-items: center;
+	}
+	
+	.clickable-card {
+		cursor: pointer;
+		transition: transform 0.2s, box-shadow 0.2s;
+	}
+	.clickable-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+	}
+	
+	.ne-sc-title {
+		display: flex;
+		justify-content: space-between;
+	}
+
 </style>
 
 <c:set var="path" value="${pageContext.request.contextPath }" />
@@ -151,116 +192,126 @@
 
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-	<main class="ne-main-content ne-body-offset">
-		<div class="ne-container">
-			<div class="container">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-				<div class="header">
-					<span class="title">파티 정보</span>
+<div class="main-body ne-body-offset">
+	
+	<%@ include file="/WEB-INF/views/common/leftSideBar.jsp" %>
+
+	<div class="main-content">
+	
+		<div class="ne-sc">
+			<main class="ne-main-content ne-body-offset">
+				<div class="ne-container">
+					<div class="container">
+
+						<div class="body">
+		
+							<div class="party-apply ne-sc">
+								<div class="panel-title">파티 신청 현황</div>
+		
+								<div class="apply-list">
+		
+									<c:forEach var="apply" items="${myPartyApplyList }">
+								
+									<div class="apply-item">
+										<div class="apply-info">
+											<span>${apply.partyName }</span>
+											<span>${apply.themeName }</span>
+											<span>${apply.resDate }</span>
+											<span>${apply.resTime }</span>
+										</div>
+										<div class="apply-status">
+											<button type="button" class="action-btn danger" value="${apply.applyId }" onclick="applyCancel(this)">취소</button>
+										</div>
+									</div> 
+									
+									</c:forEach>
+								</div>
+							</div>
+		
+							<div class="current-party ne-sc">
+								<div class="panel-title">현재 파티</div>
+		
+								<div class="current-party-list">
+									<c:forEach var="party" items="${myPartyList }">
+										<c:if test="${party.partyStatus != 'close' }">
+											<div class="current-item">
+												<div class="current-info">
+													<span>${party.partyName }</span>
+													<span>${party.themeName }</span>
+													<span>${party.resDate }</span>
+													<span>${party.resTime }</span>
+												</div>
+												<div class="current-btn">
+													<button type="button" class="action-btn" value="${party.partyId }" onclick="onBoard(this)">보드</button>
+												</div>
+											</div>
+										</c:if>
+									</c:forEach>
+								</div>
+							</div>
+		
+							<!-- 아래 줄: 비활성 -->
+							<div class="end-party ne-sc">
+								<div class="panel-title">
+									종료된 파티
+									<span class="ne-st ne-st-sm ne-st-gray">완료</span>
+								</div>
+		
+								<div class="end-party-list">
+									<c:forEach var="party" items="${myPartyList }">
+										<c:if test="${party.partyStatus == 'close' }">
+											<div class="end-item">
+												<div class="end-info">
+													<span>${party.partyName }</span>
+													<span>${party.themeName }</span>
+													<span>${party.resDate }</span>
+													<span>${party.resTime }</span>
+												</div>
+											</div>
+										</c:if>
+									</c:forEach>
+								</div>
+							</div>
+		
+							<div class="kick-party ne-sc">
+								<div class="panel-title">
+									강퇴된 파티
+									<span class="ne-st ne-st-sm ne-st-red">강퇴</span>
+								</div>
+								<div class="kick-party-list">
+									<c:forEach var="party" items="${myPartyKickList }">
+										<div class="kick-item">
+											<div class="kick-info">
+												<span>${party.partyName }</span>
+												<span>${party.themeName }</span>
+												<span>${party.resDate }</span>
+												<span>${party.resTime }</span>
+											</div>
+											<div class="kick-info">
+												<span>${party.kickDate }</span>
+												<span>${party.kickTime }</span>
+											</div>
+										</div>
+									</c:forEach>
+								</div>
+							</div>
+		
+						</div>
+		
+					</div>
 				</div>
-
-				<div class="body">
-
-					<!-- 위 줄: 활성 -->
-					<div class="party-apply ne-sc">
-						<div class="panel-title">파티 신청 현황</div>
-
-						<div class="apply-list">
-
-							<c:forEach var="apply" items="${myPartyApplyList }">
-						
-							<div class="apply-item">
-								<div class="apply-info">
-									<span>${apply.partyName }</span>
-									<span>${apply.themeName }</span>
-									<span>${apply.resDate }</span>
-									<span>${apply.resTime }</span>
-								</div>
-								<div class="apply-status">
-									<button type="button" class="action-btn danger" value="${apply.applyId }" onclick="applyCancel(this)">취소</button>
-								</div>
-							</div> 
-							
-							</c:forEach>
-						</div>
-					</div>
-
-					<div class="current-party ne-sc">
-						<div class="panel-title">현재 파티</div>
-
-						<div class="current-party-list">
-							<c:forEach var="party" items="${myPartyList }">
-								<c:if test="${party.partyStatus != 'close' }">
-									<div class="current-item">
-										<div class="current-info">
-											<span>${party.partyName }</span>
-											<span>${party.themeName }</span>
-											<span>${party.resDate }</span>
-											<span>${party.resTime }</span>
-										</div>
-										<div class="current-btn">
-											<button type="button" class="action-btn" value="${party.partyId }" onclick="onBoard(this)">보드</button>
-										</div>
-									</div>
-								</c:if>
-							</c:forEach>
-						</div>
-					</div>
-
-					<!-- 아래 줄: 비활성 -->
-					<div class="end-party ne-sc">
-						<div class="panel-title">
-							종료된 파티
-							<span class="ne-st ne-st-sm ne-st-gray">완료</span>
-						</div>
-
-						<div class="end-party-list">
-							<c:forEach var="party" items="${myPartyList }">
-								<c:if test="${party.partyStatus == 'close' }">
-									<div class="end-item">
-										<div class="end-info">
-											<span>${party.partyName }</span>
-											<span>${party.themeName }</span>
-											<span>${party.resDate }</span>
-											<span>${party.resTime }</span>
-										</div>
-									</div>
-								</c:if>
-							</c:forEach>
-						</div>
-					</div>
-
-					<div class="kick-party ne-sc">
-						<div class="panel-title">
-							강퇴된 파티
-							<span class="ne-st ne-st-sm ne-st-red">강퇴</span>
-						</div>
-						<div class="kick-party-list">
-							<c:forEach var="party" items="${myPartyKickList }">
-								<div class="kick-item">
-									<div class="kick-info">
-										<span>${party.partyName }</span>
-										<span>${party.themeName }</span>
-										<span>${party.resDate }</span>
-										<span>${party.resTime }</span>
-									</div>
-									<div class="kick-info">
-										<span>${party.kickDate }</span>
-										<span>${party.kickTime }</span>
-									</div>
-								</div>
-							</c:forEach>
-						</div>
-					</div>
-
-				</div>
-
-			</div>
+			</main>
 		</div>
-	</main>
+	</div>
 
-	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+<%@ include file="/WEB-INF/views/common/rightSideBar.jsp" %>
+
+</div>
+
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+
 </body>
 </html>

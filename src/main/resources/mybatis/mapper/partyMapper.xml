@@ -37,13 +37,33 @@
  		]]>		 		
  	</sql>
 
+	<sql id="where-filter">
+		
+		<if test="minDate != null and minDate != ''">
+			AND resDate &gt;= #{minDate}
+		</if>
+		
+		<if test="maxDate != null and maxDate != ''">
+			AND resDate &lt;= #{maxDate}
+		</if>
+		
+		<if test="minTime != null and minTime != ''">
+			AND resTime &gt; #{minTime}
+		</if>
+		
+		<if test="maxTime != null and maxTime != ''">
+			AND resTime &lt; #{maxTime}
+		</if>	
+		
+	</sql>
+
 	<select id="getPartyList" parameterType="map" resultType="com.noexit.app.model.PartyDTO">
 	
-		SELECT partyId, themeImg, themeName, themeDate, themeTime, partyName, avgAge, avgTemp, memberCount, status
+		SELECT partyId, themeImg, themeName, resDate, resTime, partyName, avgAge, avgTemp, memberCount, status
 		FROM
 		(
 			SELECT A.PARTY_ID AS partyId ,D.ROOM_IMG AS themeImg, D.ROOM_NAME AS themeName
-			, TO_CHAR(C.OPEN_AT,'YYYY-MM-DD') AS themeDate, TO_CHAR(C.OPEN_AT,'HH24:MI') AS themeTime
+			, TO_CHAR(C.OPEN_AT,'YYYY-MM-DD') AS resDate, TO_CHAR(C.OPEN_AT,'HH24:MI') AS resTime
 			, A.PARTY_NAME AS partyName, E.AGE AS avgAge, E.TEMP AS avgTemp, E.COUNT AS memberCount
 			, FN_GET_PARTY_CONDITION(A.PARTY_ID) AS STATUS
 			FROM PARTY A
@@ -60,6 +80,7 @@
 			    GROUP BY PARTY_ID
 			) E
 			ON A.PARTY_ID = E.PARTY_ID
+			WHERE C.OPEN_AT > SYSDATE + 1
 		) T
 		
 		<where>
@@ -68,11 +89,13 @@
 				<include refid="where-list"></include>
 			</if>
 			
-			AND themeDate > SYSDATE + 1 AND STATUS = 'open'
+			AND STATUS = 'open'
 			
 			<if test="lastId != 0">
 				AND partyId &lt; #{lastId}
 			</if>
+			
+			<include refid="where-filter"></include>
 			
 		</where>
 		
@@ -85,7 +108,7 @@
 	
 		SELECT A.PARTY_ID AS partyId, A.PARTY_NAME AS partyName , E.CAFE_NAME AS cafeName, D.ROOM_NAME AS themeName
 		, TO_CHAR(C.OPEN_AT,'YYYY-MM-DD') AS resDate
-		, TO_CHAR(C.OPEN_AT,'HH24:MI') AS resTime
+		, TO_CHAR(C.OPEN_AT,'HH24:MI') AS resTime, B.RES_OPEN_ID AS slotId
 		, D.MIN_PLAYERS AS minPlayers, D.MAX_PLAYERS AS maxPlayers
 		, D.PRICE AS Price, FN_RESERVATION_CHECK(C.RES_OPEN_ID) AS slotStatus
 		, A.GENDER_ID AS genderId, A.USER_ID AS userID
@@ -125,7 +148,7 @@
 	<select id="getThemeSlotById" parameterType="long" resultType="com.noexit.app.model.ThemeSlotDTO">
 		
 		SELECT A.RES_OPEN_ID AS slotId, C.CAFE_NAME AS cafeName, B.ROOM_NAME AS themeName, B.ROOM_ID AS themeId
-		, TO_CHAR(A.OPEN_AT,'YYYY-MM-DD') AS resDate, TO_CHAR(A.OPEN_AT,'HH24:MI') AS resTime
+		, TO_CHAR(A.OPEN_AT,'YYYY-MM-DD') AS resDate, TO_CHAR(A.OPEN_AT,'HH24:MI') AS resTime, B.IS_ADULT AS adult
 		, B.MIN_PLAYERS AS minPlayers, B.MAX_PLAYERS AS maxPlayers, B.PRICE AS price, FN_RESERVATION_CHECK(A.RES_OPEN_ID) AS status
 		FROM RES_OPEN A
 		JOIN ROOM B
@@ -156,7 +179,7 @@
 	<update id="partyUpdate" parameterType="com.noexit.app.model.PartyDTO">
 		
 		UPDATE PARTY
-		SET PARTY_NAME = #{partyName}, MESSAGE = #{partyComment};
+		SET PARTY_NAME = #{partyName}, MESSAGE = #{partyComment}, GENDER_ID = #{genderId}
 		WHERE PARTY_ID = #{partyId}
 		
 	</update>
@@ -330,6 +353,13 @@
 		
 	</select>
 
+	<select id="getUserAge" parameterType="Long" resultType="Integer">
+				
+		SELECT FN_GET_USER_AGE(BIRTHDATE)
+		FROM USER_INFO
+		WHERE USER_ID = #{userId}
+		
+	</select>
 	
 	<select id="getMyPartyApplyList" parameterType="Long" resultType="com.noexit.app.model.MyPartyDTO">
 	
@@ -399,6 +429,45 @@
 		ON F.ROOM_ID = G.ROOM_ID
 		WHERE C.USER_ID = #{userId} AND A.CREATED_AT > SYSDATE - 7
 		ORDER BY A.CREATED_AT DESC
+		
+	</select>
+	
+	<select id="getCafeList" resultType="com.noexit.app.model.Cafe">
+		
+		SELECT CAFE_ID AS cafeId, CAFE_NAME AS cafeName
+		FROM CAFE A
+		WHERE NOT EXISTS
+		(
+		    SELECT 1
+		    FROM CAFE_DROP B
+		    WHERE A.CAFE_ID = B.CAFE_ID
+		)
+		
+	</select>
+	
+	<select id="getThemeList" parameterType="Long" resultType="com.noexit.app.model.ThemeDTO">
+	
+		SELECT A.ROOM_ID AS themeId , A.ROOM_NAME AS themeName
+		FROM ROOM A
+		WHERE A.CAFE_ID = #{cafeId} AND NOT EXISTS
+		(  
+		    SELECT 1
+		    FROM ROOM_DROP B
+		    WHERE A.ROOM_ID = B.ROOM_ID
+		)
+		
+	</select>
+	
+	<select id="getSlotList" parameterType="Long" resultType="com.noexit.app.model.ThemeSlotDTO">
+		
+		SELECT T.RES_OPEN_ID AS AS slotId, TO_CHAR(T.OPEN_AT,'YYYY-MM-DD HH24:MI') AS resDate
+		FROM 
+		(
+		    SELECT RES_OPEN_ID, OPEN_AT, FN_RESERVATION_CHECK(RES_OPEN_ID) AS STATUS
+		    FROM RES_OPEN A
+		    WHERE ROOM_ID = #{themeId} AND OPEN_AT > SYSDATE + 1
+		) T
+		WHERE T.STATUS = 1
 		
 	</select>
 	

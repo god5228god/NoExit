@@ -184,12 +184,12 @@
 	{
 		const f = document.searchForm;
 
-		if(!f.kwd.value.trim())
+	/* 	if(!f.kwd.value.trim())
 		{
 			alert("키워드를 입력하세요");
 			f.kwd.focus();
 			return;
-		}
+		} */
 
 		f.action = '${path}/party/list';
 
@@ -204,7 +204,11 @@
 			{
 				kwd: kwd,
 				schType: schType,
-				lastId: lastId
+				lastId: lastId,
+				minDate: minDate,
+				maxDate: maxDate,
+				minTime: minTime,
+				maxTime: maxTime
 			}).toString();
 
 			$.ajax(
@@ -252,8 +256,8 @@
 			 + "</div>"
 			 + "<div class='party-info'>"
 			 + getItem("테마명",item.themeName)
-			 + getItem("날짜",item.themeDate)
-			 + getItem("시간",item.themeTime)
+			 + getItem("날짜",item.resDate)
+			 + getItem("시간",item.resTime)
 			 + getItem("파티명",item.partyName)
 			 + getItem("평균 매너온도",'🌡️ ' + item.avgTemp)
 			 + getItem("평균 나이",item.avgAge + '세')
@@ -285,7 +289,7 @@
 				<div class="search-wrap">
 
 					<div class="search-form ne-sc">
-						<form action="" method="get" name="searchForm">
+						<form action="" method="get" name="searchForm" id="searchForm">
 
 							<select name="schType" class="form-select">
 								<option value="themeName" ${schType == 'themeName' ? 'selected' : '' }>테마명</option>
@@ -305,16 +309,16 @@
 
 						<div class="filter-item">
 							<span class="filter-label">날짜</span>
-							<input type="text" name="minDate" placeholder="최소">
+							<input type="date" name="minDate" value="${minDate }" placeholder="20010101" form="searchForm">
 							<span class="filter-tilde">~</span>
-							<input type="text" name="maxDate" placeholder="최대">
+							<input type="date" name="maxDate" value="${maxDate }" placeholder="20010101" form="searchForm">
 						</div>
 
 						<div class="filter-item">
 							<span class="filter-label">시간</span>
-							<input type="text" name="minTime" placeholder="최소">
+							<input type="time" name="minTime" value="${minTime }" placeholder="1000" form="searchForm">
 							<span class="filter-tilde">~</span>
-							<input type="text" name="maxTime" placeholder="최대">
+							<input type="time" name="maxTime" value="${maxTime }" placeholder="1800" form="searchForm">
 						</div>
 
 					</div>

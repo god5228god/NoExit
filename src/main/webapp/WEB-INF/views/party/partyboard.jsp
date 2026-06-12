@@ -808,9 +808,9 @@
 
 	function partyUpdate()
 	{
-		alert("구현 중");
+		//alert("구현 중");
 		// 파티 수정 페이지 이동
-		//window.location.href="${path}/party/update/" + partyId;
+		window.location.href="${path}/party/update/" + partyId;
 	}
 
 	function partyDelete()

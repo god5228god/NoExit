@@ -7,12 +7,15 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.noexit.app.mapper.PartyMapper;
+import com.noexit.app.model.Cafe;
 import com.noexit.app.model.MyPartyDTO;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
 import com.noexit.app.model.PartyCommentDeleteDTO;
 import com.noexit.app.model.PartyCrewDTO;
 import com.noexit.app.model.PartyDTO;
+import com.noexit.app.model.SearchFilterDTO;
+import com.noexit.app.model.ThemeDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -26,12 +29,21 @@ public class PartyServiceImpl implements PartyService
 	private final PartyMapper mapper;
 	
 	@Override
-	public List<PartyDTO> getPartyList(Map<String, Object> map)
+	public List<PartyDTO> getPartyList(Map<String, Object> map,SearchFilterDTO filter)
 	{
 		List<PartyDTO> list = null;
 		
 		try
 		{
+			if(filter.getMinDate() != null)
+				map.put("minDate", filter.getMinDate());
+			if(filter.getMaxDate() != null)
+				map.put("maxDate", filter.getMaxDate());
+			if(filter.getMinTime() != null)
+				map.put("minTime", filter.getMinTime());
+			if(filter.getMaxTime() != null)
+				map.put("maxTime", filter.getMaxTime());
+			
 			list = mapper.getPartyList(map);
 		} 
 		catch (Exception e)
@@ -130,8 +142,18 @@ public class PartyServiceImpl implements PartyService
 	@Override
 	public int partyUpdate(PartyDTO dto)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try
+		{
+			result = mapper.partyUpdate(dto);
+		} 
+		catch (Exception e)
+		{
+			log.info("partyUpdate : ",e);
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -421,6 +443,23 @@ public class PartyServiceImpl implements PartyService
 	}
 	
 	@Override
+	public Integer getUserAge(long userId)
+	{
+		Integer result = null;
+		
+		try
+		{
+			result = mapper.getUserAge(userId);
+		}
+		catch (Exception e)
+		{
+			log.info("getUserId : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
 	public List<MyPartyDTO> getMyPartyApplyList(long userId)
 	{
 		List<MyPartyDTO> result = null;
@@ -472,5 +511,55 @@ public class PartyServiceImpl implements PartyService
 		
 		return result;
 	}
-
+	
+	@Override
+	public List<Cafe> getCafeList()
+	{
+		List<Cafe> result = null;
+		
+		try
+		{
+			result = mapper.getCafeList();
+		} 
+		catch (Exception e)
+		{
+			log.info("getCafeList : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public List<ThemeDTO> getThemeList(long cafeId)
+	{
+		List<ThemeDTO> result = null;
+		
+		try
+		{
+			result = mapper.getThemeList(cafeId);
+		} 
+		catch (Exception e)
+		{
+			log.info("getThemeList : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public List<ThemeSlotDTO> getSlotList(long themeId)
+	{
+		List<ThemeSlotDTO> result = null;
+		
+		try
+		{
+			result = mapper.getSlotList(themeId);
+		}
+		catch (Exception e)
+		{
+			log.info("getSlotList : ",e);
+		}
+		
+		return result;
+	}
 }

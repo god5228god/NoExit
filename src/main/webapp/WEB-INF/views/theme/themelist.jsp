@@ -184,12 +184,12 @@
 	{
 		const f = document.searchForm;
 
-		if(!f.kwd.value.trim())
+		/* if(!f.kwd.value.trim())
 		{
 			alert("키워드를 입력하세요");
 			f.kwd.focus();
 			return;
-		}
+		} */
 
 		f.action = '${path}/theme/list';
 
@@ -204,8 +204,13 @@
 			{
 				kwd: kwd,
 				schType: schType,
-				lastId: lastId
-
+				lastId: lastId,
+				minPrice:minPrice,
+			    maxPrice:maxPrice,
+			    minLevel:minLevel,
+			    maxLevel:maxLevel,
+			    minHorror:minHorror,
+			    maxHorror:maxHorror
 			}).toString();
 
 			$.ajax(
@@ -294,7 +299,7 @@
 				<div class="search-wrap">
 
 					<div class="search-form ne-sc">
-						<form action="" method="get" name="searchForm">
+						<form action="" method="get" name="searchForm" id="searchForm">
 
 							<select name="schType" class="form-select">
 								<option value="C.CAFE_NAME" ${schType == 'C.CAFE_NAME' ? 'selected' : '' }>카페명</option>
@@ -314,23 +319,23 @@
 
 						<div class="filter-item">
 							<span class="filter-label">가격</span>
-							<input type="text" name="minPrice" placeholder="최소">
+							<input type="number" name="minPrice" value="${minPrice }" placeholder="최소" form="searchForm">
 							<span class="filter-tilde">~</span>
-							<input type="text" name="maxPrice" placeholder="최대">
+							<input type="number" name="maxPrice" value="${maxPrice }" placeholder="최대" form="searchForm">
 						</div>
 
 						<div class="filter-item">
 							<span class="filter-label">난이도</span>
-							<input type="text" name="minLevel" placeholder="최소">
+							<input type="number" min="1" max="5" name="minLevel" value="${minLevel }" placeholder="최소" form="searchForm">
 							<span class="filter-tilde">~</span>
-							<input type="text" name="maxLevel" placeholder="최대">
+							<input type="number" min="1" max="5" name="maxLevel" value="${maxLevel }" placeholder="최대" form="searchForm">
 						</div>
 
 						<div class="filter-item">
 							<span class="filter-label">공포</span>
-							<input type="text" name="minHorror" placeholder="최소">
+							<input type="number" min="1" max="5" name="minHorror" value="${minHorror }" placeholder="최소" form="searchForm">
 							<span class="filter-tilde">~</span>
-							<input type="text" name="maxHorror" placeholder="최대">
+							<input type="number" min="1" max="5" name="maxHorror" value="${maxHorror }" placeholder="최대" form="searchForm">
 						</div>
 
 					</div>

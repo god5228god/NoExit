@@ -3,12 +3,15 @@ package com.noexit.app.service;
 import java.util.List;
 import java.util.Map;
 
+import com.noexit.app.model.Cafe;
 import com.noexit.app.model.MyPartyDTO;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
 import com.noexit.app.model.PartyCommentDeleteDTO;
 import com.noexit.app.model.PartyCrewDTO;
 import com.noexit.app.model.PartyDTO;
+import com.noexit.app.model.SearchFilterDTO;
+import com.noexit.app.model.ThemeDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 
 public interface PartyService
@@ -42,7 +45,7 @@ public interface PartyService
 	파티 신청 거절
 	*/
 	
-	List<PartyDTO> getPartyList(Map<String, Object> map);
+	List<PartyDTO> getPartyList(Map<String, Object> map,SearchFilterDTO filter);
 	PartyDTO getPartyById(long partyId);
 	int hasApply(PartyApplyDTO dto);
 	int partyApply(PartyApplyDTO dto);
@@ -71,8 +74,13 @@ public interface PartyService
 	int rejectApply(long applyId);
 	PartyApplyDTO getPartyApplyById(long applyId);
 	int isSameGender(Map<String, Object> map);
+	Integer getUserAge(long userId);
 	
 	List<MyPartyDTO> getMyPartyApplyList(long userId);
 	List<MyPartyDTO> getMyPartyList(long userId);
 	List<MyPartyDTO> getMyPartyKickList(long userId);
+	
+	List<Cafe> getCafeList();
+	List<ThemeDTO> getThemeList(long cafeId);
+	List<ThemeSlotDTO> getSlotList(long themeId);
 }
