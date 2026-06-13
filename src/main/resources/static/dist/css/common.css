@@ -13,8 +13,10 @@
    ───────────────────────────────────────────────────────────────────── */
 :root {
   /* 브랜드 컬러 */
-  --ne-primary:        #fdb400;
-  --ne-primary-dark:   #c8900a;
+/*   --ne-primary:        #fdb400; */
+  --ne-primary:        #f0db54;
+/*   --ne-primary-dark:   #c8900a; */
+  --ne-primary-dark:   #dec316;
   --ne-primary-light:  #fff8e6;
   --ne-primary-mid:    #fef0b0;
 
@@ -55,7 +57,8 @@
   --ne-gray-bg:        #f9fafb;
 
   /* ── Bootstrap CSS 변수 덮어쓰기 ── */
-  --bs-primary:        #fdb400;
+ /*  --bs-primary:        #fdb400; */
+  --bs-primary:        #f0db54;
   --bs-primary-rgb:    253, 180, 0;
   --bs-link-color:     var(--ne-primary-dark);
   --bs-link-hover-color: var(--ne-primary-dark);
@@ -189,7 +192,8 @@ a.no-hover:hover{
 	box-sizing: border-box;
 }
 .paginate span{
-	background-color: #fdb800;
+/* 	background-color: #fdb800; */
+	background-color: #f0db54;
 	color: #fff;
 	font-weight: bold;
 	border: none;
@@ -661,23 +665,7 @@ small, .small   { font-size: .875rem; }  /* 14px */
 .ne-st-dark    { background: var(--ne-text);      color: #ffffff; }
 .ne-st-primary { background: var(--ne-primary-light); color: var(--ne-primary-dark); }
  
-/* ── 상태별 빠른 참조 (한 줄로 쓰는 경우) ── */
-/* 모집중      : ne-st ne-st-green           */
-/* 예약완료    : ne-st ne-st-blue            */
-/* 대기중/미완 : ne-st ne-st-amber           */
-/* 취소됨      : ne-st ne-st-red             */
-/* 강제취소    : ne-st ne-st-danger          */
-/* 종료/비활성 : ne-st ne-st-gray            */
-/* 파티장      : ne-st ne-st-dark            */
-/* 파티원      : ne-st ne-st-primary         */
- 
-/* ──────────────────────
-   크기 조합 예시:
-   <span class="ne-st ne-st-sm ne-st-green">모집중</span>   → 12px
-   <span class="ne-st ne-st-green">모집중</span>            → 14px (기본)
-   <span class="ne-st ne-st-lg ne-st-green">모집중</span>   → 16px
-   ────────────────────── */
- 
+
  
 /* ─────────────────────────────────────────────────────────────────────
    태그 (장르·조건 등) — 뱃지와 별개로 사이즈 보정
@@ -1288,7 +1276,8 @@ small, .small   { font-size: .875rem; }  /* 14px */
 .ne-title{
 		font-size: 16px;
 		font-weight: bold;
-		border-bottom: 2px solid #fdb400;
+	/* 	border-bottom: 2px solid #fdb400; */
+		border-bottom: 2px solid #f0db54;
 		margin-bottom: 10px;
 		padding-bottom: 5px;
 		color: #444;

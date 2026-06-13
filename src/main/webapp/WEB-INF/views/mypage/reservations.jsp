@@ -47,11 +47,11 @@
 			<div class="ne-card resListWrap" style="width: 55%; margin: 0 20px;">
 				<div class="title ne-sc-title">예약현황</div>
 				<div class="tabWrap d-flex">
-					<a href="${pageContext.request.contextPath }/reservations?tab=1&page=1" 
+					<a href="${pageContext.request.contextPath }/mypage/reservations?tab=1&page=1" 
 					class="tab ${tab==1? 'on': '' }">예약 중 <span>${bookedCount }</span></a>
-					<a href="${pageContext.request.contextPath }/reservations?tab=2&page=1" 
+					<a href="${pageContext.request.contextPath }/mypage/reservations?tab=2&page=1" 
 					class="tab ${tab==2? 'on': ''}">플레이 완료 </a>
-					<a href="${pageContext.request.contextPath }/reservations?tab=3&page=1" 
+					<a href="${pageContext.request.contextPath }/mypage/reservations?tab=3&page=1" 
 					class="tab ${tab==3? 'on': ''}">예약 취소 </a>
 				</div>
 				<div class="listWrap">
