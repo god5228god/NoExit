@@ -1342,8 +1342,12 @@ FROM VW_RES_OPEN_BOOKED;
 
 
 
+select *
+from VW_RES_OPEN_unbooked;
 
-
+select *
+from party
+order by 1 desc;
 
 
 

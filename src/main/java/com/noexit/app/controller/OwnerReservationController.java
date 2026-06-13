@@ -37,8 +37,8 @@ public class OwnerReservationController {
 	
 	@GetMapping("/owner/openRes")
 	public String openRes(@RequestParam(name="page", defaultValue="1") int currentPage
-			, @RequestParam(name="schCafe", required=false) Long schCafe
-			, @RequestParam(name="schDate", required=false) String schDate
+			, @RequestParam(required=false) Long schCafe
+			, @RequestParam(required=false) String schDate
 			, HttpSession session
 			, Model model) {
 		
@@ -305,11 +305,8 @@ public class OwnerReservationController {
 	@PostMapping("/owner/resList/detail")
 	@ResponseBody
 	public CafeReservationDTO getDetail(
-			@RequestParam(name="resId") Long resId
-			, HttpSession session){
+			@RequestParam(name="resId") Long resId){
 		
-		User loginUser = (User) session.getAttribute("loginUser");
-		Long userId = loginUser.getUserId();
 		
 		CafeReservationDTO result = new CafeReservationDTO();
 		try {

@@ -32,9 +32,7 @@ public class ReservationController {
 		
 		User loginUser = (User) session.getAttribute("loginUser");
 		Long userId = loginUser.getUserId();
-		//Long userId = 20L;
 		
-		partyId = 16L;
 		
 		try {
 			
@@ -57,9 +55,7 @@ public class ReservationController {
 		
 		User loginUser = (User) session.getAttribute("loginUser");
 		Long userId = loginUser.getUserId();
-		//Long userId = 20L;
 				
-		partyId = 16L;
 		
 		Map<String, Object> result = new HashMap<>();
 		try {

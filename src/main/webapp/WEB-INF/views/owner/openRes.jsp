@@ -118,7 +118,7 @@
 	                    '<td>' + item.roomName + '</td>' +
 	                    '<td>' + item.openDate + '</td>' +
 	                    '<td class="fw-bold">' + item.openTime + '</td>' +
-	                    '<td><button type="button" class="btn ne-btn-deact" onclick="deleteOk('+item.resOpenId+')">슬롯 삭제</button></td>' +
+	                    '<td><button type="button" class="btn ne-btn-deact" onclick="deleteOk('+item.resOpenId+')">삭제</button></td>' +
 	                    '</tr>'
 	                );
 	            });
