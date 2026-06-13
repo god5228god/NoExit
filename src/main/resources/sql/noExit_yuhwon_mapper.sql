@@ -634,25 +634,10 @@ FETCH FIRST 3 ROWS ONLY
 
 
 
-
-
 select *
-from vw_cafe_detail;
+from vw_cafe_room_info;
 
 select *
 from user_account
-where nickname = '행복한러너';
-
-select *
-from room
-order by room_id desc;
-
-select *
-from party_message
-order by 1 desc;
-select *
-from party_apply
-order by 1 desc;
-
-
+where user_id = 4;
 

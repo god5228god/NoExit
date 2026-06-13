@@ -254,17 +254,6 @@
 							            </c:forEach>
 							        </c:otherwise>
 							    </c:choose>
-							
-								<!-- <tr>
-									<td>1</td>
-									<td>지구별</td>
-									<td>어둠의 저택</td>
-									<td style="font-size: 16px;">2026-06-01 14:00</td>
-									<td>
-										<button type="button" class="btn btn-outline-primary">예약 상세</button>
-										 <button type="button" class="btn ne-btn-deact" onclick="deleteOk()">예약취소</button>
-									</td>
-								</tr> -->
 							</tbody>
 						</table>
 						<div id="noRes" class="text-center" style="display: none;">등록된 예약이 없습니다.</div>

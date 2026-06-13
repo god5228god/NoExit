@@ -19,6 +19,9 @@ $(function(){
 			, data: {partyId, partyId}
  			, success: function(res){
  				alert(res.message);
+ 				if(res.success){
+ 					location.href="/mypage/reservation";
+ 				}
  			}
  			 , error: function(){
 		            alert('오류가 발생했습니다.');

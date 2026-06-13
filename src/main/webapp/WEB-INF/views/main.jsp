@@ -9,7 +9,7 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath }/dist/css/main.css" />
 </head>
-<body style="background-color: #fff !important;">
+<body style="background-color: #fff !important;" class="mainPage">
 	<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 	<main class="ne-main-content">
@@ -70,7 +70,7 @@
 									${party.partyName }
 								</div>
 								<div>
-									<span class="ne-tag ne-tag-sm ${party.partyCnt >= party.maxPlayers?'ne-tag-red':'ne-tag-blue' }" style="width: 62px; text-align: center;">
+									<span class="ne-tag ne-tag-sm ${party.partyCnt >= party.maxPlayers?'ne-tag-red':'ne-tag-blue' }" style="width: 72px; text-align: center;">
 										${party.partyCnt >= party.maxPlayers?'모집 마감':'모집중' }
 									</span>
 								</div>

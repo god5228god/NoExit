@@ -2,11 +2,24 @@
    NoExit — 공통 CSS
    Bootstrap 5.x 기반 · 커스텀 디자인 시스템
    
-   사용법 (JSP head):
-   <link rel="stylesheet" href=".../bootstrap.min.css">
-   <link rel="stylesheet" href=".../common.css">   ← Bootstrap 이후에 로드
    ===================================================================== */
 
+
+@import url('https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css');
+
+@font-face {
+    font-family: 'KoreaInstituteOfMachineryAndMaterials';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2212@1.0/KIMM_Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'MangoBoardTtobaks';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoDdobak-B.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
 
 /* ─────────────────────────────────────────────────────────────────────
    1. CSS 변수 (디자인 토큰)
@@ -63,7 +76,9 @@
   --bs-link-color:     var(--ne-primary-dark);
   --bs-link-hover-color: var(--ne-primary-dark);
   --bs-border-radius:  var(--ne-radius-sm);
-  --bs-body-font-family: "Apple SD Gothic Neo", "Malgun Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+ /*  --bs-body-font-family: "Apple SD Gothic Neo", "Malgun Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; */
+/*   --bs-body-font-family: 'Galmuri9', sans-serif; */
+  --bs-body-font-family: 'MangoBoardTtobaks';
   --bs-body-color:     var(--ne-text);
   --bs-body-bg:        var(--ne-bg);
   --bs-border-color:   var(--ne-border-dark);
@@ -299,6 +314,10 @@ hr {
   border-color: var(--ne-border);
   opacity: 1;
 }
+ul{
+	padding: 0;
+	margin: 0;
+}
 
 li{
 	list-style: none;
@@ -329,14 +348,21 @@ small, .small   { font-size: .875rem; }  /* 14px */
 /* ─────────────────────────────────────────────────────────────────────
    4. 레이아웃 — 헤더
    ───────────────────────────────────────────────────────────────────── */
+header{
+	width: 100%;
+	height: 100px;
+	background-color: #fff;
+	box-shadow: 0 1px 12px rgba(0, 0, 0, .05);
+}
+
 .ne-header {
   position: relative;
   top: 0; left: 0; right: 0;
   z-index: 1030;
-  height: 100px;
-  background: #ffffff;
-  border-bottom: 1px solid var(--ne-border);
-  box-shadow: 0 1px 12px rgba(0, 0, 0, .05);
+  width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  /* border-bottom: 1px solid var(--ne-border); */
 }
 
 .ne-header .ne-header-inner {
