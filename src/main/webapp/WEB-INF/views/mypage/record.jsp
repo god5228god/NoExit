@@ -183,7 +183,7 @@
 			list.forEach(item => {
 				const opt = document.createElement('option');
 				opt.value     = item.detailId;
-				opt.innerText = `[${item.cafeName}] ${item.roomName} (${item.playDate})`;
+				opt.innerText = item.cafeName + ' - ' + item.roomName + ' / ' + item.playDate;
 				selectEl.appendChild(opt);
 			});
 			new bootstrap.Modal(document.getElementById('insertRecordModal')).show();
