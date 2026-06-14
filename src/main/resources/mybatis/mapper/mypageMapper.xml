@@ -71,7 +71,7 @@
 	          WHERE AD3.ATTENDANCE_ID = AD1.ATTENDANCE_ID
 	            AND ME.TARGET_ID = AD2.USER_ID
 	      )
-	    ORDER BY RO.OPEN_AT DESC
+	    ORDER BY RO.OPEN_AT DESC, AT.ATTENDANCE_ID ASC, AD2.USER_ID ASC
 	</select>
 
 	<select id="getQuestionList" resultType="String">
