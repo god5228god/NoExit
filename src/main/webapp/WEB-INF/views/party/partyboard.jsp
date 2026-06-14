@@ -271,7 +271,9 @@
 
 	// AJAX 딜레이
 	let delay = 1000;
-
+	
+	let flag = false;
+	
 	$(function()
 	{
 		// 데이터 AJAX 로 바인딩
@@ -585,7 +587,15 @@
 			commentInput.focus();
 			return;
 		}
-
+		
+		if(flag)
+		{
+			alert("잠시 후 다시 시도하세요");
+			return;
+		}
+		
+		flag = true;
+		
 		// alert("댓글 작성");
 		// comment.value = "";
 
@@ -612,6 +622,8 @@
 				{
 					alert("댓글 작성 실패");
 				}
+				
+				flag = false;
 			}
 			, "error":function(e)
 			{
@@ -627,6 +639,8 @@
 	            {
 	                console.log(e.responseText);
 	            }
+			  	
+			  	flag = false;
 			}
 		});
 	}
@@ -640,6 +654,14 @@
 			return;
 		}
 		
+		if(flag)
+		{
+			alert("잠시 후 다시 시도하세요");
+			return;
+		}
+		
+		flag = true;
+		
 		$.ajax(
 		{
 			"type":"POST"
@@ -652,6 +674,8 @@
 					alert("삭제 실패");
 					btn.disabled = false;
 				}
+				
+				flag = false;
 			}
 			, "error":function(e)
 			{
@@ -667,7 +691,8 @@
 	            {
 	            	alert("서버 오류");
 	                console.log(e.responseText);
-	                btn.disabled = false;
+	             	btn.disabled = false;
+				  	flag = false;
 	            }
 			}
 		});
@@ -677,6 +702,14 @@
 	{
 		//alert("레디");
 		// ajax 레디 요청
+		
+		if(flag)
+		{
+			alert("잠시 후 다시 시도하세요");
+			return;
+		}
+		
+		flag = true;
 		
 		btn.disabled = true;
 		
@@ -692,6 +725,7 @@
 					alert("레디 실패");	
 				}
 				
+				flag = false;
 				btn.disabled = false;
 			}
 			,"error":function(e)
@@ -709,6 +743,7 @@
 	            	alert("서버 오류");
 	                console.log(e.responseText);
 	                btn.disabled = false;
+	                flag = false;
 	            }
 			}
 		});
@@ -722,6 +757,14 @@
 			btn.disabled = false;
 			return;
 		}
+		
+		if(flag)
+		{
+			alert("잠시 후 다시 시도하세요");
+			return;
+		}
+		
+		flag = true;
 		
 		//alert("승인");
 		// ajax 승인 요청
@@ -737,7 +780,8 @@
 				{
 					alert("승인 실패");
 					btn.disabled = false;
-				}				
+				}			
+				flag = false;
 			}
 			, "error":function(e)
 			{
@@ -754,6 +798,7 @@
 	            	alert("서버 오류");
 	                console.log(e.responseText);
 	                btn.disabled = false;
+	                flag = false;
 	            }
 			}
 		});
@@ -767,6 +812,13 @@
 			return;
 		}
 		
+		if(flag)
+		{
+			alert("잠시 후 다시 시도하세요");
+			return;
+		}
+		flag = true;
+		
 		$.ajax(
 		{
 			"type":"POST"
@@ -778,7 +830,8 @@
 				{
 					alert("거절 실패");
 					btn.disabled = false;
-				}				
+				}		
+				flag = false;
 			}
 			, "error":function(e)
 			{
@@ -795,6 +848,7 @@
 	            	alert("서버 오류");
 	                console.log(e.responseText);
 	                btn.disabled = false;
+	                flag = false;
 	            }
 			}
 		});
@@ -821,6 +875,12 @@
 		
 		if(confirm("파티를 해산 하시겠습니까?"))
 		{
+			if(flag)
+			{
+				alert("잠시 후 다시 시도하세요");
+				return;
+			}
+			
 			window.location.href="${path}/party/delete/" + partyId;
 		}
 	}
@@ -833,6 +893,14 @@
 			return;
 		}
 		
+		if(flag)
+		{
+			alert("잠시 후 다시 시도하세요");
+			return;
+		}
+		
+		flag = true;
+		
 		$.ajax(
 		{
 			"type":"POST"
@@ -844,7 +912,8 @@
 				{
 					alert("강퇴 실패");
 					btn.disabled = false;
-				}				
+				}			
+				flag = false;
 			}
 			, "error":function(e)
 			{
@@ -861,6 +930,7 @@
 	            	alert("서버 오류");
 	                console.log(e.responseText);
 	                btn.disabled = false;
+	                flag = false;
 	            }
 			}
 		});
@@ -874,6 +944,13 @@
 			return;
 		}
 		
+		if(flag)
+		{
+			alert("잠시 후 다시 시도하세요");
+			return;
+		}
+		flag = true;
+		
 		$.ajax(
 		{
 			"type":"POST"
@@ -885,6 +962,7 @@
 				{
 					btn.disabled = false;
 					alert("탈퇴 실패");
+					flag = fasle;
 				}
 				else
 				{
@@ -906,6 +984,7 @@
 	            	alert("서버 오류");
 	                console.log(e.responseText);
 	                btn.disabled = false;
+	                flag = fasle;
 	            }
 			}
 		});

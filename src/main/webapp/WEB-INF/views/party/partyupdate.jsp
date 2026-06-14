@@ -78,7 +78,35 @@
 
 <script type="text/javascript">
 
-	 function partyWrite()
+	$(function()
+	{
+		$(".info-row").on("change","[name='cafeName']",function()
+		{
+			// alert("확인");
+			getThemeList(this.value);
+		});
+		
+		$(".info-row").on("change","[name='themeName']",function()
+		{
+			getSlotList(this.value);
+		})
+		
+		/* 	
+		$(".info-row").on("change","[name='dateTime']",function()
+		{
+			if(this.length == 0)
+			{
+				//alert("없음");
+				return;
+			}
+			
+			//alert("확인");
+		}) */
+		
+		$("[name='cafeName']").trigger("change");
+	});
+
+	 function partyUpdate()
 	{
 		const f = document.writeForm;
 
@@ -138,15 +166,22 @@
 		let themeList = document.querySelector("[name='themeName']");
 		// 초기화해야함
 		
+		themeList.length = 0;
+		
 		data.forEach(function(item)
 		{
-			themeList.append(createTheme(item));
+			themeList.insertAdjacentHTML("beforeend",createTheme(item));
 		});
+		
+		$("[name='themeName']").trigger("change");
 	}
 	
 	function createTheme(item)
 	{
-		return "<option value=" + item.themeId + ">" + item.themeName + "</option>";
+		if(item.themeId  == ${dto.themeId})
+			return "<option value=" + item.themeId + " style='color:orange;' selected>" + item.themeName + "</option>";
+		else
+			return "<option value=" + item.themeId + ">" + item.themeName + "</option>";
 	}
 	
 	function getSlotList(themeId)
@@ -159,6 +194,7 @@
 			, "success":function(data)
 			{
 				slotListInsert(data);
+				infoInsert(themeId);
 			}
 			, "error":function(e)
 			{
@@ -170,18 +206,51 @@
 	
 	function slotListInsert(data)
 	{
-		let slotList = document.querySelector("[name='dateTime']");
+		let slotList = document.querySelector("[name='slotId']");
 		// 초기화해야함
+		
+		slotList.length = 0;
 		
 		data.forEach(function(item)
 		{
-			slotList.append(createSlot(item));	
+			slotList.insertAdjacentHTML("beforeend",createSlot(item));	
 		});
+		
+		$("[name='dateTime']").trigger("change");
 	}
 	
 	function createSlot(item)
 	{
-		return "<option value=" + item.soltId + ">" + item.resDate + "</option>";
+		if(item.slotId == ${dto.slotId})
+			return "<option value=" + item.slotId + " style='color:orange;' selected>" + item.resDate + "</option>";
+		else
+			return "<option value=" + item.slotId + ">" + item.resDate + "</option>";
+	}
+	
+	function infoInsert(slotId)
+	{
+		let players = document.querySelector("#players");
+		let price = document.querySelector("#price");
+		
+		$.ajax(
+		{
+			"type":"POST"
+			, "url":"${path}/party/time/" + slotId
+			, "dataType":"json"
+			, "success":function(data)
+			{
+				let info = data[0];
+				
+				//console.log(data);
+				players.textContent = info.minPlayers + "명 ~ " + info.maxPlayers + "명";
+				price.textContent = info.price + "원";
+			}
+			, "error":function(e)
+			{
+				alert("서버 오류");
+				console.log(e.responseText);
+			}
+		});
 	}
 	
 </script>
@@ -206,36 +275,40 @@
 						<div class="info-row"><span>카페명</span>
 							<select name="cafeName">
 								<c:forEach var="cafe" items="${cafeList }">
-									<option value="${cafe.cafeId }">${cafe.cafeName }</option>
+									<option value="${cafe.cafeId }" ${cafe.cafeId == dto.cafeId ? 'selected' : '' }
+									style="${cafe.cafeId == dto.cafeId ? 'color:orange;' : ''}">
+									${cafe.cafeName }</option>
 								</c:forEach>
 							</select>
 						</div>
 						
 						<div class="info-row"><span>테마명</span>
 							<select name="themeName">
+							<!-- 	<option value="themeCode">테마명1</option>
 								<option value="themeCode">테마명1</option>
 								<option value="themeCode">테마명1</option>
-								<option value="themeCode">테마명1</option>
-								<option value="themeCode">테마명1</option>
+								<option value="themeCode">테마명1</option> -->
 							</select>
 						</div>
 						
 						<div class="info-row"><span>일시</span>
-							<select name="dateTime">
+							<select name="slotId" form="writeForm">
+							<!-- 	<option value="slotId">날짜/시간</option>
 								<option value="slotId">날짜/시간</option>
 								<option value="slotId">날짜/시간</option>
-								<option value="slotId">날짜/시간</option>
-								<option value="slotId">날짜/시간</option>
+								<option value="slotId">날짜/시간</option> -->
 							</select>
 						</div>
 						
-						<div class="info-row"><span>인원수</span><span>${dto.minPlayers }명 ~ ${dto.maxPlayers }명</span></div>
-						<div class="info-row"><span>가격</span><span><fmt:formatNumber value="${dto.price }" pattern="#,###"/>원</span></div>
+						<div class="info-row"><span>인원수</span>
+						<span id="players"></span>
+						</div>
+						<div class="info-row"><span>가격</span><span id="price"><fmt:formatNumber value="" pattern="#,###"/>원</span></div>
 					</div>
 
 					<!-- 작성 폼 -->
 					<div class="write-wrap">
-						<form action="" class="write-form" method="post" name="writeForm">
+						<form action="" class="write-form" method="post" name="writeForm" id="writeForm">
 
 							<label class="form-label">파티명 <span class="form-required">*</span></label>
 							<input type="text" class="form-control" name="partyName" value="${party.partyName }" maxlength="20" placeholder="파티명을 입력하세요">
@@ -247,14 +320,13 @@
 
 							<label class="form-label">코멘트 <span class="form-required">*</span></label>
 							<input type="text" class="form-control" value="${party.partyComment }" name="partyComment" maxlength="30" placeholder="파티원에게 전할 내용을 입력하세요">
-
-							<input type="hidden" value="${dto.slotId }" name="slotId">
+				
 						</form>
 					</div>
 
 					<!-- 버튼 -->
 					<div class="write-btn">
-						<button type="button" class="btn btn-primary" onclick="partyWrite()">${mode == 'write' ? '파티 개설' : '파티 수정' }</button>
+						<button type="button" class="btn btn-primary" onclick="partyUpdate()">${mode == 'write' ? '파티 개설' : '파티 수정' }</button>
 						<button type="button" class="btn btn-outline-primary" onclick="cancel()">취소하기</button>
 					</div>
 

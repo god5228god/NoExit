@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import com.noexit.app.common.PaginateUtil;
 import com.noexit.app.model.Cafe;
 import com.noexit.app.model.PartyApplyDTO;
 import com.noexit.app.model.PartyCommentDTO;
@@ -73,6 +73,24 @@ public class Party
 		catch (Exception e)
 		{
 			log.info("getSlotList : ",e);
+		}
+		
+		return result;
+	}
+	
+	@PostMapping("time/{slotId}")
+	@ResponseBody
+	public List<ThemeSlotDTO> getTimeList(@PathVariable(name="slotId") long slotId)
+	{
+		List<ThemeSlotDTO> result = null;
+		
+		try
+		{
+			result = service.getTimeList(slotId);
+		}
+		catch (Exception e)
+		{
+			log.info("getTimeList : ",e);
 		}
 		
 		return result;
@@ -645,6 +663,7 @@ public class Party
 			,@RequestParam(name="partyComment") String partyComment
 			,@RequestParam(name="partyName") String partyName
 			,@RequestParam(name="genderId", defaultValue = "0") int genderId
+			,@RequestParam(name="slotId") long slotId
 			, RedirectAttributes reModel, HttpSession session)
 	{
 		try
@@ -700,6 +719,16 @@ public class Party
 			party.setGenderId(genderId);
 			
 			service.partyUpdate(party);
+			
+			if(party.getSlotId() != slotId)
+			{
+				Map<String, Object> updateMap = new HashMap<>();
+				updateMap.put("partyId", party.getPartyId());
+				updateMap.put("slotId", slotId);
+				int result = service.partyRoomUpdate(updateMap);
+				
+				log.info("result : " + result);
+			}
 			
 			return "redirect:/party/board/" + party.getPartyId();
 			

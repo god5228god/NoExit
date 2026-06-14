@@ -147,7 +147,7 @@
 	
 	<select id="getThemeSlotById" parameterType="long" resultType="com.noexit.app.model.ThemeSlotDTO">
 		
-		SELECT A.RES_OPEN_ID AS slotId, C.CAFE_NAME AS cafeName, B.ROOM_NAME AS themeName, B.ROOM_ID AS themeId
+		SELECT A.RES_OPEN_ID AS slotId,C.CAFE_ID AS cafeId, C.CAFE_NAME AS cafeName, B.ROOM_NAME AS themeName, B.ROOM_ID AS themeId
 		, TO_CHAR(A.OPEN_AT,'YYYY-MM-DD') AS resDate, TO_CHAR(A.OPEN_AT,'HH24:MI') AS resTime, B.IS_ADULT AS adult
 		, B.MIN_PLAYERS AS minPlayers, B.MAX_PLAYERS AS maxPlayers, B.PRICE AS price, FN_RESERVATION_CHECK(A.RES_OPEN_ID) AS status
 		FROM RES_OPEN A
@@ -460,15 +460,33 @@
 	
 	<select id="getSlotList" parameterType="Long" resultType="com.noexit.app.model.ThemeSlotDTO">
 		
-		SELECT T.RES_OPEN_ID AS AS slotId, TO_CHAR(T.OPEN_AT,'YYYY-MM-DD HH24:MI') AS resDate
+		SELECT T.RES_OPEN_ID AS slotId, TO_CHAR(T.OPEN_AT,'YYYY-MM-DD HH24:MI') AS resDate
 		FROM 
 		(
 		    SELECT RES_OPEN_ID, OPEN_AT, FN_RESERVATION_CHECK(RES_OPEN_ID) AS STATUS
-		    FROM RES_OPEN A
+		    FROM RES_OPEN
 		    WHERE ROOM_ID = #{themeId} AND OPEN_AT > SYSDATE + 1
 		) T
 		WHERE T.STATUS = 1
 		
 	</select>
+	
+	<select id="getTimeList" parameterType="Long" resultType="com.noexit.app.model.ThemeSlotDTO">
+		
+		SELECT B.MIN_PLAYERS AS minPlayers, B.MAX_PLAYERS AS maxPlayers, B.PRICE AS price
+		FROM RES_OPEN A
+		JOIN ROOM B
+		ON A.ROOM_ID = B.ROOM_ID
+		WHERE A.RES_OPEN_ID = #{slotId}
+		
+	</select>
+	
+	<update id="partyRoomUpdate" parameterType="map">
+		
+		UPDATE PARTY_ROOM
+		SET RES_OPEN_ID = #{slotId}, CREATED_AT = SYSDATE
+		WHERE PARTY_ID = #{partyId}
+		
+	</update>
 	
 </mapper>
