@@ -185,7 +185,12 @@
 	        REVIEW_COMMENT = #{reviewComment}
 	    WHERE DETAIL_ID = #{detailId}
 	</update>
-
-
+	
+	<delete id="deleteReview" parameterType="long">
+		DELETE
+		FROM REVIEW
+		WHERE REVIEW_ID = #{reviewId}
+	</delete>	
+	
 
 </mapper>

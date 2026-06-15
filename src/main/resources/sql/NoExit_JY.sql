@@ -254,6 +254,19 @@ from room;
 
 SELECT FN_GET_MANNER(
 
+select *
+from record;
+
+
+
+select *
+from review;
+
+UPDATE RECORD
+SET PLAY_TIME = PLAY_TIME * 60;
+
+
+
 
 
 

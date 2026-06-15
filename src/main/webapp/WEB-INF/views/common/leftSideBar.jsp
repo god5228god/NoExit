@@ -113,9 +113,9 @@
 <div class="left-sidebar-wrapper">
 	<nav class="ne-side-nav">
 		<div class="ne-side-profile">
-			<img src="${pageContext.request.contextPath}/dist/images/zazaz.jpg" alt="프로필">
-			<div id="nickName" class="fw-bold mb-2" style="font-size: 20px;">${USER.nickname} </div>
-			<div class="text-muted small">
+
+			<div class="ne-sc-title">
+				마이페이지
 			</div>
 		</div>
 		

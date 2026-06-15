@@ -44,14 +44,23 @@ public class MyPageController {
 	         
 	         if(user == null)
 	         {
-	            return "redirect:/user/login";
+	        	reModel.addAttribute("errorMsg", "로그인 이후 이용가능합니다.");
+	            return "redirect:/err/login";
 	         }
 	         
+	         
 	         long userId = user.getUserId();
+	         
+	         List<MyPage> mutualList = service.getMutualList(userId);
+	         double userManner = service.getUserManner(userId);
+	         
 	         
 	         model.addAttribute("myPartyList", partyService.getMyPartyList(userId));
 	         model.addAttribute("myPartyApplyList", partyService.getMyPartyApplyList(userId));
 	         model.addAttribute("myPartyKickList", partyService.getMyPartyKickList(userId));
+	         model.addAttribute("mutualList" ,mutualList);
+	         model.addAttribute("userManner" ,userManner);
+
 	         
 	         return "mypage/myparty";
 	      }
@@ -116,7 +125,6 @@ public class MyPageController {
 		boolean hasPrev = (page > 1);
 		boolean hasNext = (page < totalPage);
 		//-------------------------------------------------------
-		
 		
 		List<MyPage> mutualList = service.getMutualList(userId);
 		List<String> questionList = service.getQuestionList();
@@ -248,21 +256,44 @@ public class MyPageController {
 		User loginUser = (User) session.getAttribute("loginUser");
 		
 		if (loginUser == null || session.getAttribute("loginUser") == null)
-		{
 			return "redirect:/user/login";
-		}
-		
 		
 			int result= service.insertReview(myPage);
 		
-		
 		// 성공 여부 반환
-		if (result > 0) {
+		if (result > 0) 
 			return "success";
-		} else {
+		 else 
 			return "fail";
-		}
+		
 	}
+	
+	
+	@PostMapping("/mypage/review/delete")
+	@ResponseBody
+	public String deleteReview(@RequestBody MyPage mypage , HttpSession session) {
+		
+		User loginUser = (User) session.getAttribute("loginUser");
+		
+		if (loginUser == null || session.getAttribute("loginUser") == null)
+			return "redirect:/user/login";
+		
+		int result = service.deleteReview(mypage.getReviewId());
+		
+		if (result > 0) 
+			return "success";
+		 else 
+			return "fail";
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 		
 }

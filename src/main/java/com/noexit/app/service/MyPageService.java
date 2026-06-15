@@ -19,6 +19,8 @@ public interface MyPageService {
 	public int getUserRecordCount(Long userId);
 	int updateRecord(MyPage myPage);
 	int insertReview(MyPage myPage);
+	int deleteReview(Long reviewId);
+	
 	
 	
 }

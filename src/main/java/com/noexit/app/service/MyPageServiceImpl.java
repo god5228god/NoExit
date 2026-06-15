@@ -96,4 +96,14 @@ public class MyPageServiceImpl implements MyPageService{
 	}
 	
 	
+	@Override
+	public int deleteReview(Long reviewId) {
+		return mapper.deleteReview(reviewId);
+		
+	}
+	
+	
+	
+	
+	
 }

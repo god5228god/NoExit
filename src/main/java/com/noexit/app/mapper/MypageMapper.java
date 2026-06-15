@@ -22,4 +22,5 @@ public interface MypageMapper {
 	int insertReview(MyPage myPage);
 	int countReview(long detailId);
 	int updateReview(MyPage myPage);
+	int deleteReview(Long reviewId);
 }
