@@ -352,8 +352,9 @@ public class Party
 				return "redirect:/err/error";
 			}
 			
-			if(service.partyInsert(dto) > 0)
-				return "redirect:/party/board/" + dto.getPartyId();
+			service.partyInsert(dto);
+			
+			return "redirect:/party/board/" + dto.getPartyId();
 		} 
 		catch (Exception e)
 		{
@@ -1250,11 +1251,9 @@ public class Party
 			if(user.getUserId() != apply.getUserId()) {throw new ResponseStatusException(HttpStatus.FORBIDDEN);}
 			
 			// 파티 탈퇴 처리
-			if(service.partyOut(applyId) > 0)
-			{
-				map.put("status", true);
-				return map;
-			}
+			service.partyOut(applyId);
+			map.put("status", true);
+			return map;
 		}
 		catch (Exception e)
 		{
