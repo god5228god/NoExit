@@ -186,11 +186,32 @@
 	    WHERE DETAIL_ID = #{detailId}
 	</update>
 	
-	<delete id="deleteReview" parameterType="long">
+	<delete id="deleteReview" parameterType="Long">
 		DELETE
 		FROM REVIEW
 		WHERE REVIEW_ID = #{reviewId}
 	</delete>	
+	
+	<select id="getUserSchedule" parameterType="Long">
+		SELECT 
+	    UA.NICKNAME,
+	    RO.OPEN_AT,
+	    C.ROOM_IMG,
+	    CA.CAFE_NAME,
+	    RM.ROOM_NAME
+		FROM RESERVATION RS
+		JOIN PARTY P ON RS.PARTY_ID = P.PARTY_ID
+		JOIN PARTY_ROOM PR ON P.PARTY_ID = PR.PARTY_ID
+		JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
+		JOIN ROOM RM ON RO.ROOM_ID = RM.ROOM_ID
+		JOIN CAFE CA ON RM.CAFE_ID = CA.CAFE_ID
+		JOIN USER_ACCOUNT UA ON P.USER_ID = UA.USER_ID
+		WHERE UA.USER_ID = #{userId}
+		ORDER BY RO.OPEN_AT DESC
+		
+	</select>
+	
+	
 	
 
 </mapper>

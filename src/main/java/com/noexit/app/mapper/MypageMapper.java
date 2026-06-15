@@ -23,4 +23,5 @@ public interface MypageMapper {
 	int countReview(long detailId);
 	int updateReview(MyPage myPage);
 	int deleteReview(Long reviewId);
+	List<MyPage> getUserSchedule(Long userId);
 }

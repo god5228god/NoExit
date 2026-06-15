@@ -245,19 +245,28 @@ SELECT *
 FROM MUTUAL_EVALUATION;
 
 
+SELECT *
+FROM ROOM;
+
 
 select *
 from common;
 
 select *
-from room;
+from party;
 
 SELECT FN_GET_MANNER(
 
 select *
 from record;
 
+desc user_info
 
+select *
+from user_info
+
+select *
+from cafe;
 
 select *
 from review;
@@ -266,7 +275,8 @@ UPDATE RECORD
 SET PLAY_TIME = PLAY_TIME * 60;
 
 
+DELETE
+FROM RECORD
+WHERE RECORD_ID=70;
 
-
-
-
+COMMIT;

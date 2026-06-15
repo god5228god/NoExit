@@ -115,7 +115,7 @@
 	                    
 	                    // 모달 테스트용 더미 예약 삽입-----------------------------------------------------
 						document.getElementById('md-date').innerText = clickedDate;
-	                    document.getElementById('md-time').innerText = "14:30";   
+	                    document.getElementById('md-time').innerText = "14:30";       // todo
 	                    document.getElementById('md-shop').innerText = "비트방탈출 강남점";    
 	                    document.getElementById('md-theme').innerText = "강남 숨바꼭질";   
 	                    
@@ -127,7 +127,7 @@
 	                });
 	        },
 	        
-	        // css 테스트용 더미 데이터 
+	        // css 테스트용 더미 데이터  todo
 	        events: [
 	            {
 	                start: '2026-06-03T14:30:00',
@@ -198,7 +198,8 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 12px;"></button>
 			</div>
 			
-			<div class="modal-body" style="font-size: 13px;">
+			<div class="modal-body" style="font-size: 13px;">	<!-- 	todo  바인딩 -->
+				<img src="${pageContext.request.contextPath}/dist/images/${record.roomImg}">
 				<div class="mb-2"><strong>날짜 :</strong> <span id="md-date" class="text-muted"></span></div>
 				<div class="mb-2"><strong>시간 :</strong> <span id="md-time" class="badge bg-warning text-dark"></span></div>
 				<div class="mb-2"><strong>매장 :</strong> <span id="md-shop" class="fw-bold"></span></div>

@@ -102,6 +102,13 @@ public class MyPageServiceImpl implements MyPageService{
 		
 	}
 	
+	@Override
+	public List<MyPage> getUserSchedule(Long userId)
+	{
+		return mapper.getUserSchedule(userId);
+		
+	}
+	
 	
 	
 	

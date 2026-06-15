@@ -289,6 +289,40 @@ public class MyPageController {
 	}
 	
 	
+	/*
+	 
+	 @GetMapping("/mypage/record/write")
+	@ResponseBody				// json 객체 반환할때 써야함
+	public List<MyPage> getUnrecordedList(HttpSession session)
+	{
+		User loginUser = (User) session.getAttribute("loginUser");
+		
+		// 비어있는 기록 가져오기
+		List<MyPage> unrecordedList = service.getUnrecordedList(loginUser.getUserId());
+		
+		
+		// JSON 객체로 반환
+		return unrecordedList;			//ResponseBody 써서 가능
+		
+	}
+	 * */
+	
+	
+	
+	@PostMapping("/mypage/reservation")
+	@ResponseBody
+	public List<MyPage> getUserSchedule(HttpSession session)
+	{
+		User loginUser = (User) session.getAttribute("loginUser");
+		
+		List<MyPage> scheduleList = service.getUserSchedule(loginUser.getUserId());
+
+		return scheduleList; 
+	}
+	
+	
+	
+	
 	
 	
 	
