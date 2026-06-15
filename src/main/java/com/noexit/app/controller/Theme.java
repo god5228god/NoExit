@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.noexit.app.mapper.ThemeMapper;
 import com.noexit.app.model.SearchFilterDTO;
 import com.noexit.app.model.ThemeDTO;
 import com.noexit.app.model.ThemeReviewDTO;
