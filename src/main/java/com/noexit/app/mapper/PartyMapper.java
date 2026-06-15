@@ -58,4 +58,5 @@ public interface PartyMapper
 	List<ThemeSlotDTO> getSlotList(long themeId);
 	List<ThemeSlotDTO> getTimeList(long slotId);
 	int partyRoomUpdate(Map<String, Object> map);
+	int hasReservation(Map<String, Object> map);
 }

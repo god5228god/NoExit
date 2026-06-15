@@ -596,4 +596,21 @@ public class PartyServiceImpl implements PartyService
 		
 		return result;
 	}
+	
+	@Override
+	public int hasReservation(Map<String, Object> map)
+	{
+		int result = 0;
+		
+		try
+		{
+			result = mapper.hasReservation(map);
+		} 
+		catch (Exception e)
+		{
+			log.info("hasReservation : ",e);
+		}
+		
+		return result;
+	}
 }

@@ -230,11 +230,19 @@
 					renderList(data);
 
 					lastId = data[data.length-1].themeId;
+					
+					if(data.length != 4)
+						$("#addList").remove();
 				}
 				, "error":function(e)
 				{
-					alert("에러 발생");
-					console.log(e.responseText);
+					if(e.status == 404)
+						alert("테마 목록이 존재하지 않습니다.");
+					else if(e.status == 500)
+						alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요");
+					else
+						alert("에러 발생");
+						console.log(e.responseText);
 				}
 			});
 		});
@@ -337,7 +345,11 @@
 							<span class="filter-tilde">~</span>
 							<input type="number" min="1" max="5" name="maxHorror" value="${maxHorror }" placeholder="최대" form="searchForm">
 						</div>
-
+						
+						<div>
+							<button type="button" onclick="search()" class="btn btn-primary" style="width: 100%;">적용</button>
+						</div>
+						
 					</div>
 
 				</div>

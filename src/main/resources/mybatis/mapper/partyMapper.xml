@@ -100,7 +100,7 @@
 		</where>
 		
 		ORDER BY partyId DESC
-		FETCH FIRST 2 ROWS ONLY
+		FETCH FIRST 4 ROWS ONLY
 		
 	</select>
 	
@@ -147,14 +147,14 @@
 	
 	<select id="getThemeSlotById" parameterType="long" resultType="com.noexit.app.model.ThemeSlotDTO">
 		
-		SELECT A.RES_OPEN_ID AS slotId,C.CAFE_ID AS cafeId, C.CAFE_NAME AS cafeName, B.ROOM_NAME AS themeName, B.ROOM_ID AS themeId
-		, TO_CHAR(A.OPEN_AT,'YYYY-MM-DD') AS resDate, TO_CHAR(A.OPEN_AT,'HH24:MI') AS resTime, B.IS_ADULT AS adult
+		SELECT A.RES_OPEN_ID AS slotId, C.CAFE_ID AS cafeId, C.CAFE_NAME AS cafeName, B.ROOM_NAME AS themeName, B.ROOM_ID AS themeId
+		, TO_CHAR(A.OPEN_AT,'YYYY-MM-DD') AS resDate, TO_CHAR(A.OPEN_AT,'HH24:MI') AS resTime, B.IS_ADULT AS adult, A.OPEN_AT AS startAt, (A.OPEN_AT + B.DURATION/1440) AS endAt
 		, B.MIN_PLAYERS AS minPlayers, B.MAX_PLAYERS AS maxPlayers, B.PRICE AS price, FN_RESERVATION_CHECK(A.RES_OPEN_ID) AS status
 		FROM RES_OPEN A
 		JOIN ROOM B
 		ON A.ROOM_ID = B.ROOM_ID
 		JOIN CAFE C
-		On B.CAFE_ID = C.CAFE_ID
+		ON B.CAFE_ID = C.CAFE_ID
 		WHERE A.RES_OPEN_ID = #{slotId}
 		
 	</select>
@@ -488,5 +488,14 @@
 		WHERE PARTY_ID = #{partyId}
 		
 	</update>
+	
+	<select id="hasReservation" parameterType="map" resultType="Integer">
+		
+		SELECT COUNT(*)
+		FROM VW_MEMBER_BOOKED_TIME
+		WHERE USER_ID = USER_ID = #{userId}
+		  AND START_AT &lt; #{endAt}
+		  AND END_AT   &gt; #{startAt}
+	</select>
 	
 </mapper>
