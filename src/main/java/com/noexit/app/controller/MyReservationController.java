@@ -1,6 +1,7 @@
 package com.noexit.app.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.noexit.app.model.MyPage;
 import com.noexit.app.model.User;
 import com.noexit.app.service.MyPageService;
 import com.noexit.app.service.MyReservationService;
@@ -41,7 +43,9 @@ public class MyReservationController {
 			Long userId = loginUser.getUserId();
 			
 			double userManner = mypageService.getUserManner(loginUser.getUserId());
-	
+			List<MyPage> mutualList = mypageService.getMutualList(userId);
+			
+			
 		try {
 			int size = 10;
 			
@@ -49,6 +53,7 @@ public class MyReservationController {
 
 			model.addAllAttributes(pageData);
 			model.addAttribute("userManner" ,userManner);
+			model.addAttribute("mutualList" ,mutualList);
 
 			
 		} catch (Exception e) {
