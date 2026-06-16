@@ -59,9 +59,14 @@ public class Party
 			
 			PartyDTO party = service.getPartyById(partyId);
 			// 파티 유효성 검사
-			if(party == null || "close".equals(party.getPartyStatus()) || "confirm".equals(party.getPartyStatus()))
+			if(party == null || "close".equals(party.getPartyStatus()))
 			{
 				reModel.addAttribute("errorMsg", "유효하지 않은 파티입니다.");
+				return "redirect:/err/error";
+			}
+			if("confirm".equals(party.getPartyStatus()))
+			{
+				reModel.addAttribute("errorMsg", "이미 예약한 파티입니다.");
 				return "redirect:/err/error";
 			}
 			
@@ -1315,7 +1320,7 @@ public class Party
 			if(crew.isEmpty()){throw new ResponseStatusException(HttpStatus.NOT_FOUND);}
 			
 			// 내가 파티장 인지 확인
-			if(crew.get().getUserId() != user.getUserId()){throw new ResponseStatusException(HttpStatus.FORBIDDEN);}
+			if(crew.get().getUserId() != user.getUserId()){throw new ResponseStatusException(HttpStatus.FORBIDDEN,"파티장만 승인 가능합니다.");}
 			
 			// 1 이면 동성만 받음
 			if(party.getGenderId() == 1)
@@ -1328,7 +1333,7 @@ public class Party
 				if(service.isSameGender(emp) > 1)
 				{
 					// 바꿔야함
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN,"성별 조건을 만족하지 않는 신청입니다.");
 				}
 			}
 			
@@ -1339,7 +1344,7 @@ public class Party
 			{
 				if(service.getUserAge(apply.getUserId()) < 19)
 				{
-					throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN,"미성년자는 성인 테마 승인이 불가합니다.");
 				}
 			}
 			

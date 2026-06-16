@@ -422,7 +422,12 @@
 		resDate.innerText = data.resDate;
 		resTime.innerText = data.resTime;
 		themePlayers.innerText = data.minPlayers + "명 ~ " + data.maxPlayers + "명";
-		themeStatus.innerText = data.slotStatus == 1 ? "예약 가능" : "예약 불가" ;
+		
+		if(data.partyStatus == 'confirm')
+			themeStatus.innerText = "예약 완료"
+		else
+			themeStatus.innerText = data.slotStatus == 1 ? "예약 가능" : "예약 불가" ;
+		
 		genderName.innerText = data.genderName;
 		partyComment.innerText = data.partyComment;
 	}
@@ -447,7 +452,7 @@
 				 + "<div class='crew-info'>"
 				 + "<span>" + item.nickName + "</span>"
 				 + "<span>" + item.age + "세</span>"
-				 + "<span>" + item.gender + "</span>"
+				 + "<span>" + (item.gender == 'F' ? '여' : '남') + "</span>"
 				 + "<span class='ne-mannero'>🌡️ " + item.temp + "</span>"
 				 + "</div>"
 				 + "<div class='crew-position'>";
@@ -507,7 +512,7 @@
 				 + "<div class='apply-info'>"
 				 + "<span>" + item.nickName + "</span>"
 				 + "<span>" + item.age + "세</span>"
-				 + "<span>" + (item.gender == 'F' ? '여자' : '남자') + "</span>"
+				 + "<span>" + (item.gender == 'F' ? '여' : '남') + "</span>"
 				 + "<span class='ne-mannero'>🌡️ " + item.temp + "</span>"
 				 + "</div>" // .apply-info
 				 + "<div class='apply-comment'>"
@@ -579,14 +584,10 @@
 		let deleteBtn = document.querySelector(".comment-delete[data-comment-id='" + item.commentId + "']");
 
 		if(deleteBtn != null)
-		{
 			deleteBtn.remove();
-		}
 
 		if(commentItem != null)
-		{
-			commentItem.innerText = "삭제된 메세지 입니다";
-		}
+			commentItem.innerText = "삭제된 메세지 입니다.";
 	}
 
 	// 댓글 작성 함수
@@ -844,7 +845,7 @@
 	            }
 	            else if (e.status === 403)
 	            { 
-	            	alert("권한이 없습니다.")
+	            	alert("승인 규칙을 벗어났습니다.")
 	            	location.href = "${path}/party/list";
 	            }
 	            else if(e.status == 404)
