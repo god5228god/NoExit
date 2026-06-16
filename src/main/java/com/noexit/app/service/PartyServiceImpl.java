@@ -562,4 +562,55 @@ public class PartyServiceImpl implements PartyService
 		
 		return result;
 	}
+	
+	@Override
+	public List<ThemeSlotDTO> getTimeList(long slotId)
+	{
+		List<ThemeSlotDTO> result = null;
+		
+		try
+		{
+			result = mapper.getTimeList(slotId);
+		} 
+		catch (Exception e)
+		{
+			log.info("getTimeList : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public int partyRoomUpdate(Map<String, Object> map)
+	{
+		int result = 0;
+		
+		try
+		{
+			result = mapper.partyRoomUpdate(map);
+		} 
+		catch (Exception e)
+		{
+			log.info("partyRoomUpdate : ",e);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public int hasReservation(Map<String, Object> map)
+	{
+		int result = 0;
+		
+		try
+		{
+			result = mapper.hasReservation(map);
+		} 
+		catch (Exception e)
+		{
+			log.info("hasReservation : ",e);
+		}
+		
+		return result;
+	}
 }

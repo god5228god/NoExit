@@ -47,7 +47,7 @@
 	    // 더보기 버튼 컨트롤
 	    let currentOffset = 0;
 	    $("#moreBtn").on("click", function(){
-	    	currentOffset += 10;
+	    	currentOffset += 3;
 	    	loadList(currentOffset);
 	    });
 	    
@@ -120,19 +120,23 @@
 	            if(offset === 0) 
 	            	tbody.empty();  
 	
-	            if(res.length == 0 && offset == 0){
+	            if(res.length == 0 && offset === 0){
 	                tbody.append('<tr><td colspan="5" class="text-center">예약 내역이 없습니다.</td></tr>');
+	                $('#moreBtn').hide();
+	                return;
+	            }else if (res.length == 0 && offset > 0) {
+	                // 더보기 중에 데이터가 더 없으면 버튼 숨기기
 	                $('#moreBtn').hide();
 	                return;
 	            }
 	
-	            	let i = 1;
-	            res.forEach(function(item){
+	            res.forEach(function(item, index){
 	            	
+	            	let rowNum = offset+index+1;
 	            	
 	                tbody.append(
-	                    '<tr>' +
-	                    '<td>' +  i + '</td>' +
+	                    '<tr class="res_' + item.reservationId + '">' +
+	                    '<td>' +  rowNum + '</td>' +
 	                    '<td>' + item.cafeName + '</td>' +
 	                    '<td>' + item.roomName + '</td>' +
 	                    '<td style="font-size: 16px; font-weight: bold;">' + item.openAt + '</td>' +
@@ -143,11 +147,10 @@
 	                        'onclick="deleteOk(' + item.reservationId + ')">예약 취소</button></td>' +
 	                    '</tr>'
 	                );
-	                i++;
 	            });
 	
-	            // 10개 미만이면 더보기 숨김
-	            if(res.length < 10){
+	            // 3개 미만이면 더보기 숨김
+	            if(res.length < 3){
 	                $('#moreBtn').hide();
 	            } else {
 	                $('#moreBtn').show();
@@ -165,13 +168,15 @@
 				, type: "POST"
 				, data: {resId, resId}
 				, success: function(res){
-					
-				}
-			
+						alert(res.message);
+					if(res.success)
+						$(".res_"+resId).remove();
+				},
+	            error: function() {
+	                alert("서버 통신 중 오류가 발생했습니다.");
+	            }
 			});
 		}
-		
-		
 	}
 
 		
@@ -240,7 +245,7 @@
 							        </c:when>
 							        <c:otherwise>
 							            <c:forEach var="res" items="${resList}" varStatus="vs">
-							                <tr>
+							                <tr class="res_${res.reservationId }">
 							                    <td>${vs.count}</td>
 							                    <td>${res.cafeName}</td>
 							                    <td>${res.roomName}</td>
@@ -254,21 +259,14 @@
 							            </c:forEach>
 							        </c:otherwise>
 							    </c:choose>
-							
-								<!-- <tr>
-									<td>1</td>
-									<td>지구별</td>
-									<td>어둠의 저택</td>
-									<td style="font-size: 16px;">2026-06-01 14:00</td>
-									<td>
-										<button type="button" class="btn btn-outline-primary">예약 상세</button>
-										 <button type="button" class="btn ne-btn-deact" onclick="deleteOk()">예약취소</button>
-									</td>
-								</tr> -->
 							</tbody>
 						</table>
 						<div id="noRes" class="text-center" style="display: none;">등록된 예약이 없습니다.</div>
-						<button type="button" id="moreBtn" class="btn ne-btn" style="display: none;">더보기</button>
+						<button type="button" id="moreBtn" class="btn ne-btn" style="display: none; width: 100%; margin: 0 auto;">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
+  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
+</svg>
+						</button>
 						
 					</div>
 				</div>

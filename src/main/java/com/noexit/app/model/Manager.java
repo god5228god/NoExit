@@ -22,6 +22,7 @@ public class Manager {
 	private String cafeName;       // CAFE.CAFE_NAME
 	private String loginId;        // USER_ACCOUNT.LOGIN_ID 검색용
 	private String nickname;       // USER_ACCOUNT.NICKNAME
+	private String name;           // USER_INFO.NAME
 	private String phone;          // USER_INFO.PHONE
 	private String regEventName;   // 등록/해제
 

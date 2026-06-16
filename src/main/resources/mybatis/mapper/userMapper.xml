@@ -28,6 +28,10 @@
       SELECT COUNT(*) FROM USER_ACCOUNT WHERE LOGIN_ID = #{loginId}
 </select>
 
+<select id="countByEmail" parameterType="string" resultType="int">
+      SELECT COUNT(*) FROM USER_INFO WHERE EMAIL = #{email}
+</select>
+
 <select id="selectByLoginId" parameterType="com.noexit.app.model.User" resultType="com.noexit.app.model.User">
       SELECT USER_ID, LOGIN_ID, NICKNAME, CREATED_AT
       FROM USER_ACCOUNT
@@ -71,5 +75,22 @@
 	 WHERE USER_ID = #{userId}
 </update>
 
+<insert id="insertUserDrop" parameterType="long">
+	INSERT INTO USER_DROP (USER_ID, EMAIL, NAME, PHONE, GENDER, BIRTHDATE)
+	SELECT USER_ID, EMAIL, NAME, PHONE, GENDER, BIRTHDATE
+	  FROM USER_INFO
+	 WHERE USER_ID = #{userId}
+</insert>
+
+<delete id="deleteUserInfo" parameterType="long">
+	DELETE FROM USER_INFO WHERE USER_ID = #{userId}
+</delete>
+
+<select id="countByUserIdAndPassword" parameterType="com.noexit.app.model.User" resultType="int">
+	SELECT COUNT(*)
+	  FROM USER_ACCOUNT
+	 WHERE USER_ID = #{userId}
+	   AND PASSWORD = CRYPTPACK.ENCRYPT(#{password}, '12341234')
+</select>
 
 </mapper>

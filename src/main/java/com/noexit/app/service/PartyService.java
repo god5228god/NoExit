@@ -83,4 +83,7 @@ public interface PartyService
 	List<Cafe> getCafeList();
 	List<ThemeDTO> getThemeList(long cafeId);
 	List<ThemeSlotDTO> getSlotList(long themeId);
+	List<ThemeSlotDTO> getTimeList(long slotId);
+	int partyRoomUpdate(Map<String, Object> map);
+	int hasReservation(Map<String, Object> map);
 }

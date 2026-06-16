@@ -21,5 +21,6 @@ public class Cafe {
 	private String addressDetail;
 	private Date createdAt;
 	private String status;
+	private Long dropReasonId; 
 
 }

@@ -18,4 +18,11 @@ public interface MypageMapper {
 	List<MyPage> getUnrecordedList(long userId);
 	int insertRecord(MyPage myPage);
 	public int getUserRecordCount(Long userId);
+	int updateRecord(MyPage myPage);
+	int insertReview(MyPage myPage);
+	int countReview(long detailId);
+	int updateReview(MyPage myPage);
+	int deleteReview(Long reviewId);
+	List<MyPage> getReservationList(Long userId);
+	List<MyPage> getReservationDetail(Map<String, Object> map);
 }

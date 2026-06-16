@@ -26,7 +26,7 @@
 		</div>
 
 		<form action="${pageContext.request.contextPath}/owner/theme/write" method="post" enctype="multipart/form-data">
-			<input type="hidden" name="mode"    value="${mode}">
+			<input type="hidden" name="mode" value="${mode}">
 			<c:if test="${mode == 'update'}">
 				<input type="hidden" name="themeId" value="${dto.themeId}">
 			</c:if>

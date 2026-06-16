@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noexit.app.mapper.MainMapper">
+
+
+	<select id="popularThemeList" resultType="com.noexit.app.model.PopularThemeDTO">
+		SELECT *
+		FROM (
+		    SELECT 
+		        C.CAFE_NAME,
+		        R.ROOM_ID, 
+		        R.ROOM_NAME, 
+		        RG.GENRE_NAME,
+		        R.ROOM_IMG, 
+		        R.IS_ADULT, 
+		        R.CREATED_AT,
+		        (
+		            SELECT AVG(RV.SATISFACTION)
+		            FROM REVIEW RV
+		                JOIN ATTENDANCE_DETAIL AD ON RV.DETAIL_ID = AD.DETAIL_ID
+		                JOIN ATTENDANCE AT ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID
+		                JOIN RESERVATION RES ON AT.RESERVATION_ID = RES.RESERVATION_ID
+		                JOIN PARTY P ON RES.PARTY_ID = P.PARTY_ID
+		                JOIN PARTY_ROOM PR ON PR.PARTY_ID = P.PARTY_ID
+		                JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
+		            WHERE RO.ROOM_ID = R.ROOM_ID
+		        ) AS AVG_GRADE
+		    FROM ROOM R
+		    JOIN ROOM_GENRE RG 
+		        ON R.GENRE_ID = RG.GENRE_ID
+		    JOIN CAFE C 
+		        ON R.CAFE_ID = C.CAFE_ID
+		)
+		ORDER BY AVG_GRADE DESC NULLS LAST, CREATED_AT DESC
+		FETCH FIRST 4 ROWS ONLY
+	</select>
+	
+	<select id="recentPartyList" resultType="com.noexit.app.model.RecentPartyDTO">
+		SELECT VAP.PARTY_ID, VAP.PARTY_NAME
+		, C.CAFE_NAME, R.ROOM_NAME
+		, TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD HH24:MI') AS OPEN_AT
+		, (
+		    SELECT ROUND(AVG(TEMP),1)
+		    FROM VW_PARTY_ACTIVE_MEMBER
+		    WHERE PARTY_ID = VAP.PARTY_ID
+		) AS AVG_TEMP
+		, FN_MEMBER_COUNT(VAP.PARTY_ID) AS PARTY_CNT
+		, R.MAX_PLAYERS
+		FROM VW_ACTIVE_PARTY VAP
+		    JOIN RES_OPEN RO
+		    ON RO.RES_OPEN_ID = VAP.RES_OPEN_ID
+		    JOIN ROOM R
+		    ON RO.ROOM_ID = R.ROOM_ID
+		    JOIN CAFE C
+		    ON R.CAFE_ID = C.CAFE_ID
+		ORDER BY VAP.CREATED_AT DESC
+		FETCH FIRST 3 ROWS ONLY
+	</select>
+
+</mapper> 
+
+

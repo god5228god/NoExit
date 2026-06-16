@@ -35,11 +35,11 @@
 }
 
 .resOpen .selectBox{
-	width: 100%;
+	width: 180px;
 }
 
 .resOpenList{
-	width: 60%;
+	width: 63%;
 	height: 100%;
 	background-color: #fff;
 	/* border: 1px solid #ccc; */

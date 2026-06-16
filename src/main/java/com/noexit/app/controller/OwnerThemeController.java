@@ -56,12 +56,31 @@ public class OwnerThemeController {
             // 리스트 가져오기
             List<ThemeDTO> themeList = themeService.selectListByOwnerUserId(map);
             model.addAttribute("themeList", themeList);
+            model.addAttribute("reasonList", themeService.getDropReasonList());
 
         } catch (Exception e) {
             log.info("themeManage : ", e);
         }
 
         return "theme/themeManage";
+    }
+    
+    @PostMapping("/drop")
+    public String themeDrop(@RequestParam("themeId") Long themeId
+                          , @RequestParam("dropReasonId") Long dropReasonId
+                          , HttpSession session) {
+    	
+    	String redirect = AuthUtil.checkOwner(session);   	 	
+    	if (redirect != null) 
+    		return redirect;
+
+    	User loginUser = (User) session.getAttribute("loginUser");
+    	try {
+    		themeService.themeDrop(themeId, dropReasonId, loginUser.getUserId());
+    	} catch (Exception e) {
+    		log.info("themeDrop : ", e);
+    	}
+    	return "redirect:/owner/theme/manage";
     }
 
     @GetMapping("/write")
@@ -73,6 +92,7 @@ public class OwnerThemeController {
         	return redirect;
 
         User loginUser = (User) session.getAttribute("loginUser");
+        
         model.addAttribute("cafeList", cafeService.selectByUserId(loginUser.getUserId()));
         model.addAttribute("genreList", genreService.getGenreList());
         model.addAttribute("commonList", commonService.getCommonList());

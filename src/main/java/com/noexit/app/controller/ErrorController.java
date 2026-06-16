@@ -18,4 +18,12 @@ public class ErrorController
 		
 		return "error/error";
 	}
+	
+	@GetMapping("login")
+	public String loginError(@RequestParam(name="errorMsg") String errorMsg, Model model)
+	{
+		model.addAttribute("errorMsg", errorMsg);
+		
+		return "error/loginErr";
+	}
 }

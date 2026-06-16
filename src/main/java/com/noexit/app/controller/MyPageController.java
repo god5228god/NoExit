@@ -44,14 +44,23 @@ public class MyPageController {
 	         
 	         if(user == null)
 	         {
-	            return "redirect:/user/login";
+	        	reModel.addAttribute("errorMsg", "로그인 이후 이용가능합니다.");
+	            return "redirect:/err/login";
 	         }
 	         
+	         
 	         long userId = user.getUserId();
+	         
+	         List<MyPage> mutualList = service.getMutualList(userId);
+	         double userManner = service.getUserManner(userId);
+	         
 	         
 	         model.addAttribute("myPartyList", partyService.getMyPartyList(userId));
 	         model.addAttribute("myPartyApplyList", partyService.getMyPartyApplyList(userId));
 	         model.addAttribute("myPartyKickList", partyService.getMyPartyKickList(userId));
+	         model.addAttribute("mutualList" ,mutualList);
+	         model.addAttribute("userManner" ,userManner);
+
 	         
 	         return "mypage/myparty";
 	      }
@@ -117,12 +126,11 @@ public class MyPageController {
 		boolean hasNext = (page < totalPage);
 		//-------------------------------------------------------
 		
-		
 		List<MyPage> mutualList = service.getMutualList(userId);
 		List<String> questionList = service.getQuestionList();
 		double userManner = service.getUserManner(loginUser.getUserId());
 		List<MyPage> roomImgList = service.getRoomImg(loginUser.getUserId());
-		
+		List<MyPage> reservationList = service.getReservationList(userId);
 		
 		
 		// 로그인 유저 정보 넘기기
@@ -132,7 +140,7 @@ public class MyPageController {
 		model.addAttribute("questionList",questionList);
 		model.addAttribute("userManner" ,userManner);
 		model.addAttribute("roomImgList" ,roomImgList);		// 이미지 insert 후 바인딩 예정
-		
+		model.addAttribute("reservationList", reservationList);
 		
 		// 페이징 처리 정보 넘기기
 		model.addAttribute("totalCount", totalCount);
@@ -198,17 +206,106 @@ public class MyPageController {
 	
 	@PostMapping("/mypage/record/write")
 	@ResponseBody
-	public String writeRecord(@RequestBody MyPage myPage) {
+	public String writeRecord(@RequestBody MyPage myPage, HttpSession session) {
+		
+		User loginUser = (User) session.getAttribute("loginUser");
+		
+		// 세션 만료 시 로그인 페이지 리다이렉트
+		if (loginUser == null || session.getAttribute("loginUser") == null)
+		{
+			return "redirect:/user/login";
+		}
 		
 	    int result = service.insertRecord(myPage);
 	    
+	    // insert 확인
 	    if(result > 0)
 	    	return "success";
 	    else
 	    	return "fail";
 	}
 	
+	@PostMapping("/mypage/record/update")
+	@ResponseBody
+	public String updateRecord(@RequestBody MyPage myPage,  HttpSession session) {
+		
+		User loginUser = (User) session.getAttribute("loginUser");
+		
+		// 세션 만료 시 로그인 페이지 리다이렉트
+		if (loginUser == null || session.getAttribute("loginUser") == null)
+		{
+			return "redirect:/user/login";
+		}
+		
+		
+		int result = service.updateRecord(myPage);
+		
+		// update 확인
+		if (result > 0)
+			return "success";
+		else
+			return "fail";
+	
+	}
+	
+	
+	@PostMapping("/mypage/review/write")
+	@ResponseBody
+	public String writeReview(@RequestBody MyPage myPage, HttpSession session) {
+		
+		User loginUser = (User) session.getAttribute("loginUser");
+		
+		if (loginUser == null || session.getAttribute("loginUser") == null)
+			return "redirect:/user/login";
+		
+			int result= service.insertReview(myPage);
+		
+		// 성공 여부 반환
+		if (result > 0) 
+			return "success";
+		 else 
+			return "fail";
+		
+	}
+	
+	
+	@PostMapping("/mypage/review/delete")
+	@ResponseBody
+	public String deleteReview(@RequestBody MyPage mypage , HttpSession session) {
+		
+		User loginUser = (User) session.getAttribute("loginUser");
+		
+		if (loginUser == null || session.getAttribute("loginUser") == null)
+			return "redirect:/user/login";
+		
+		int result = service.deleteReview(mypage.getReviewId());
+		
+		if (result > 0) 
+			return "success";
+		 else 
+			return "fail";
+		
+	}
+	
+	
+	@GetMapping("/reservation/detail")
+	@ResponseBody
+	public List<MyPage> getReservationDetail(
+	        @RequestParam("date") String date
+	        ,HttpSession session)
+	{
+	    
+		User loginUser = (User) session.getAttribute("loginUser");
 
+	    Map<String, Object> map = new HashMap<>();
+
+	    map.put("userId", loginUser.getUserId());
+	    map.put("date", date);
+
+	    return service.getReservationDetail(map);
+	}
+	
+	
 	
 	
 	

@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/dist/css/main.css" />
 </head>
 <body>
-	<%@ include file="/WEB-INF/views/common/header.jsp" %>
+	<%-- <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 	<main class="ne-main-content ne-body-offset">
 		<div class="ne-container">
@@ -24,6 +24,14 @@
 		</div>
 	</main>
 
-	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+	<%@ include file="/WEB-INF/views/common/footer.jsp" %> --%>
+	
+	<script type="text/javascript">
+		
+		alert("${errorMsg}");
+		history.back();
+	
+	</script>
+	
 </body>
 </html>

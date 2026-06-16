@@ -50,6 +50,44 @@ public class CafeController {
 
 	        return "cafe/cafeEnrollForm";
 	    }
-
+	       
 	}
+	
+	
+	// 카페 삭제 폼
+	@GetMapping("/drop")
+	public String cafeDropForm(HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) 
+			return "redirect:/user/login";
+		
+
+		// 내 카페 목록 + 삭제 사유 목록
+		model.addAttribute("cafeList", cafeService.selectByUserId(loginUser.getUserId()));
+		model.addAttribute("reasonList", cafeService.getDropReasonList());
+		return "cafe/cafeDropForm";
+		}
+	
+	// 카페 삭제 처리
+	@PostMapping("/drop")
+	public String cafeDrop(Cafe cafe, HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) return "redirect:/user/login";
+
+		try {
+			cafeService.cafeDrop(cafe, loginUser.getUserId());
+		} catch (Exception e) {
+			log.info("cafeDrop : ", e);
+			model.addAttribute("errorMessage", "카페 삭제 중 오류가 발생했습니다.");
+			model.addAttribute("cafeList", cafeService.selectByUserId(loginUser.getUserId()));
+			model.addAttribute("reasonList", cafeService.getDropReasonList());
+			return "cafe/cafeDropForm";
+		}
+		return "redirect:/mypage/record";
+	}
+	
+	
+		
+		
+	
 } 	

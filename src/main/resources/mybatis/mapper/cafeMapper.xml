@@ -4,13 +4,6 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.noexit.app.mapper.CafeMapper">
 
-	<select id="selectByUserId" parameterType="long" resultType="com.noexit.app.model.Cafe">
-		SELECT CAFE_ID, USER_ID, BR_NO, CAFE_NAME, PHONE,
-		       POSTAL_CODE, ADDRESS, ADDRESS_DETAIL, CREATED_AT
-		FROM CAFE
-		WHERE USER_ID = #{userId}
-		ORDER BY CAFE_ID
-	</select>
 	
 	<insert id="insertCafe" parameterType="com.noexit.app.model.Cafe">
     <selectKey keyProperty="cafeId" resultType="long" order="BEFORE">
@@ -24,6 +17,42 @@
       , #{postalCode}, #{address}, #{addressDetail}
     )
 	</insert>	
+	
+	<!-- 폐업되지 않은 카페만 조회 -->
+	<select id="selectByUserId" parameterType="long" resultType="com.noexit.app.model.Cafe">
+		SELECT CAFE_ID, USER_ID, BR_NO, CAFE_NAME, PHONE,
+		       POSTAL_CODE, ADDRESS, ADDRESS_DETAIL, CREATED_AT
+		FROM CAFE C
+		WHERE USER_ID = #{userId}
+		  AND NOT EXISTS (SELECT 1 FROM CAFE_DROP CD WHERE CD.CAFE_ID = C.CAFE_ID)
+		ORDER BY CAFE_ID
+	</select>
+
+	<!-- 카페 삭제 사유 목록-->
+	<select id="selectDropReasonList" resultType="com.noexit.app.model.CafeDropReason">
+		SELECT DROP_REASON_ID dropReasonId, DROP_REASON_NAME dropReasonName
+		FROM CAFE_DROP_REASON
+		ORDER BY DROP_REASON_ID
+	</select>
+
+	<!-- 단일 카페 조회-->
+	<select id="selectByCafeId" parameterType="long" resultType="com.noexit.app.model.Cafe">
+		SELECT CAFE_ID, USER_ID, BR_NO, CAFE_NAME, PHONE,
+		       POSTAL_CODE, ADDRESS, ADDRESS_DETAIL, CREATED_AT
+		FROM CAFE
+		WHERE CAFE_ID = #{cafeId}
+	</select>
+
+	<!-- 카페 삭제 CAFE_DROP에 INSERT -->
+	<insert id="insertCafeDrop" parameterType="com.noexit.app.model.Cafe">
+		INSERT INTO CAFE_DROP (CAFE_DROP_ID, CAFE_ID, DROP_REASON_ID)
+		SELECT CAFE_DROP_SEQ.NEXTVAL, #{cafeId}, #{dropReasonId}
+	    FROM CAFE
+	    WHERE CAFE_ID = #{cafeId}
+	    AND USER_ID = #{userId}
+	</insert>
+	
+	
 	
 	
 

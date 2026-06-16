@@ -25,7 +25,7 @@
 		    JOIN CAFE C
 		    ON R.CAFE_ID = C.CAFE_ID
 		    JOIN USER_INFO UI
-		    ON C.USER_ID = UI.USER_ID
+		    ON P.USER_ID = UI.USER_ID
 		WHERE P.PARTY_ID = #{partyId}
 		AND P.USER_ID = #{userId}
 	

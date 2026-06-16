@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.noexit.app.model.ThemeDTO;
+import com.noexit.app.model.ThemeDropReason;
 import com.noexit.app.model.ThemeReviewDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 
@@ -34,4 +35,7 @@ public interface ThemeMapper
 	List<ThemeSlotDTO> getThemeSlot(long themeId);
 	List<ThemeReviewDTO> getThemeReview(long themeId);
 	ThemeReviewDTO getTotalReview(long themeId);
+	
+	public List<ThemeDropReason> selectDropReasonList();
+	public int insertRoomDrop(Map<String, Object> map);
 }

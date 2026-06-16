@@ -6,8 +6,8 @@
 
 	<!-- 사장 소유 카페들의 활성 매니저 목록 (V_ACTIVE_MANAGER 뷰 사용) -->
 	<select id="selectActiveByOwnerUserId" parameterType="map" resultType="com.noexit.app.model.Manager">
-		SELECT *
-		  FROM V_ACTIVE_MANAGER
+		 SELECT *
+		 FROM VW_ACTIVE_MANAGER
 		 WHERE OWNER_USER_ID = #{ownerUserId}
 		 ORDER BY CREATED_AT DESC
 		 OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY

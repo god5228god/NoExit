@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.noexit.app.mapper.CafeMapper;
 import com.noexit.app.model.Cafe;
+import com.noexit.app.model.CafeDropReason;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,28 @@ public class CafeServiceImpl implements CafeService  {
 			log.info("selectByUserId : ", e);
 		}
 		return list;
+	}
+	
+	@Override
+	public List<CafeDropReason> getDropReasonList() {
+		List<CafeDropReason> list = null;
+		try {
+			list = cafeMapper.selectDropReasonList();
+		} catch (Exception e) {
+			log.info("getDropReasonList : ", e);
+		}
+		return list;
+	}
+
+	@Override
+	public void cafeDrop(Cafe cafe, Long loginUserId) throws Exception {
+		try {
+			cafe.setUserId(loginUserId);
+			cafeMapper.insertCafeDrop(cafe);
+		} catch (Exception e) {
+			log.info("cafeDrop : ", e);
+			throw e;
+		}
 	}
 
 

@@ -9,7 +9,7 @@
 	<select id="getCafeList" resultType="com.noexit.app.model.OpenReservationDTO" parameterType="Long">
 		SELECT DISTINCT CAFE_ID, CAFE_NAME
 		FROM VW_CAFE_ROOM_INFO
-		WHERE CAFE_OWNER = #{userId} OR CAFE_MANAGER= #{userId}
+		WHERE CAFE_OWNER = #{userId} OR (CAFE_MANAGER= #{userId} AND CAFE_MANAGER IS NOT NULL)
 	</select>
 	
 	<!-- 테마 목록 조회 -->

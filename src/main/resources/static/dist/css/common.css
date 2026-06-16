@@ -2,19 +2,34 @@
    NoExit — 공통 CSS
    Bootstrap 5.x 기반 · 커스텀 디자인 시스템
    
-   사용법 (JSP head):
-   <link rel="stylesheet" href=".../bootstrap.min.css">
-   <link rel="stylesheet" href=".../common.css">   ← Bootstrap 이후에 로드
    ===================================================================== */
 
+
+@import url('https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css');
+
+@font-face {
+    font-family: 'KoreaInstituteOfMachineryAndMaterials';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2212@1.0/KIMM_Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'MangoBoardTtobaks';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoDdobak-B.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
 
 /* ─────────────────────────────────────────────────────────────────────
    1. CSS 변수 (디자인 토큰)
    ───────────────────────────────────────────────────────────────────── */
 :root {
   /* 브랜드 컬러 */
-  --ne-primary:        #fdb400;
-  --ne-primary-dark:   #c8900a;
+/*   --ne-primary:        #fdb400; */
+  --ne-primary:        #f0db54;
+/*   --ne-primary-dark:   #c8900a; */
+  --ne-primary-dark:   #dec316;
   --ne-primary-light:  #fff8e6;
   --ne-primary-mid:    #fef0b0;
 
@@ -55,12 +70,15 @@
   --ne-gray-bg:        #f9fafb;
 
   /* ── Bootstrap CSS 변수 덮어쓰기 ── */
-  --bs-primary:        #fdb400;
+ /*  --bs-primary:        #fdb400; */
+  --bs-primary:        #f0db54;
   --bs-primary-rgb:    253, 180, 0;
   --bs-link-color:     var(--ne-primary-dark);
   --bs-link-hover-color: var(--ne-primary-dark);
   --bs-border-radius:  var(--ne-radius-sm);
-  --bs-body-font-family: "Apple SD Gothic Neo", "Malgun Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+ /*  --bs-body-font-family: "Apple SD Gothic Neo", "Malgun Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; */
+/*   --bs-body-font-family: 'Galmuri9', sans-serif; */
+  --bs-body-font-family: 'MangoBoardTtobaks';
   --bs-body-color:     var(--ne-text);
   --bs-body-bg:        var(--ne-bg);
   --bs-border-color:   var(--ne-border-dark);
@@ -189,7 +207,8 @@ a.no-hover:hover{
 	box-sizing: border-box;
 }
 .paginate span{
-	background-color: #fdb800;
+/* 	background-color: #fdb800; */
+	background-color: #f0db54;
 	color: #fff;
 	font-weight: bold;
 	border: none;
@@ -295,6 +314,10 @@ hr {
   border-color: var(--ne-border);
   opacity: 1;
 }
+ul{
+	padding: 0;
+	margin: 0;
+}
 
 li{
 	list-style: none;
@@ -325,14 +348,21 @@ small, .small   { font-size: .875rem; }  /* 14px */
 /* ─────────────────────────────────────────────────────────────────────
    4. 레이아웃 — 헤더
    ───────────────────────────────────────────────────────────────────── */
+header{
+	width: 100%;
+	height: 100px;
+	background-color: #fff;
+	box-shadow: 0 1px 12px rgba(0, 0, 0, .05);
+}
+
 .ne-header {
   position: relative;
   top: 0; left: 0; right: 0;
   z-index: 1030;
-  height: 100px;
-  background: #ffffff;
-  border-bottom: 1px solid var(--ne-border);
-  box-shadow: 0 1px 12px rgba(0, 0, 0, .05);
+  width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  /* border-bottom: 1px solid var(--ne-border); */
 }
 
 .ne-header .ne-header-inner {
@@ -661,23 +691,7 @@ small, .small   { font-size: .875rem; }  /* 14px */
 .ne-st-dark    { background: var(--ne-text);      color: #ffffff; }
 .ne-st-primary { background: var(--ne-primary-light); color: var(--ne-primary-dark); }
  
-/* ── 상태별 빠른 참조 (한 줄로 쓰는 경우) ── */
-/* 모집중      : ne-st ne-st-green           */
-/* 예약완료    : ne-st ne-st-blue            */
-/* 대기중/미완 : ne-st ne-st-amber           */
-/* 취소됨      : ne-st ne-st-red             */
-/* 강제취소    : ne-st ne-st-danger          */
-/* 종료/비활성 : ne-st ne-st-gray            */
-/* 파티장      : ne-st ne-st-dark            */
-/* 파티원      : ne-st ne-st-primary         */
- 
-/* ──────────────────────
-   크기 조합 예시:
-   <span class="ne-st ne-st-sm ne-st-green">모집중</span>   → 12px
-   <span class="ne-st ne-st-green">모집중</span>            → 14px (기본)
-   <span class="ne-st ne-st-lg ne-st-green">모집중</span>   → 16px
-   ────────────────────── */
- 
+
  
 /* ─────────────────────────────────────────────────────────────────────
    태그 (장르·조건 등) — 뱃지와 별개로 사이즈 보정
@@ -1288,7 +1302,8 @@ small, .small   { font-size: .875rem; }  /* 14px */
 .ne-title{
 		font-size: 16px;
 		font-weight: bold;
-		border-bottom: 2px solid #fdb400;
+	/* 	border-bottom: 2px solid #fdb400; */
+		border-bottom: 2px solid #f0db54;
 		margin-bottom: 10px;
 		padding-bottom: 5px;
 		color: #444;

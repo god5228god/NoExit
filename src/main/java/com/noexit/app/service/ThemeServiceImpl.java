@@ -16,6 +16,7 @@ import com.noexit.app.mapper.ThemeMapper;
 import com.noexit.app.model.Cafe;
 import com.noexit.app.model.SearchFilterDTO;
 import com.noexit.app.model.ThemeDTO;
+import com.noexit.app.model.ThemeDropReason;
 import com.noexit.app.model.ThemeReviewDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 
@@ -112,10 +113,6 @@ public class ThemeServiceImpl implements ThemeService {
 		return result;
 	}
 
-	@Override
-	public int themeDelete(long themeId) {
-		return 0;
-	}
 
 	private String saveThemeImage(ThemeDTO dto) throws Exception {
 		List<MultipartFile> files = dto.getThemeImageFile();
@@ -271,4 +268,32 @@ public class ThemeServiceImpl implements ThemeService {
 		
 		return result;
 	}
+	
+	@Override
+	public List<ThemeDropReason> getDropReasonList() {
+		List<ThemeDropReason> list = null;
+		try {
+			list = themeMapper.selectDropReasonList();
+		} catch (Exception e) {
+			log.info("getDropReasonList : ", e);
+		}
+		return list;
+	}
+	
+	@Override
+	public void themeDrop(Long themeId, Long dropReasonId, Long ownerUserId) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("themeId", themeId);
+			map.put("dropReasonId", dropReasonId);
+			map.put("ownerUserId", ownerUserId);
+			
+			themeMapper.insertRoomDrop(map);
+			
+		} catch (Exception e) {
+			log.info("themeDrop : ", e);
+			throw e;
+		}
+	}
+	
 }

@@ -95,32 +95,69 @@
 	                    return response.json();
 	                })
 	                .then(data => {
-	                    // 백엔드에서 JSON 데이터를 정상적으로 받아왔을 때 모달 매핑
-	                    
-	                    // 모달 내부 텍스트 노드에 데이터 바인딩 (id 기준)
-	                    document.getElementById('md-date').innerText = clickedDate;
-	                    document.getElementById('md-time').innerText = data.createdAt;   // 예약일시
-	                    document.getElementById('md-shop').innerText = data.cafeName;    // 카페이름
-	                    document.getElementById('md-theme').innerText = data.roomName;   // 방이름
-	                  // ※ 추가 데이터 구성 예정
-	                    
-	                    
-	                    // 예약 모달 띄우기
-	                    let myModal = new bootstrap.Modal(document.getElementById('reservationModal'));
-	                    myModal.show();
+				    // 백엔드에서 JSON 데이터를 정상적으로 받아왔을 때 모달 매핑
+					
+				    let html = '';
+				
+				    data.forEach(item => {
+				
+				    	html +=
+				    	    '<div class="border-bottom pb-3 mb-3">' +
+
+				    	        '<div class="mb-2">' +
+				    	            '<strong>예약일시 :</strong> ' +
+				    	            '<span class="badge bg-warning text-dark">' +
+				    	                item.reservedAt +
+				    	            '</span>' +
+				    	        '</div>' +
+
+				    	        '<div class="mb-2">' +
+				    	            '<strong>매장 :</strong> ' +
+				    	            '<span class="fw-bold">' +
+				    	                item.reservedCafe +
+				    	            '</span>' +
+				    	        '</div>' +
+
+				    	        '<div class="mb-2">' +
+				    	            '<strong>테마 :</strong> ' +
+				    	            '<span class="text-primary fw-bold">' +
+				    	                item.reservedRoom +
+				    	            '</span>' +
+				    	        '</div>' +
+
+				    	        '<div class="mt-2">' +
+				    	            '<img src="' +
+				    	                '${pageContext.request.contextPath}/dist/images/' +
+				    	                item.roomImg +
+				    	            '" class="img-fluid rounded" style="max-height:120px;">' +
+				    	        '</div>' +
+
+				    	    '</div>';
+				    });
+				
+				    document.getElementById('reservation-detail-container').innerHTML = html;
+				
+				    // 예약 모달 띄우기
+				    let myModal = new bootstrap.Modal(document.getElementById('reservationModal'));
+				    myModal.show();
+
 	                })
 	                .catch(error => {
 	                    
 	                	console.log("해당 날짜에 예약이 없거나 에러 발생");
 	                    
 	                    // 모달 테스트용 더미 예약 삽입-----------------------------------------------------
-						document.getElementById('md-date').innerText = clickedDate;
-	                    document.getElementById('md-time').innerText = "14:30";   
-	                    document.getElementById('md-shop').innerText = "비트방탈출 강남점";    
-	                    document.getElementById('md-theme').innerText = "강남 숨바꼭질";   
-	                    
-	                    let myModal = new bootstrap.Modal(document.getElementById('reservationModal'));
-	                    myModal.show();
+						document.getElementById('reservation-detail-container').innerHTML =
+						`
+						    <div>
+						        <strong>${clickedDate}</strong>
+						        <hr>
+						        예약 내역이 없습니다.
+						    </div>
+						`;
+						
+						let myModal = new bootstrap.Modal(document.getElementById('reservationModal'));
+						myModal.show();
 	                    //------------------------------------------------------------------------------------
 	                    
 	                    // ※ 예약 없는 날짜 클릭 무반응 처리 필요
@@ -128,6 +165,7 @@
 	        },
 	        
 	        // css 테스트용 더미 데이터 
+	        /*
 	        events: [
 	            {
 	                start: '2026-06-03T14:30:00',
@@ -138,6 +176,30 @@
 	                display: 'list-item'
 	            }
 	        ]
+	        */
+	        events: [
+
+	        	<c:forEach var="reservation"
+	        	           items="${reservationList}"
+	        	           varStatus="status">
+
+	        	{
+	        	    start: '${reservation.reservedAt}',
+	        	    display: 'list-item'
+	        	}
+
+	        	// 마지막 건이 아닐 때 , 붙이기
+	        	<c:if test="${!status.last}">
+	        	,
+	        	</c:if>
+
+	        	</c:forEach>
+
+	        	]
+	        
+	        
+	        
+	        
 	    }); //----------------------------------------------------------------------- 달력 생성자 속성 구성
 	    
 	    // 달력 생성
@@ -198,11 +260,9 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 12px;"></button>
 			</div>
 			
-			<div class="modal-body" style="font-size: 13px;">
-				<div class="mb-2"><strong>날짜 :</strong> <span id="md-date" class="text-muted"></span></div>
-				<div class="mb-2"><strong>시간 :</strong> <span id="md-time" class="badge bg-warning text-dark"></span></div>
-				<div class="mb-2"><strong>매장 :</strong> <span id="md-shop" class="fw-bold"></span></div>
-				<div><strong>테마 :</strong> <span id="md-theme" class="text-primary fw-bold"></span></div>
+			<div class="modal-body"
+			     id="reservation-detail-container"
+			     style="font-size: 13px;">
 			</div>
 		</div>
 	</div>

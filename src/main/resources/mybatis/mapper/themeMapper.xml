@@ -54,8 +54,11 @@
  		       R.PRICE price, R.MAX_PLAYERS maxPlayers
  		  FROM ROOM R
  		  JOIN CAFE C ON R.CAFE_ID = C.CAFE_ID
+ 		  		 	AND NOT EXISTS 
+ 		  		 	(SELECT 1 FROM CAFE_DROP CD WHERE CD.CAFE_ID = C.CAFE_ID)
  		  JOIN ROOM_GENRE G ON R.GENRE_ID = G.GENRE_ID
  		 WHERE C.USER_ID = #{ownerUserId}
+ 		 	AND NOT EXISTS (SELECT 1 FROM ROOM_DROP RD WHERE RD.ROOM_ID = R.ROOM_ID)
  		 ORDER BY R.ROOM_ID DESC
  		 OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
  	</select>
@@ -65,7 +68,10 @@
  		SELECT NVL(COUNT(*), 0)
  		  FROM ROOM R
  		  JOIN CAFE C ON R.CAFE_ID = C.CAFE_ID
+ 		  			AND NOT EXISTS 
+ 		  		 	(SELECT 1 FROM CAFE_DROP CD WHERE CD.CAFE_ID = C.CAFE_ID)
  		 WHERE C.USER_ID = #{ownerUserId}
+ 		 AND NOT EXISTS (SELECT 1 FROM ROOM_DROP RD WHERE RD.ROOM_ID = R.ROOM_ID)
  	</select>
 
  	<!-- 테마 수정 -->
@@ -132,6 +138,7 @@
 		FROM ROOM A
 		JOIN CAFE B
 		ON A.CAFE_ID = B.CAFE_ID
+		AND NOT EXISTS (SELECT 1 FROM CAFE_DROP CD WHERE CD.CAFE_ID = B.CAFE_ID)
 		JOIN ROOM_GENRE C
 		ON A.GENRE_ID = C.GENRE_ID
 		WHERE A.ROOM_ID = #{themeId}
@@ -148,6 +155,8 @@
 		ON A.GENRE_ID = B.GENRE_ID
 		JOIN CAFE C
 		ON A.CAFE_ID = C.CAFE_ID
+		AND NOT EXISTS (SELECT 1 FROM CAFE_DROP CD WHERE CD.CAFE_ID = C.CAFE_ID)
+		AND NOT EXISTS (SELECT 1 FROM ROOM_DROP RD WHERE RD.ROOM_ID = A.ROOM_ID)
  		<where>
 	 		<if test="kwd != null and kwd != ''">
 	 			<include refid="where-list"></include>
@@ -215,5 +224,23 @@
 		WHERE G.ROOM_ID = #{themeId}
 		
 	</select>
+	
+	<!-- 테마 삭제 사유 목록 -->
+	<select id="selectDropReasonList" resultType="com.noexit.app.model.ThemeDropReason">
+		SELECT DROP_REASON_ID dropReasonId, DROP_REASON_NAME dropReasonName
+		FROM ROOM_DROP_REASON
+		ORDER BY DROP_REASON_ID
+	</select>
+	
+	<!-- 테마 삭제 = ROOM_DROP에 INSERT (본인 카페의 테마일 때만) -->
+	<insert id="insertRoomDrop" parameterType="map">
+		INSERT INTO ROOM_DROP (ROOM_DROP_ID, ROOM_ID, DROP_REASON_ID)
+		SELECT ROOM_DROP_SEQ.NEXTVAL, #{themeId}, #{dropReasonId}
+		FROM ROOM R
+		JOIN CAFE C ON R.CAFE_ID = C.CAFE_ID
+		WHERE R.ROOM_ID = #{themeId}
+	 	AND C.USER_ID = #{ownerUserId}
+	</insert>
+	
 
 </mapper>

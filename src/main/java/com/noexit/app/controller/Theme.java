@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.noexit.app.mapper.ThemeMapper;
 import com.noexit.app.model.SearchFilterDTO;
@@ -20,23 +22,17 @@ import com.noexit.app.model.ThemeReviewDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 import com.noexit.app.service.ThemeService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/theme/*")
 public class Theme
 {
 	private final ThemeService themeService;
 	
-    private final AdminController adminController;
-
-    Theme(AdminController adminController, ThemeService themeService) 
-    {
-        this.adminController = adminController;
-        this.themeService = themeService;
-    }
-
     /*
      * themelist 페이지로 이동하는 메소드
      * 파라미터로 schTpye, kwd 를 받고
@@ -128,6 +124,9 @@ public class Theme
 			
 			List<ThemeDTO> list = themeService.getThemeList(map,filter);
 			
+			if(list == null)
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			
 			return list;
 		} 
 		catch (Exception e)
@@ -135,7 +134,7 @@ public class Theme
 			log.info("themeListData : ",e);
 		}
 		
-		return null;
+		throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/**

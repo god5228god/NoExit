@@ -21,6 +21,7 @@ END;
          C.USER_ID  AS OWNER_USER_ID,   -- 사장 검색용 (c.USER_ID가 카페 소유주)
          C.CAFE_NAME,
          UA.LOGIN_ID, UA.NICKNAME,
+         UI.NAME,
          UI.PHONE
     FROM MANAGER_HISTORY MH
     JOIN CAFE C ON C.CAFE_ID = MH.CAFE_ID

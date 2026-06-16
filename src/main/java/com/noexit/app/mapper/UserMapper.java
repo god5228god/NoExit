@@ -10,6 +10,7 @@ public interface UserMapper {
 	public int insertAccount(User user);
 	public int insertInfo(User user);
 	public int countByLoginId(String loginId);
+	public int countByEmail(String email);
 	public User selectByLoginId(User user);
 	public User findByLoginId(String loginId);
 	public int countCafeByUserId(Long userId);
@@ -18,5 +19,10 @@ public interface UserMapper {
 	// 비밀번호 찾기 아이디 + 이름으로 사용자 검증
 	public User findByLoginIdAndName(User user);
 	public int updatePassword(User user);
+
+	// 회원탈퇴
+	public int insertUserDrop(Long userId);
+	public int deleteUserInfo(Long userId);
+	public int countByUserIdAndPassword(User user);
 
 }

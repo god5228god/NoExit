@@ -50,7 +50,7 @@
 							<c:forEach var="m" items="${managerList}" varStatus="st">
 								<div class="row align-items-center border-bottom py-2 m-0">
 									<div class="col-1">${st.count}</div>
-									<div class="col-2">${m.nickname}</div>
+									<div class="col-2">${m.name}</div>
 									<div class="col-2">${m.cafeName}</div>
 									<div class="col-2">${m.phone}</div>
 									<div class="col-2"><fmt:formatDate value="${m.createdAt}" pattern="yyyy-MM-dd"/></div>

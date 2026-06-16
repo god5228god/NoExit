@@ -6,31 +6,22 @@ import java.util.Map;
 import com.noexit.app.model.Cafe;
 import com.noexit.app.model.SearchFilterDTO;
 import com.noexit.app.model.ThemeDTO;
+import com.noexit.app.model.ThemeDropReason;
 import com.noexit.app.model.ThemeReviewDTO;
 import com.noexit.app.model.ThemeSlotDTO;
 
 public interface ThemeService
 {
-	/*
-	장르 목록 가져오는 메소드
-	카페 목록 가져오는 메소드
-	테마 등록하는 메소드
-	테마 정보 조회하는 메소드
-	테마 수정하는 메소드
-	테마 삭제하는 메소드
-	*/
+
+	public List<Cafe> getCafeList(long userId);
+	public int themeInsert(ThemeDTO dto) throws Exception;
+	public ThemeDTO getThemeById(long themeId);
+	public int themeUpdate(ThemeDTO dto) throws Exception;
+	public List<ThemeDTO> selectListByOwnerUserId(Map<String, Object> map);
+	public int dataCount(Map<String, Object> map);
+	public List<ThemeDropReason> getDropReasonList();
+	public void themeDrop(Long themeId, Long dropReasonId, Long ownerUserId) throws Exception;
 	
-	List<Cafe> getCafeList(long userId);
-	int themeInsert(ThemeDTO dto) throws Exception;
-	ThemeDTO getThemeById(long themeId);
-	int themeUpdate(ThemeDTO dto) throws Exception;
-	int themeDelete(long themeId);
-	List<ThemeDTO> selectListByOwnerUserId(Map<String, Object> map);
-	int dataCount(Map<String, Object> map);
-	
-	/*
-	 * ↑ 위 메소드는 명철님이 사용함 
-	 */
 	
 	
 	/*
@@ -45,4 +36,6 @@ public interface ThemeService
 	Map<String,List<ThemeSlotDTO>> getThemeSlot(long themeId);
 	List<ThemeReviewDTO> getThemeReview(long themeId);
 	ThemeReviewDTO getTotalReview(long themeId);
+	
+
 }

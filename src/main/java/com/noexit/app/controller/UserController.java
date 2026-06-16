@@ -34,6 +34,14 @@ public class UserController {
 	     response.setContentType("text/html; charset=UTF-8");
 	     response.getWriter().print(count == 0 ? "OK" : "NO");
 	  }
+
+	 // 이메일 중복확인 (Ajax)
+	 @PostMapping("/email-check")
+	 public void emailCheck(User user, HttpServletResponse response) throws IOException {
+	     int count = service.countByEmail(user.getEmail());
+	     response.setContentType("text/html; charset=UTF-8");
+	     response.getWriter().print(count == 0 ? "OK" : "NO");
+	  }
 	
 	
 	// 아이디 찾기 폼
@@ -125,7 +133,7 @@ public class UserController {
 		} catch (Exception e) {
 			log.info("enroll : ", e);
 		}
-		return "redirect:/theme/list";
+		return "redirect:/";
 	}
 
 	// 로그인 폼
@@ -153,7 +161,7 @@ public class UserController {
 	    String role = service.findRole(dto.getUserId());
 	    session.setAttribute("loginUser", dto);
 	    session.setAttribute("role", role);
-	    return "redirect:/theme/list";
+	    return "redirect:/";
 	}
 
 	// 로그아웃
@@ -161,6 +169,32 @@ public class UserController {
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/user/login";
+	}
+
+	// 회원탈퇴 폼
+	@GetMapping("/withdraw")
+	public String withdrawForm(HttpSession session) {
+		if (session.getAttribute("loginUser") == null) return "redirect:/user/login";
+		return "user/withdrawForm";
+	}
+
+	// 회원탈퇴
+	@PostMapping("/withdraw")
+	public String withdraw(@RequestParam(name = "password") String password, HttpSession session, Model model) {
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) return "redirect:/user/login";
+		if (!service.verifyPassword(loginUser.getUserId(), password)) {
+			model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
+			return "user/withdrawForm";
+		}
+		try {
+			service.withdraw(loginUser.getUserId());
+		} catch (Exception e) {
+			log.info("withdraw : ", e);
+			return "redirect:/mypage/record";
+		}
+		session.invalidate();
+		return "redirect:/";
 	}
 
 }

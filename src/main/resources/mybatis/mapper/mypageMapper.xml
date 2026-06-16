@@ -6,17 +6,25 @@
 	
 <select id="getUserRecord" parameterType="map" resultType="com.noexit.app.model.MyPage">
     SELECT * FROM (
-        
         SELECT rownum AS rnum, A.* FROM (
-            
             SELECT 
-                C.ROOM_NAME AS roomName, 
-                RC.PLAY_TIME AS playTime, 
-                RC.HINT_COUNT AS hintCount, 
-                RC.PLAYER_COUNT AS peopleCount, 
-                RO.OPEN_AT AS playDate, 
-                RC.RECORD_COMMENT AS recordComment,
-                RC.IS_ESCAPED AS isEscaped
+		    RC.DETAIL_ID AS detailId,  
+		    C.ROOM_NAME AS roomName, 
+		    C.ROOM_IMG AS roomImg,          
+		    CA.CAFE_NAME AS cafeName,       
+		    RC.PLAY_TIME AS playTime, 
+		    RC.HINT_COUNT AS hintCount, 
+		    RC.PLAYER_COUNT AS peopleCount, 
+		    RO.OPEN_AT AS playDate, 
+		    RC.RECORD_COMMENT AS recordComment,
+		    RC.IS_ESCAPED AS isEscaped,
+		    RV.REVIEW_ID AS reviewId,         RV.DIFFICULTY AS difficulty,
+		    RV.HORROR AS horror,
+		    RV.ACTIVITY AS activity,
+		    RV.IMMERSION AS immersion,
+		    RV.SATISFACTION AS satisfaction,
+		    RV.REVIEW_COMMENT AS reviewComment,
+		    CASE WHEN RV.DETAIL_ID IS NOT NULL THEN 1 ELSE 0 END AS hasReview
             FROM RECORD RC
             JOIN ATTENDANCE_DETAIL AD ON RC.DETAIL_ID = AD.DETAIL_ID
             JOIN ATTENDANCE AT ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID
@@ -25,13 +33,14 @@
             JOIN PARTY_ROOM PR ON P.PARTY_ID = PR.PARTY_ID
             JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
             JOIN ROOM C ON RO.ROOM_ID = C.ROOM_ID
+            JOIN CAFE CA ON C.CAFE_ID = CA.CAFE_ID 
+            LEFT OUTER JOIN REVIEW RV ON RC.DETAIL_ID = RV.DETAIL_ID
             WHERE AD.USER_ID = #{userId}
             ORDER BY RO.OPEN_AT DESC
-            
         ) A
-        WHERE rownum &lt;= #{endRow} )
+        WHERE rownum &lt;= #{endRow} 
+    )
     WHERE rnum &gt;= #{startRow}
-    
 </select>
 
 
@@ -62,7 +71,7 @@
 	          WHERE AD3.ATTENDANCE_ID = AD1.ATTENDANCE_ID
 	            AND ME.TARGET_ID = AD2.USER_ID
 	      )
-	    ORDER BY RO.OPEN_AT DESC
+	    ORDER BY RO.OPEN_AT DESC, AT.ATTENDANCE_ID ASC, AD2.USER_ID ASC
 	</select>
 
 	<select id="getQuestionList" resultType="String">
@@ -103,27 +112,26 @@
 	아직 기록을 남기지 않은 
 	카페 이름, 테마이름, 플레이 일시 
 	-->
-<select id="getUnrecordedList" resultType="com.noexit.app.model.MyPage">
-    SELECT 
-        CA.CAFE_NAME AS cafeName, 
-        C.ROOM_NAME AS roomName, 
-        RO.OPEN_AT AS playDate, 
-        AD.DETAIL_ID AS detailId 
-    FROM ATTENDANCE_DETAIL AD 
-    JOIN ATTENDANCE AT ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID 
-    JOIN RESERVATION RS ON AT.RESERVATION_ID = RS.RESERVATION_ID 
-    JOIN PARTY P ON RS.PARTY_ID = P.PARTY_ID 
-    JOIN PARTY_ROOM PR ON P.PARTY_ID = PR.PARTY_ID 
-    JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID 
-    JOIN ROOM C ON RO.ROOM_ID = C.ROOM_ID 
-    JOIN CAFE CA ON C.CAFE_ID = CA.CAFE_ID 
-    LEFT JOIN RECORD RC ON AD.DETAIL_ID = RC.DETAIL_ID 
-    WHERE AD.USER_ID = #{userId} 
-    AND AD.ATTEND_STATUS_ID = 1 
-    AND RC.DETAIL_ID IS NULL 
-    ORDER BY RO.OPEN_AT DESC
-</select>
-	
+	<select id="getUnrecordedList" resultType="com.noexit.app.model.MyPage">
+	    SELECT 
+	        CA.CAFE_NAME AS cafeName, 
+	        C.ROOM_NAME AS roomName, 
+	        RO.OPEN_AT AS playDate, 
+	        AD.DETAIL_ID AS detailId 
+	    FROM ATTENDANCE_DETAIL AD 
+	    JOIN ATTENDANCE AT ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID 
+	    JOIN RESERVATION RS ON AT.RESERVATION_ID = RS.RESERVATION_ID 
+	    JOIN PARTY P ON RS.PARTY_ID = P.PARTY_ID 
+	    JOIN PARTY_ROOM PR ON P.PARTY_ID = PR.PARTY_ID 
+	    JOIN RES_OPEN RO ON PR.RES_OPEN_ID = RO.RES_OPEN_ID 
+	    JOIN ROOM C ON RO.ROOM_ID = C.ROOM_ID 
+	    JOIN CAFE CA ON C.CAFE_ID = CA.CAFE_ID 
+	    LEFT JOIN RECORD RC ON AD.DETAIL_ID = RC.DETAIL_ID 
+	    WHERE AD.USER_ID = #{userId} 
+	    AND AD.ATTEND_STATUS_ID = 1 
+	    AND RC.DETAIL_ID IS NULL 
+	    ORDER BY RO.OPEN_AT DESC
+	</select>
 	
 	
 	<insert id="insertRecord" parameterType="com.noexit.app.model.MyPage">
@@ -141,13 +149,100 @@
 	</select>
 
 
+	<update id="updateRecord" parameterType="com.noexit.app.model.MyPage">
+			UPDATE RECORD
+			SET 
+				IS_ESCAPED = #{isEscaped}
+			   ,PLAY_TIME = #{playTime}
+			   ,HINT_COUNT = #{hintCount}
+			   ,PLAYER_COUNT = #{peopleCount}
+			   ,RECORD_COMMENT = #{recordComment}
+			WHERE DETAIL_ID = #{detailId}
+	</update>
 
+	
+	<insert id="insertReview" parameterType="com.noexit.app.model.MyPage">
+	    INSERT INTO REVIEW (
+	        REVIEW_ID, DETAIL_ID, DIFFICULTY, HORROR, 
+	        ACTIVITY, IMMERSION, SATISFACTION, REVIEW_COMMENT) 
+	        VALUES (
+	        REVIEW_SEQ.NEXTVAL, #{detailId}, #{difficulty}, #{horror}, 
+	        #{activity}, #{immersion}, #{satisfaction}, #{reviewComment})
+	</insert>
 
+	<select id="countReview" parameterType="long" resultType="int">
+	    SELECT COUNT(*) FROM REVIEW WHERE DETAIL_ID = #{detailId}
+	</select>
 
-
-
-
-
-
+	<update id="updateReview" parameterType="com.noexit.app.model.MyPage">
+	    UPDATE REVIEW 
+	    SET 
+	        DIFFICULTY = #{difficulty},
+	        HORROR = #{horror},
+	        ACTIVITY = #{activity},
+	        IMMERSION = #{immersion},
+	        SATISFACTION = #{satisfaction},
+	        REVIEW_COMMENT = #{reviewComment}
+	    WHERE DETAIL_ID = #{detailId}
+	</update>
+	
+	<delete id="deleteReview" parameterType="long">
+		DELETE
+		FROM REVIEW
+		WHERE REVIEW_ID = #{reviewId}
+	</delete>	
+	
+	
+	<select id="getReservationList" parameterType="long" resultType="com.noexit.app.model.MyPage">
+	
+	    SELECT DISTINCT TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD') AS reservedAt
+	    FROM ATTENDANCE_DETAIL AD
+	    JOIN ATTENDANCE AT
+	    ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID
+	    JOIN RESERVATION RS
+	    ON AT.RESERVATION_ID = RS.RESERVATION_ID
+	    JOIN PARTY P
+	    ON RS.PARTY_ID = P.PARTY_ID
+	    JOIN PARTY_ROOM PR
+	    ON P.PARTY_ID = PR.PARTY_ID
+	    JOIN RES_OPEN RO
+	    ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
+	    WHERE AD.USER_ID = #{userId}
+	    ORDER BY reservedAt
+	</select>
+	
+		
+	<select id="getReservationDetail" parameterType="map" resultType="com.noexit.app.model.MyPage">
+	    SELECT TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD HH24:MI') AS reservedAt
+	     , CA.CAFE_NAME AS reservedCafe
+	     , C.ROOM_NAME AS reservedRoom
+	     , C.ROOM_IMG AS roomImg
+	    FROM ATTENDANCE_DETAIL AD
+	    JOIN ATTENDANCE AT
+	    ON AD.ATTENDANCE_ID = AT.ATTENDANCE_ID
+	    JOIN RESERVATION RS
+	    ON AT.RESERVATION_ID = RS.RESERVATION_ID
+	    JOIN PARTY P
+	    ON RS.PARTY_ID = P.PARTY_ID
+	    JOIN PARTY_ROOM PR
+	    ON P.PARTY_ID = PR.PARTY_ID
+	    JOIN RES_OPEN RO
+	    ON PR.RES_OPEN_ID = RO.RES_OPEN_ID
+	    JOIN ROOM C
+	    ON RO.ROOM_ID = C.ROOM_ID
+	    JOIN CAFE CA
+	    ON C.CAFE_ID = CA.CAFE_ID
+	    WHERE AD.USER_ID = #{userId}
+	    AND TO_CHAR(RO.OPEN_AT, 'YYYY-MM-DD') = #{date}
+	    ORDER BY RO.OPEN_AT
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
 
 </mapper>

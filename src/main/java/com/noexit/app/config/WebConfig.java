@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		
 		registry.addInterceptor(loginInterceptor)
-				.addPathPatterns("/owner/**","/mypage/**", "/reservations/**")	// 인터셉터 적용 경로
+				.addPathPatterns("/owner/**","/mypage/**", "/reservation/**")	// 인터셉터 적용 경로
 				.excludePathPatterns("/"); // 인터셉터 제외 경로
 		
 		WebMvcConfigurer.super.addInterceptors(registry);

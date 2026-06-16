@@ -46,7 +46,23 @@ public class MyPage {
 	// 매너온도 바인딩 영역 --------------------------------------
 	private double manner;							// 매너온도
 	
+	// 테마 이미지 -----------------------------------------------
 	private String roomImg;
+	
+	// 리뷰 등록 -------------------------------------------------
+	private Long reviewId;                      // 리뷰 id
+	
+	private int hasReview;
+	private int difficulty;
+	private int horror;
+	private int activity;
+	private int immersion;                      // 몰입도
+	private int satisfaction;                   // 만족도
+	private String reviewComment;               // 한줄코멘트
+	private String reviewCreatedAt;             // 리뷰 등록일자
+	
+	
+	
 	
 	
 }

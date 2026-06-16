@@ -50,7 +50,7 @@
 									<div class="col-1">${r.totalMember}명</div>
 									<c:choose>
 										<c:when test="${r.statusName == '출석 완료'}">
-											<div class="col-2"><span class="status-done">출석</span></div>
+											<div class="col-2"><span class="status-done">출석처리 완료</span></div>
 											<div class="col-2">-</div>
 										</c:when>
 										<c:when test="${r.statusName == '노쇼'}">

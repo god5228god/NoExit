@@ -71,6 +71,12 @@ $(function(){
 		$("#error").css("display", "none");
 		$("#pwError").css("display", "none");
 		$("#pwConfirmError").css("display", "none");
+		$("#nickError").css("display", "none");
+		$("#emailError").css("display", "none");
+		$("#nameError").css("display", "none");
+		$("#phoneError").css("display", "none");
+		$("#genderError").css("display", "none");
+		$("#birthError").css("display", "none");
 
 		if (!isIdChecked) {
 			$("#error").html("아이디 중복 확인은 필수입니다.")
@@ -99,52 +105,70 @@ $(function(){
 		// 닉네임 2~10자
 		let nick = $("#nickname").val().trim();
 		if (nick.length < 2 || nick.length > 10) {
-			$("#error").html("닉네임은 2~10자로 입력해주세요.")
-			           .css({color: "red", display: "inline"});
+			$("#nickError").html("닉네임은 2~10자로 입력해주세요.")
+			               .css({color: "red", display: "inline"});
 			$("#nickname").focus();
 			return;
 		}
 
 		// 이름 필수
 		if ($("#name").val().trim() === "") {
-			$("#error").html("이름을 입력해주세요.")
-			           .css({color: "red", display: "inline"});
+			$("#nameError").html("이름을 입력해주세요.")
+			              .css({color: "red", display: "inline"});
 			$("#name").focus();
 			return;
 		}
 
 		// 이메일 형식
 		if (!/^[\w.+-]+@[\w-]+(\.[\w-]+)+$/.test($("#email").val().trim())) {
-			$("#error").html("올바른 이메일 형식이 아닙니다.")
-			           .css({color: "red", display: "inline"});
+			$("#emailError").html("올바른 이메일 형식이 아닙니다.")
+			               .css({color: "red", display: "inline"});
 			$("#email").focus();
 			return;
 		}
 
 		// 연락처 11자리 숫자
 		if (!/^\d{11}$/.test($("#phone").val().trim())) {
-			$("#error").html("연락처는 11자리 숫자만 입력해주세요.")
-			           .css({color: "red", display: "inline"});
+			$("#phoneError").html("연락처는 11자리 숫자만 입력해주세요.")
+			               .css({color: "red", display: "inline"});
 			$("#phone").focus();
 			return;
 		}
 
 		// 성별 필수
 		if ($("input[name='gender']:checked").length === 0) {
-			$("#error").html("성별을 선택해주세요.")
-			           .css({color: "red", display: "inline"});
+			$("#genderError").html("성별을 선택해주세요.")
+			                .css({color: "red", display: "inline"});
 			return;
 		}
 
 		// 생년월일 필수
 		if ($("#birthDate").val() === "") {
-			$("#error").html("생년월일을 선택해주세요.")
-			           .css({color: "red", display: "inline"});
+			$("#birthError").html("생년월일을 선택해주세요.")
+			               .css({color: "red", display: "inline"});
 			$("#birthDate").focus();
 			return;
 		}
 
-		$("#signUpForm").submit();
+		// 이메일 중복확인 (Ajax)
+		$.ajax({
+			type: "POST",
+			url: "${pageContext.request.contextPath}/user/email-check",
+			data: { email: $("#email").val().trim() },
+			success: function(result){
+				if (result === "OK") {
+					$("#signUpForm").submit();
+				} else {
+					$("#emailError").html("이미 사용 중인 이메일입니다.")
+					               .css({color: "red", display: "inline"});
+					$("#email").focus();
+				}
+			},
+			error: function(){
+				$("#emailError").html("오류가 발생했습니다.")
+				               .css({color: "red", display: "inline"});
+			}
+		});
 	});
 });
 </script>
@@ -186,21 +210,25 @@ $(function(){
 			<div class="mb-3">
 				<label for="nicnName" class="form-label">닉네임<span class="form-required">*</span></label>
 				<input type="text" id="nickname" name="nickname" class="form-control" placeholder="2~10자">
+				<span id="nickError" class="small" style="display: none;"></span>
 			</div>
 
 			<div class="mb-3">
 				<label for="name" class="form-label">이름<span class="form-required">*</span></label>
 				<input type="text" id="name" name="name" class="form-control">
+				<span id="nameError" class="small" style="display: none;"></span>
 			</div>
 
 			<div class="mb-3">
 				<label for="email" class="form-label">이메일<span class="form-required">*</span></label>
 				<input type="email" id="email" name="email" class="form-control">
+				<span id="emailError" class="small" style="display: none;"></span>
 			</div>
 
 			<div class="mb-3">
 				<label for="phone" class="form-label">연락처<span class="form-required">*</span></label>
 				<input type="text" id="phone" name="phone" class="form-control" maxlength="11" placeholder="하이픈 없이 11자리">
+				<span id="phoneError" class="small" style="display: none;"></span>
 			</div>
 
 			<div class="mb-3">
@@ -215,11 +243,13 @@ $(function(){
 						<label class="form-check-label" for="genderF">여</label>
 					</div>
 				</div>
+				<span id="genderError" class="small" style="display: none;"></span>
 			</div>
 
 			<div class="mb-3">
 				<label for="birthDate" class="form-label">생년월일</label>
 				<input type="date" id="birthDate" name="birthDate" class="form-control">
+				<span id="birthError" class="small" style="display: none;"></span>
 			</div>
 
 			<div class="text-end mt-4">

@@ -46,6 +46,8 @@
 									<div class="col-2">
 										<a href="${pageContext.request.contextPath}/owner/theme/write?mode=update&roomId=${t.themeId}"
 										   class="btn btn-sm btn-primary">수정</a>
+										 <button type="button" class="btn btn-sm btn-danger"
+            									 onclick="openDropModal(${t.themeId}, '${t.themeName}')">삭제</button>   
 									</div>
 								</div>
 							</c:forEach>
@@ -61,6 +63,49 @@
 			</div>
 		</div>
 	</main>
+	<!-- 테마 삭제 모달 -->
+	<div class="modal fade" id="themeDropModal" tabindex="-1">
+  	<div class="modal-dialog modal-dialog-centered">
+    	<div class="modal-content">
+     	 <div class="modal-header">
+      	  <h6 class="modal-title fw-bold">테마 삭제</h6>
+       	 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+     	 </div>
+     	 <form id="themeDropForm" action="${pageContext.request.contextPath}/owner/theme/drop" method="post">
+       		<div class="modal-body">
+         	 <p>
+           	 <strong id="dropThemeName"></strong> 테마를 삭제하시겠습니까?<br>
+           	 <span class="text-muted small">삭제 후에는 복구할 수 없습니다.</span>
+          	</p>
+         	 <input type="hidden" name="themeId" id="dropThemeId">
+         	 <div class="mb-2">
+         	   <label for="dropReasonId" class="form-label">삭제 사유</label>
+        	    <select id="dropReasonId" name="dropReasonId" class="form-select" required>
+         	     <option value="">-- 사유 선택 --</option>
+         	     <c:forEach var="r" items="${reasonList}">
+         	       <option value="${r.dropReasonId}">${r.dropReasonName}</option>
+         	     </c:forEach>
+         	   </select>
+      	    </div>
+     	   </div>
+       	 <div class="modal-footer">
+       	   <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">취소</button>
+       	   <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+      	  </div>
+     	 </form>
+   	 </div>
+  	</div>
+	</div>
+
+<script>
+function openDropModal(themeId, themeName) {
+    document.getElementById('dropThemeId').value = themeId;
+    document.getElementById('dropThemeName').innerText = themeName;
+    document.getElementById('dropReasonId').value = '';
+    new bootstrap.Modal(document.getElementById('themeDropModal')).show();
+}
+</script>	
+	
 
 	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 </body>

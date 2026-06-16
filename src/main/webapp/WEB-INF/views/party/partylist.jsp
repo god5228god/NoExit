@@ -228,11 +228,19 @@
 					renderList(data);
 
 					lastId = data[data.length-1].partyId;
+					
+					if(data.length != 4)
+						$("#addBtn").remove();
 				}
 				, "error":function(e)
 				{
-					alert("에러 발생");
-					console.log(e.responseText);
+					if(e.status == 404)
+						alert("파티 목록이 존재하지 않습니다.");
+					else if(e.status == 500)
+						alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요");
+					else
+						alert("에러 발생");
+						console.log(e.responseText);
 				}
 			});
 		});
@@ -251,9 +259,8 @@
 	function renderParty(item)
 	{
 		return "<a href='${path}/party/info/" + item.partyId + "' class='party-item'>"
-			 + "<div class='party-image'>"
-			 + "<span>" + item.themeImg + "</span>"
-			 + "</div>"
+			 + "<div class='party-image'><img src='" + (item.themeImg && item.themeImg.charAt(0) === '/' ? '${path}' + item.themeImg : '${path}/dist/images/' + item.themeImg)
+			 + "'></div>"
 			 + "<div class='party-info'>"
 			 + getItem("테마명",item.themeName)
 			 + getItem("날짜",item.resDate)
@@ -320,7 +327,10 @@
 							<span class="filter-tilde">~</span>
 							<input type="time" name="maxTime" value="${maxTime }" placeholder="1800" form="searchForm">
 						</div>
-
+						
+						<div>
+							<button type="button" style="width: 100%;" class="btn btn-primary" onclick="search()">적용</button>						
+						</div>
 					</div>
 
 				</div>

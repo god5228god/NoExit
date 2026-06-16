@@ -228,6 +228,10 @@
 									</div> 
 									
 									</c:forEach>
+									
+									<c:if test="${empty myPartyApplyList}">
+										<span>신청 내역이 없습니다.</span>									
+									</c:if>
 								</div>
 							</div>
 		
@@ -250,6 +254,10 @@
 											</div>
 										</c:if>
 									</c:forEach>
+									
+									<c:if test="${empty myPartyList }">
+										<span>파티 목록이 없습니다.</span>
+									</c:if>
 								</div>
 							</div>
 		
@@ -273,6 +281,10 @@
 											</div>
 										</c:if>
 									</c:forEach>
+									
+									<c:if test="${empty myPartyList }">
+										<span>파티 목록이 없습니다.</span>
+									</c:if>
 								</div>
 							</div>
 		
@@ -296,6 +308,11 @@
 											</div>
 										</div>
 									</c:forEach>
+									
+									<c:if test="${empty myPartyKickList }">
+										<span>강퇴 이력이 없습니다.</span>
+									</c:if>
+									
 								</div>
 							</div>
 		
