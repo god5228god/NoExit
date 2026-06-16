@@ -270,7 +270,7 @@
 	let status = '${status}';
 
 	// AJAX 딜레이
-	let delay = 1000;
+	let delay = 100;
 	
 	let flag = false;
 	

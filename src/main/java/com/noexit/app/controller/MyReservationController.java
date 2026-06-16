@@ -42,8 +42,15 @@ public class MyReservationController {
 			User loginUser = (User) session.getAttribute("loginUser");
 			Long userId = loginUser.getUserId();
 			
+			
+			
+			List<String> questionList = mypageService.getQuestionList();
 			double userManner = mypageService.getUserManner(loginUser.getUserId());
 			List<MyPage> mutualList = mypageService.getMutualList(userId);
+			List<MyPage> roomImgList = mypageService.getRoomImg(loginUser.getUserId());
+			List<MyPage> reservationList = mypageService.getReservationList(userId);
+			
+			
 			
 			
 		try {
@@ -54,7 +61,10 @@ public class MyReservationController {
 			model.addAllAttributes(pageData);
 			model.addAttribute("userManner" ,userManner);
 			model.addAttribute("mutualList" ,mutualList);
-
+			model.addAttribute("questionList",questionList);
+			model.addAttribute("roomImgList" ,roomImgList);		// 이미지 insert 후 바인딩 예정
+			model.addAttribute("reservationList", reservationList);
+			
 			
 		} catch (Exception e) {
 			log.error("reservationsList: ",e);

@@ -54,6 +54,9 @@ public class MyPageController {
 	         List<MyPage> mutualList = service.getMutualList(userId);
 	         double userManner = service.getUserManner(userId);
 	         List<String> questionList = service.getQuestionList();
+	         List<MyPage> reservationList = service.getReservationList(userId);
+	         List<MyPage> roomImgList = service.getRoomImg(userId);
+	         
 	         
 	         model.addAttribute("myPartyList", partyService.getMyPartyList(userId));
 	         model.addAttribute("myPartyApplyList", partyService.getMyPartyApplyList(userId));
@@ -61,6 +64,8 @@ public class MyPageController {
 	         model.addAttribute("mutualList" ,mutualList);
 	         model.addAttribute("userManner" ,userManner);
 	         model.addAttribute("questionList",questionList);
+	 		 model.addAttribute("roomImgList" ,roomImgList);
+			 model.addAttribute("reservationList", reservationList);
 	         
 	         return "mypage/myparty";
 	      }
