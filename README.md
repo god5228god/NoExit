@@ -71,3 +71,88 @@ AND TO_CHAR(OPEN_AT, 'YYYY-MM-DD') = #{openAt}
 <br>
 
 ## 패키지 구조
+**동시성 제어** — 같은 슬롯에 여러 파티가 동시 예약 시도할 때 `FOR UPDATE`로 행 락을 걸어 중복 예약을 차단합니다. 예약 가능 조건 확인과 락 획득을 단일 쿼리로 처리해 락 획득 후 상태 변경으로 인한 정합성 문제를 방지했습니다.
+
+**예외 구분** — `NO_DATA_FOUND`가 여러 위치에서 발생할 수 있어, FOR UPDATE 블록만 중첩 `BEGIN-EXCEPTION-END`로 감싸 발생 위치를 특정하고 명확한 에러 메시지를 반환하도록 처리했습니다.
+
+### 예약 현황 목록 조회
+
+필터 조건(날짜·카페·테마)과 권한 확인을 단일 쿼리로 처리했습니다.
+
+```sql
+WHERE CAFE_ID IN (
+    SELECT CAFE_ID FROM CAFE WHERE USER_ID = #{userId}  -- 사장
+    UNION
+    SELECT CAFE_ID FROM ( -- 현재 활성 매니저 여부를 ROW_NUMBER로 판별 )
+)
+AND CAFE_ID = #{cafeId}
+AND TO_CHAR(OPEN_AT, 'YYYY-MM-DD') = #{openAt}
+```
+
+파라미터 조작으로 권한 없는 카페 데이터에 접근하는 것을 쿼리 레벨에서 차단합니다.
+
+<br>
+
+## 트러블슈팅
+
+### 동시 예약 시도 시 중복 예약 문제
+
+**상황** 두 파티가 동시에 같은 슬롯 예약 시도 시 둘 다 예약 가능 상태로 통과할 수 있는 구조
+
+**문제** COUNT로 예약 가능 체크 → FOR UPDATE 락 순서로 처리하면, A가 체크 통과 후 락 획득 전에 B도 체크를 통과해버림. A가 커밋하면 B는 이미 체크를 통과한 상태라 중복 INSERT 발생
+
+**해결** 예약 가능 조건 확인과 FOR UPDATE 락 획득을 단일 쿼리로 합쳐, 락을 획득하는 시점에 상태를 재확인하도록 구조 변경. B는 A 커밋 후 락이 풀리면 동일 쿼리를 재실행하므로 이미 예약된 슬롯을 만나 `NO_DATA_FOUND`로 처리됨
+
+<br>
+
+## 패키지 구조**동시성 제어** — 같은 슬롯에 여러 파티가 동시 예약 시도할 때 `FOR UPDATE`로 행 락을 걸어 중복 예약을 차단합니다. 예약 가능 조건 확인과 락 획득을 단일 쿼리로 처리해 락 획득 후 상태 변경으로 인한 정합성 문제를 방지했습니다.
+
+**예외 구분** — `NO_DATA_FOUND`가 여러 위치에서 발생할 수 있어, FOR UPDATE 블록만 중첩 `BEGIN-EXCEPTION-END`로 감싸 발생 위치를 특정하고 명확한 에러 메시지를 반환하도록 처리했습니다.
+
+### 예약 현황 목록 조회
+
+필터 조건(날짜·카페·테마)과 권한 확인을 단일 쿼리로 처리했습니다.
+
+```sql
+WHERE CAFE_ID IN (
+    SELECT CAFE_ID FROM CAFE WHERE USER_ID = #{userId}  -- 사장
+    UNION
+    SELECT CAFE_ID FROM ( -- 현재 활성 매니저 여부를 ROW_NUMBER로 판별 )
+)
+AND CAFE_ID = #{cafeId}
+AND TO_CHAR(OPEN_AT, 'YYYY-MM-DD') = #{openAt}
+```
+
+파라미터 조작으로 권한 없는 카페 데이터에 접근하는 것을 쿼리 레벨에서 차단합니다.
+
+<br>
+
+## 트러블슈팅
+
+### 동시 예약 시도 시 중복 예약 문제
+
+**상황** 두 파티가 동시에 같은 슬롯 예약 시도 시 둘 다 예약 가능 상태로 통과할 수 있는 구조
+
+**문제** COUNT로 예약 가능 체크 → FOR UPDATE 락 순서로 처리하면, A가 체크 통과 후 락 획득 전에 B도 체크를 통과해버림. A가 커밋하면 B는 이미 체크를 통과한 상태라 중복 INSERT 발생
+
+**해결** 예약 가능 조건 확인과 FOR UPDATE 락 획득을 단일 쿼리로 합쳐, 락을 획득하는 시점에 상태를 재확인하도록 구조 변경. B는 A 커밋 후 락이 풀리면 동일 쿼리를 재실행하므로 이미 예약된 슬롯을 만나 `NO_DATA_FOUND`로 처리됨
+
+<br>
+
+## 패키지 구조
+
+controller/
+
+├── OwnerReservationController  # 카페 관계자 예약오픈·현황
+
+└── ReservationController       # 사용자 예약 확정
+service/
+
+├── CafeReservationService
+
+└── OpenReservationService
+mapper/
+
+├── cafeReservationMapper.xml
+
+└── openReservationMapper.xml
